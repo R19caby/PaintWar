@@ -1,0 +1,1 @@
+package com.paintwar.client.model.communication.messageio;

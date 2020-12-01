@@ -1,0 +1,1 @@
+package com.paintwar.client.controller.message;
