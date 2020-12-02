@@ -36,13 +36,14 @@ public class UnicastTransmitter implements Serializable
 		Logger.print("Socket emission : " + transmissionSocket.getLocalPort() + " " + transmissionAddress);
 	}
 
-	public void diffuseMessage(String command, String name, HashMap<String, Object> hm)
+	public void diffuseMessage(String packageName, String command, String name, HashMap<String, Object> hm)
 	{
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		ObjectOutputStream oos;
 		try
 		{
 			oos = new ObjectOutputStream(baos);
+			oos.writeObject(packageName);
 			oos.writeObject(command);
 			oos.writeObject(name);
 			oos.writeObject(hm);

@@ -6,15 +6,18 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.HashMap;
+import java.util.List;
 
 import com.paintwar.client.logger.Logger;
-import com.paintwar.client.model.communication.IClientUnicastReceiver;
+import com.paintwar.client.model.communication.IClientCommandReceiver;
 
 public class UnicastReceiver extends Thread
 {
 	private transient DatagramSocket receptionSocket;
-	private IClientUnicastReceiver localClient;
 
+	private List<IClientCommandReceiver> commandReceivers;
+
+	private String packageName; // the name of the package responsible for the command
 	private String command; // the name of the method to use on local client
 	private String name; // the name of the object to apply the command on
 	private HashMap<String, Object> hm; // the arguments of the method
@@ -38,11 +41,6 @@ public class UnicastReceiver extends Thread
 		}
 	}
 
-	public void setLocalClient(IClientUnicastReceiver localClient)
-	{
-		this.localClient = localClient;
-	}
-
 	public void receive()
 	{
 		try
@@ -52,6 +50,7 @@ public class UnicastReceiver extends Thread
 			receptionSocket.receive(packet);
 			ByteArrayInputStream bais = new ByteArrayInputStream(packet.getData());
 			ObjectInputStream ois = new ObjectInputStream(bais);
+			packageName = (String) ois.readObject();
 			command = (String) ois.readObject();
 			name = (String) ois.readObject();
 			hm = (HashMap<String, Object>) ois.readObject();
@@ -69,14 +68,18 @@ public class UnicastReceiver extends Thread
 			receive();
 
 			// treat all different message here -->
-			if (command.equals("aMethod"))
+			for (IClientCommandReceiver ccm : commandReceivers)
 			{
-				// localClient.callAMethod(name, (TypeA) hm.get("argumentA"), (TypeB)
-				// hm.get("argumentB"));
-			} else if (command.equals("anotherMethod"))
-			{
-
+				if (ccm.getPackageName().equals(packageName))
+				{
+					ccm.executeCommand(command, name, hm);
+				}
 			}
 		}
+	}
+
+	public void addClientCommandReceiver(IClientCommandReceiver ccm)
+	{
+		commandReceivers.add(ccm);
 	}
 }
