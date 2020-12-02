@@ -85,34 +85,25 @@ public class AccountCreation extends JPanel {
 			this.associatedField = field;
 			this.printing = text;
 		}
-
 		@Override
 		public void mouseClicked(MouseEvent arg0) {
 			associatedField.setText("");
 		}
-
 		@Override
 		public void mouseEntered(MouseEvent arg0) {
 		}
-
 		@Override
 		public void mouseExited(MouseEvent arg0) {
 			if (associatedField.getText().equals("")) {
 				this.associatedField.setText(printing);
 			}
-			
 		}
-
 		@Override
 		public void mousePressed(MouseEvent arg0) {
 		}
-
 		@Override
 		public void mouseReleased(MouseEvent arg0) {
 		}
-
-
-
 	}
 	
 }
