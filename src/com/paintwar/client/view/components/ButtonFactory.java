@@ -6,9 +6,11 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 
+import com.paintwar.client.view.pages.PageName;
+
 public class ButtonFactory extends JButton {
 	private String cardName;
-	public ButtonFactory(String name, String cardName) {
+	public ButtonFactory(String name, PageName pageName) {
 		super(name);
 		addActionListener(new RedirectActionListener());
 	}
@@ -18,7 +20,7 @@ public class ButtonFactory extends JButton {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			// Changement dans le card layout de la Frame principale.
-			// accès au cardName
+			// accès au cardName via pageName.getName
 		}
 		
 	}
