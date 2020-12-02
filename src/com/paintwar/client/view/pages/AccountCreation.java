@@ -7,12 +7,12 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 import javax.swing.BoxLayout;
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import com.paintwar.client.view.components.BackButton;
+import com.paintwar.client.view.components.ButtonFactory;
 import com.paintwar.client.view.components.ParametersButton;
 
 public class AccountCreation extends JPanel {
@@ -68,8 +68,10 @@ public class AccountCreation extends JPanel {
 		confirm.setText("Confirmez le mot de passe");
 		confirm.addMouseListener(new ResetText(confirm, "Confirmez le mot de passe"));
 		
-		JButton validate = new JButton("Valider");
-		add(validate, BorderLayout.SOUTH);
+		JPanel south = new JPanel();
+		add(south, BorderLayout.SOUTH);
+		ButtonFactory validate = new ButtonFactory("Valider", PageName.HOME);
+		south.add(validate, BorderLayout.SOUTH);
 		
 		
 	}
