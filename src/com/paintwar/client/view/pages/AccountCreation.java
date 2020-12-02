@@ -26,7 +26,7 @@ public class AccountCreation extends JPanel {
 		JPanel shortcuts = new JPanel();
 		shortcuts.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		shortcuts.add(new ParametersButton());
-		shortcuts.add(new BackButton("connexionChoicePage"));
+		shortcuts.add(new BackButton(PageName.CONNEXION_CHOICE));
 		add(shortcuts, BorderLayout.NORTH);
 		shortcuts.setAlignmentX(RIGHT_ALIGNMENT);
 		
