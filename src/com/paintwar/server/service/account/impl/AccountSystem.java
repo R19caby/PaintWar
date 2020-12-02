@@ -4,6 +4,7 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.paintwar.server.exception.AlreadyExistingUsernameException;
 import com.paintwar.server.exception.NoSuchUsernameException;
 import com.paintwar.server.exception.PasswordDoNotMatchException;
 import com.paintwar.server.service.account.interfaces.IAccountSystem;
@@ -21,7 +22,7 @@ public class AccountSystem implements IAccountSystem
 	{
 		users = new HashMap<String, IUser>();
 
-		// TODO get the users from disk
+		// TODO load the users from disk
 		// for(IUser user : disk)
 		// {
 		// users.put(user.getUsername(), user);
@@ -43,51 +44,31 @@ public class AccountSystem implements IAccountSystem
 	}
 
 	@Override
-	public byte[] getSalt(String username) throws RemoteException, NoSuchUsernameException
+	public void createUser(String username, String cryptedPassword, byte[] salt)
+			throws RemoteException, AlreadyExistingUsernameException
 	{
-		return users.get(username).getUserMetadata().getSalt();
-	}
+		if (users.get(username) != null)
+		{
+			throw new AlreadyExistingUsernameException();
+		} else
+		{
+			IUserMetadata metadata = new UserMetadata(username, cryptedPassword, salt, new Level(), new UserStats(),
+					new GameHistory(new ArrayList<IGameRecap>()));
+			IUserInventory inventory = new UserInventory();
+			IUserFriendlist friendlist = new UserFriendlist(new ArrayList<IUser>());
 
-	@Override
-	public void createUser(String username, String cryptedPassword, byte[] salt) throws RemoteException
-	{
-		IUserMetadata metadata = new UserMetadata(username, cryptedPassword, salt, new Level(), new UserStats(),
-				new GameHistory(new ArrayList<IGameRecap>()));
-		IUserInventory inventory = new UserInventory();
-		IUserFriendlist friendlist = new UserFriendlist(new ArrayList<IUser>());
+			IUser user = new User(metadata, inventory, friendlist);
 
-		IUser user = new User(metadata, inventory, friendlist);
-
-		users.put(username, user);
+			users.put(username, user);
+		}
 	}
 
 	@Override
 	public void deleteUser(String username) throws RemoteException, NoSuchUsernameException
 	{
-		users.remove(username);
-	}
-
-	@Override
-	public void changeUsername(String oldUsername, String newUsername) throws RemoteException, NoSuchUsernameException
-	{
-		IUser user = users.get(oldUsername);
-		if (user != null)
+		if (users.get(username) != null)
 		{
-			user.changeUsername(newUsername);
-		} else
-		{
-			throw new NoSuchUsernameException();
-		}
-	}
-
-	@Override
-	public void changePassword(String username, String newCryptedPassword)
-			throws RemoteException, NoSuchUsernameException
-	{
-		IUser user = users.get(username);
-		if (user != null)
-		{
-			user.changePassword(newCryptedPassword);
+			users.remove(username);
 		} else
 		{
 			throw new NoSuchUsernameException();
