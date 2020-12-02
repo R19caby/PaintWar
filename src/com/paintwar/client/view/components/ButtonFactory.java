@@ -25,7 +25,7 @@ public class ButtonFactory extends JButton {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			// Changement dans le card layout de la Frame principale.
-			// accÃ¨s au cardName via pageName.getName
+			// accès au cardName via pageName.getName
 		}
 		
 	}
