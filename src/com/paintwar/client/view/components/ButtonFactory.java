@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 
 public class ButtonFactory extends JButton {
+	
 	private String cardName;
 	public ButtonFactory(String name, String cardName) {
 		super(name);
@@ -18,7 +19,7 @@ public class ButtonFactory extends JButton {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			// Changement dans le card layout de la Frame principale.
-			// accÃ¨s au cardName
+			// accès au cardName
 		}
 		
 	}
