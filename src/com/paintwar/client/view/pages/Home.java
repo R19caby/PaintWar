@@ -24,7 +24,7 @@ public class Home extends JPanel {
 	
 	private static final long serialVersionUID = -1539937711095867060L;
 	
-	String playerName;
+	private String playerName;
 	
 	public Home(String name) {
 		super();
