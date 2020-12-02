@@ -5,6 +5,11 @@ import javax.swing.JPanel;
 
 public class Header extends JPanel {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3670573890343632722L;
+	
 	private ButtonFactory home;
 	private ButtonFactory collection;
 	private ButtonFactory battlepass;
