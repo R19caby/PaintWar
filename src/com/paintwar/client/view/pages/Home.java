@@ -3,8 +3,7 @@ package com.paintwar.client.view.pages;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.Font;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
@@ -102,13 +101,14 @@ public class Home extends JPanel {
 		east.setBorder(BorderFactory.createLineBorder(Color.black));
 		east.setLayout(new BoxLayout(east, BoxLayout.PAGE_AXIS));
 		JLabel eastTitle = new JLabel("Liste d'amis");
+		eastTitle.setFont(new Font(eastTitle.getFont().getName(), eastTitle.getFont().getSize(), eastTitle.getFont().getSize()+10));
 		east.add(eastTitle);
 		
 		JPanel favoriteFriends = new JPanel();
 		east.add(favoriteFriends);
 		favoriteFriends.setLayout(new BorderLayout(10, 10));
-		JLabel favoritesTitle = new JLabel("Favoris");
-		favoriteFriends.add(favoritesTitle, BorderLayout.NORTH);
+		JLabel favoriteTitle = new JLabel("Favoris");
+		favoriteFriends.add(favoriteTitle, BorderLayout.NORTH);
 		JScrollPane favoriteScroller = new JScrollPane();
 		favoriteFriends.add(favoriteScroller, BorderLayout.CENTER);
 		favoriteScroller.setPreferredSize(new Dimension(300, 300));
