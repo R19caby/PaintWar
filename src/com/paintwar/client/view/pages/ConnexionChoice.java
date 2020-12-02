@@ -25,7 +25,7 @@ public class ConnexionChoice extends JPanel {
 		JLabel logo = new JLabel("Logo");
 		ButtonFactory logInButton = new ButtonFactory("Se connecter", PageName.LOG_IN);
 		ButtonFactory signInButton = new ButtonFactory("Rejoindre", PageName.SIGN_IN);
-		ButtonFactory guestButton = new ButtonFactory("Continuer en tant qu'invitÃ©", PageName.GUEST);
+		ButtonFactory guestButton = new ButtonFactory("Continuer en tant qu'invité", PageName.GUEST);
 		ParametersButton param = new ParametersButton();
 		QuitAppButton quit = new QuitAppButton();
 		

@@ -3,6 +3,8 @@ package com.paintwar.client.view.components;
 import java.awt.FlowLayout;
 import javax.swing.JPanel;
 
+import com.paintwar.client.view.pages.PageName;
+
 public class Header extends JPanel {
 	
 	/**
@@ -21,22 +23,22 @@ public class Header extends JPanel {
 		
 		this.setLayout(new FlowLayout());
 		
-		home = new ButtonFactory("Home", "Homepage");
+		home = new ButtonFactory("Home", PageName.HOME);
 		this.add(home);
 		
-		collection = new ButtonFactory("Collection", "Collection");
+		collection = new ButtonFactory("Collection", PageName.COLLECTION);
 		this.add(collection);
 		
-		battlepass = new ButtonFactory("BattlePass", "BattlePass");
+		battlepass = new ButtonFactory("BattlePass", PageName.BATTLEPASS);
 		this.add(battlepass);
 		
-		shop = new ButtonFactory("Shop", "Shop");
+		shop = new ButtonFactory("Shop", PageName.SHOP);
 		this.add(shop);
 		
-		parameters = new ButtonFactory("Parameters", "Parameters");
+		parameters = new ParametersButton();
 		this.add(parameters);
 		
-		quit = new ButtonFactory("Quit", "Connexion");
+		quit = new ButtonFactory("Quit", PageName.CONNEXION_CHOICE);
 		this.add(quit);
 		
 	}
