@@ -1,6 +1,5 @@
 package com.paintwar.client.view.components;
 
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -9,6 +8,12 @@ import javax.swing.JButton;
 import com.paintwar.client.view.pages.PageName;
 
 public class ButtonFactory extends JButton {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2910361933495135715L;
+	
 	private String cardName;
 	public ButtonFactory(String name, PageName pageName) {
 		super(name);
