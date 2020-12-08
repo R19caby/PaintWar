@@ -17,9 +17,11 @@ public class DrawZone extends JPanel {
 	private GameEntity gameEntity;
 	private HashMap<String, Drawing> drawPanels;
 	private String currentDrawingByUser;
+	private Minimap minimap;
 	
-	public DrawZone(GameEntity gameEntity) {
+	public DrawZone(GameEntity gameEntity, Minimap minimap) {
 		this.gameEntity = gameEntity;
+		this.minimap = minimap;
 		this.drawPanels = new HashMap<String, Drawing>();
 		
 		this.setBounds(0, 0, 3000, 3000);
@@ -31,8 +33,10 @@ public class DrawZone extends JPanel {
 		this.addMouseMotionListener(drawLis);
 	}
 	
+	/*Add a drawing to zone and gameEntity*/
 	public String initializeDraw(Point p) {
 		String entiName = gameEntity.paint(p, p, Color.black);
+		minimap.paint(entiName, p, p, Color.black);
 		Drawing newDraw = new Drawing(Color.black);
 		drawPanels.put(entiName, newDraw);
 		newDraw.setBounds(new Rectangle(p));
@@ -43,6 +47,7 @@ public class DrawZone extends JPanel {
 		return entiName;
 	}
 	
+	/*Update a drawing 2nd point*/
 	public void updateEndPointDraw(String name, Point p) {
 		Drawing drawToUpdate = drawPanels.get(name);
 		if (drawToUpdate != null) {
@@ -51,6 +56,7 @@ public class DrawZone extends JPanel {
 			drawToUpdate.setBounds(r);
 			drawToUpdate.setEndPoint(p);
 			gameEntity.updateEndPointPaint(name, p);
+			minimap.updateEndPointPaint(name, p);
 		} else if (name != null) {
 			Logger.print("[Game] Couldn't find drawing to change coord");
 		}
@@ -60,6 +66,7 @@ public class DrawZone extends JPanel {
 		this.currentDrawingByUser = name;
 	}
 	
+	/*Update current drawing 2nd point*/
 	public void updateEndPointDraw(int x, int y) {
 		Drawing currentDraw = drawPanels.get(currentDrawingByUser);
 		if (currentDraw != null) {
@@ -73,6 +80,7 @@ public class DrawZone extends JPanel {
 			currentDraw.setBounds(r);
 			currentDraw.setEndPoint(endPoint);
 			gameEntity.updateEndPointPaint(currentDrawingByUser, endPoint);
+			minimap.updateEndPointPaint(currentDrawingByUser, endPoint);
 		}
 		
 	}

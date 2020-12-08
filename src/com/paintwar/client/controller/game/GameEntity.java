@@ -71,6 +71,6 @@ public class GameEntity implements IGameEntity {
 		
 		window.setVisible(true);
 		window.setSize(700, 400);
-		gp.updatePage();
+		gp.updatePage(700, 400);
 	}
 }
