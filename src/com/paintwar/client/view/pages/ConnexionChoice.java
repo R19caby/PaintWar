@@ -5,7 +5,11 @@ import com.paintwar.client.view.components.ParametersButton;
 import com.paintwar.client.view.components.QuitAppButton;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GridLayout;
 
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
@@ -19,18 +23,27 @@ public class ConnexionChoice extends JPanel {
 	public ConnexionChoice(MainWindow parent) {
 		super();
 		manager = parent;
-		setLayout(new BorderLayout());
+		setLayout(new BorderLayout(0, 50));
 		JPanel center = new JPanel();
 		JPanel north = new JPanel();
 		north.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		
-		JLabel logo = new JLabel("Logo");
+		JLabel logo = new JLabel("Paint War");
+		logo.setFont(new Font(logo.getFont().getName(), logo.getFont().getSize(), logo.getFont().getSize() + 100));
 		ButtonFactory logInButton = new ButtonFactory("Se connecter", PageName.LOG_IN, manager);
 		ButtonFactory signInButton = new ButtonFactory("Rejoindre", PageName.SIGN_IN, manager);
-		ButtonFactory guestButton = new ButtonFactory("Continuer en tant qu'invit�", PageName.GUEST, manager);
+		ButtonFactory guestButton = new ButtonFactory("Continuer en tant qu'invité", PageName.GUEST, manager);
+		logInButton.setPreferredSize(new Dimension(200, 40));
+		signInButton.setPreferredSize(new Dimension(200, 40));
+		guestButton.setPreferredSize(new Dimension(200, 40));
+		JPanel logInButtonPanel = new JPanel();
+		JPanel signInButtonPanel = new JPanel();
+		JPanel guestButtonPanel = new JPanel();
+		logInButtonPanel.add(logInButton);
+		signInButtonPanel.add(signInButton);
+		guestButtonPanel.add(guestButton);
 		ParametersButton param = new ParametersButton(manager);
 		QuitAppButton quit = new QuitAppButton(manager);
-		
 		
 		JPanel logoPanel = new JPanel();
 		JPanel buttonsPanel = new JPanel();
@@ -38,16 +51,17 @@ public class ConnexionChoice extends JPanel {
 		JPanel logoButtonsPanel = new JPanel();
 		
 		logoPanel.add(logo);
-		buttonsPanel.add(logInButton);
-		buttonsPanel.add(signInButton);
-		buttonsPanel.add(guestButton);
+		buttonsPanel.add(logInButtonPanel);
+		buttonsPanel.add(signInButtonPanel);
+		buttonsPanel.add(guestButtonPanel);
 		
 		
-		buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.Y_AXIS));
-		logoButtonsPanel.setLayout(new BoxLayout(logoButtonsPanel, BoxLayout.Y_AXIS));
+		buttonsPanel.setLayout(new GridLayout(3, 1));
+		logoButtonsPanel.setLayout(new GridLayout(2, 1));
 		
 		logoButtonsPanel.add(logoPanel);
 		logoButtonsPanel.add(buttonsPanel);
+		logoButtonsPanel.setPreferredSize(new Dimension(800, 500));
 
 		center.add(logoButtonsPanel);
 		
