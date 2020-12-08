@@ -13,21 +13,24 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import com.paintwar.client.view.MainWindow;
 import com.paintwar.client.view.components.BackButton;
 import com.paintwar.client.view.components.ParametersButton;
 
 public class LogIn extends JPanel {
 
 	private static final long serialVersionUID = 7402238299632129019L;
+	private MainWindow manager;
 	
-	public LogIn() {
+	public LogIn(MainWindow parent) {
 		super();
+		manager = parent;
 		this.setLayout(new BorderLayout());
 		
 		JPanel shortcuts = new JPanel();
 		shortcuts.setLayout(new FlowLayout(FlowLayout.RIGHT));
-		shortcuts.add(new ParametersButton());
-		shortcuts.add(new BackButton(PageName.CONNEXION_CHOICE));
+		shortcuts.add(new ParametersButton(manager));
+		shortcuts.add(new BackButton(PageName.CONNEXION_CHOICE, manager));
 		add(shortcuts, BorderLayout.NORTH);
 		shortcuts.setAlignmentX(RIGHT_ALIGNMENT);
 		

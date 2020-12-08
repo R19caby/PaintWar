@@ -1,4 +1,5 @@
 package com.paintwar.client.view.pages;
+import com.paintwar.client.view.MainWindow;
 import com.paintwar.client.view.components.ButtonFactory;
 import com.paintwar.client.view.components.ParametersButton;
 import com.paintwar.client.view.components.QuitAppButton;
@@ -7,26 +8,27 @@ import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 
 import javax.swing.BoxLayout;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class ConnexionChoice extends JPanel {
 	
 	private static final long serialVersionUID = 7891834666568908781L;
+	private MainWindow manager;
 
-	public ConnexionChoice() {
+	public ConnexionChoice(MainWindow parent) {
 		super();
+		manager = parent;
 		setLayout(new BorderLayout());
 		JPanel center = new JPanel();
 		JPanel north = new JPanel();
 		north.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		
 		JLabel logo = new JLabel("Logo");
-		ButtonFactory logInButton = new ButtonFactory("Se connecter", PageName.LOG_IN);
-		ButtonFactory signInButton = new ButtonFactory("Rejoindre", PageName.SIGN_IN);
-		ButtonFactory guestButton = new ButtonFactory("Continuer en tant qu'invité", PageName.GUEST);
-		ParametersButton param = new ParametersButton();
+		ButtonFactory logInButton = new ButtonFactory("Se connecter", PageName.LOG_IN, manager);
+		ButtonFactory signInButton = new ButtonFactory("Rejoindre", PageName.SIGN_IN, manager);
+		ButtonFactory guestButton = new ButtonFactory("Continuer en tant qu'invitï¿½", PageName.GUEST, manager);
+		ParametersButton param = new ParametersButton(manager);
 		QuitAppButton quit = new QuitAppButton();
 		
 		

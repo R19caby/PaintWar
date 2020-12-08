@@ -9,7 +9,7 @@ public class TestAccountCreation {
 	public static void main(String[] args) {
 		JFrame window = new JFrame();
 		window.setSize(new Dimension(500, 500));
-		window.add(new AccountCreation());
+		window.add(new AccountCreation(null));
 		window.setVisible(true);
 	}
 
