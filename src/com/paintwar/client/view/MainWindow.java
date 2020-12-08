@@ -3,9 +3,13 @@ package com.paintwar.client.view;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.File;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -35,6 +39,17 @@ public class MainWindow extends JFrame {
 	private JPanel contentContainer;
 	private String playerName;
 	
+	public void paintComponent(Graphics g) {
+        try {
+        	super.paintComponents(g);
+        	
+        	File imageFile = new File("graphicResources.paint.png");
+        	Image img = ImageIO.read(imageFile);
+            g.drawImage(img, 0, 0, this.getWidth(), this.getHeight(), this);
+            this.repaint();
+        } catch (Exception e ) {
+        }
+    }
 	
 	public MainWindow() {
 		super();

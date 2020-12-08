@@ -1,8 +1,10 @@
-package com.paintwar.client.view.pages;
+package com.paintwar.client.view.pagetests;
 
 import java.awt.Dimension;
 
 import javax.swing.JFrame;
+
+import com.paintwar.client.view.pages.AccountCreation;
 
 public class TestAccountCreation {
 	
