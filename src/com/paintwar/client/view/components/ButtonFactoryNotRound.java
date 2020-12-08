@@ -9,7 +9,12 @@ import javax.swing.JButton;
 import com.paintwar.client.view.MainWindow;
 import com.paintwar.client.view.pages.PageName;
 
-public class ButtonFactory extends RoundButton {
+/**
+ * A voir si c'est utile d'avoir des boutons non ronds.
+ * @author R19Caby
+ *
+ */
+public class ButtonFactoryNotRound extends JButton {
 	
 	/**
 	 * 
@@ -19,7 +24,7 @@ public class ButtonFactory extends RoundButton {
 	private String cardName;
 	private MainWindow manager;
 	
-	public ButtonFactory(String name, PageName pageName, MainWindow parent) {
+	public ButtonFactoryNotRound(String name, PageName pageName, MainWindow parent) {
 		super(name);
 		manager = parent;
 		addActionListener(new RedirectActionListener(pageName.toString()));
