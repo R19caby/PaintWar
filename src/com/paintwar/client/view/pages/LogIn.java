@@ -17,7 +17,6 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import com.paintwar.client.view.MainWindow;
-import com.paintwar.client.view.components.BackButton;
 import com.paintwar.client.view.components.ButtonFactory;
 
 public class LogIn extends JPanel {

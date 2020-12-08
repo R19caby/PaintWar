@@ -90,7 +90,7 @@ public class ButtonFactory
 		public void actionPerformed(ActionEvent e)
 		{
 			CardLayout cl = (CardLayout) (manager.getContentContainer().getLayout());
-			cl.show(manager.getContentContainer(), getName());
+			cl.show(manager.getContentContainer(), pageName+"");
 		}
 
 	}
