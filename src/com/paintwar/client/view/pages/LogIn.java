@@ -18,7 +18,7 @@ import javax.swing.JTextField;
 
 import com.paintwar.client.view.MainWindow;
 import com.paintwar.client.view.components.BackButton;
-import com.paintwar.client.view.components.ParametersButton;
+import com.paintwar.client.view.components.ButtonFactory;
 
 public class LogIn extends JPanel {
 
@@ -33,8 +33,8 @@ public class LogIn extends JPanel {
 		
 		JPanel shortcuts = new JPanel();
 		shortcuts.setLayout(new FlowLayout(FlowLayout.RIGHT));
-		shortcuts.add(new ParametersButton(manager));
-		shortcuts.add(new BackButton(PageName.CONNEXION_CHOICE, manager));
+		shortcuts.add(ButtonFactory.getInstance().getButton("Paramètres", PageName.PARAMETERS, manager));
+		shortcuts.add(ButtonFactory.getInstance().getButton("Retour", PageName.CONNEXION_CHOICE, manager));
 		add(shortcuts, BorderLayout.NORTH);
 		shortcuts.setAlignmentX(RIGHT_ALIGNMENT);
 		

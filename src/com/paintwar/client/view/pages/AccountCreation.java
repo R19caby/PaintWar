@@ -20,7 +20,6 @@ import javax.swing.JTextField;
 import com.paintwar.client.view.MainWindow;
 import com.paintwar.client.view.components.BackButton;
 import com.paintwar.client.view.components.ButtonFactory;
-import com.paintwar.client.view.components.ParametersButton;
 
 public class AccountCreation extends JPanel {
 	
@@ -35,8 +34,8 @@ public class AccountCreation extends JPanel {
 		
 		JPanel shortcuts = new JPanel();
 		shortcuts.setLayout(new FlowLayout(FlowLayout.RIGHT));
-		shortcuts.add(new ParametersButton(manager));
-		shortcuts.add(new BackButton(PageName.CONNEXION_CHOICE, manager));
+		shortcuts.add(ButtonFactory.getInstance().getButton("Parameters", PageName.PARAMETERS, manager));
+		shortcuts.add(ButtonFactory.getInstance().getButton("Back", PageName.CONNEXION_CHOICE, manager));
 		add(shortcuts, BorderLayout.NORTH);
 		shortcuts.setAlignmentX(RIGHT_ALIGNMENT);
 		
@@ -97,7 +96,7 @@ public class AccountCreation extends JPanel {
 		
 		JPanel south = new JPanel();
 		add(south, BorderLayout.SOUTH);
-		ButtonFactory validate = new ButtonFactory("Valider", PageName.HOME, parent);
+		JButton validate = ButtonFactory.getInstance().getButton("Valider", PageName.HOME, parent);
 		south.add(validate, BorderLayout.SOUTH);
 		
 		

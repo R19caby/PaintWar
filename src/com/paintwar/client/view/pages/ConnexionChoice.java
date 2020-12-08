@@ -1,7 +1,6 @@
 package com.paintwar.client.view.pages;
 import com.paintwar.client.view.MainWindow;
 import com.paintwar.client.view.components.ButtonFactory;
-import com.paintwar.client.view.components.ParametersButton;
 import com.paintwar.client.view.components.QuitAppButton;
 
 import java.awt.BorderLayout;
@@ -12,6 +11,7 @@ import java.awt.Font;
 import java.awt.GridLayout;
 
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -30,9 +30,9 @@ public class ConnexionChoice extends JPanel {
 		
 		JLabel logo = new JLabel("Paint War");
 		logo.setFont(new Font(logo.getFont().getName(), logo.getFont().getSize(), logo.getFont().getSize() + 100));
-		ButtonFactory logInButton = new ButtonFactory("Se connecter", PageName.LOG_IN, manager);
-		ButtonFactory signInButton = new ButtonFactory("Rejoindre", PageName.SIGN_IN, manager);
-		ButtonFactory guestButton = new ButtonFactory("Continuer en tant qu'invité", PageName.GUEST, manager);
+		JButton logInButton = ButtonFactory.getInstance().getButton("Se connecter", PageName.LOG_IN, manager);
+		JButton signInButton = ButtonFactory.getInstance().getButton("Rejoindre", PageName.SIGN_IN, manager);
+		JButton guestButton = ButtonFactory.getInstance().getButton("Continuer en tant qu'invité", PageName.GUEST, manager);
 		logInButton.setPreferredSize(new Dimension(200, 40));
 		signInButton.setPreferredSize(new Dimension(200, 40));
 		guestButton.setPreferredSize(new Dimension(200, 40));
@@ -42,7 +42,7 @@ public class ConnexionChoice extends JPanel {
 		logInButtonPanel.add(logInButton);
 		signInButtonPanel.add(signInButton);
 		guestButtonPanel.add(guestButton);
-		ParametersButton param = new ParametersButton(manager);
+		JButton param = ButtonFactory.getInstance().getParameterButton(manager);
 		QuitAppButton quit = new QuitAppButton(manager);
 		
 		JPanel logoPanel = new JPanel();

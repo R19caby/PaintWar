@@ -50,7 +50,7 @@ public class Parameters extends JPanel {
 		titlePanel.add(parametersTitle);
 		north.add(titlePanel);
 
-		ButtonFactory validateButton = new ButtonFactory("Valider", PageName.PARAMETERS, manager);
+		JButton validateButton = ButtonFactory.getInstance().getButton("Valider", PageName.PARAMETERS, manager);
 		south.add(validateButton);
 
 		JPanel categoryPanel = new JPanel();
