@@ -1,6 +1,8 @@
 package com.paintwar.client.view;
 
 import java.awt.BorderLayout;
+import java.awt.CardLayout;
+import java.awt.Dimension;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
@@ -20,6 +22,7 @@ import com.paintwar.client.view.pages.Shop;
 
 public class MainWindow extends JFrame {
 	
+	private static final long serialVersionUID = -1263567319246462529L;
 	private ConnexionChoice connexionChoicePage;
 	private LogIn logInPage;
 	private AccountCreation accountCreationPage;
@@ -29,6 +32,7 @@ public class MainWindow extends JFrame {
 	private SetEnd setEndPage;
 	private Shop shopPage;
 	
+	private JPanel contentContainer;
 	private String playerName;
 	
 	
@@ -38,21 +42,25 @@ public class MainWindow extends JFrame {
 		setLayout(new BorderLayout());
 		setVisible(true);
 		
-		JPanel contentContainer = new JPanel();
+		contentContainer = new JPanel();
 		add(contentContainer, BorderLayout.CENTER);
+		contentContainer.setLayout(new CardLayout());
 		
 		connexionChoicePage = new ConnexionChoice(this);
 		logInPage = new LogIn(this);
 		accountCreationPage = new AccountCreation(this);
+		parametersPage = new Parameters(this);
 		contentContainer.add(PageName.CONNEXION_CHOICE.toString(), connexionChoicePage);
 		contentContainer.add(PageName.LOG_IN.toString(), logInPage);
 		contentContainer.add(PageName.SIGN_IN.toString(), accountCreationPage);
-		
+		contentContainer.add(PageName.PARAMETERS.toString(), parametersPage);
 		
 		
 	}
 	
-	
+	public JPanel getContentContainer() {
+		return contentContainer;
+	}
 	
 	
 	public class MyWindowListener implements WindowListener {
@@ -72,6 +80,11 @@ public class MainWindow extends JFrame {
 		}
 		public void windowOpened(WindowEvent arg0) {
 		}
+	}
+	
+	public static void main(String[] args) {
+		MainWindow window = new MainWindow();
+		window.setSize(new Dimension(1800, 900));
 	}
 	
 }

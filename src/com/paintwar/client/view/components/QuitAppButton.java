@@ -5,11 +5,17 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 
+import com.paintwar.client.view.MainWindow;
+
 public class QuitAppButton extends JButton {
 
 	private static final long serialVersionUID = -5498137514568853518L;
-	public QuitAppButton() {
+	private MainWindow manager;
+	
+	public QuitAppButton(MainWindow parent) {
 		super("Quitter");
+		manager = parent;
+		addActionListener(new EndAppListener());
 		/*
 		 * Ici les modifs graphiques genre couleur etc
 		 */
@@ -19,7 +25,9 @@ public class QuitAppButton extends JButton {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			manager.dispose();
 			System.exit(0);
+			
 			
 		}
 		

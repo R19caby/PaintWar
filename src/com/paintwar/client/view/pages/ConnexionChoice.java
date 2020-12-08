@@ -29,7 +29,7 @@ public class ConnexionChoice extends JPanel {
 		ButtonFactory signInButton = new ButtonFactory("Rejoindre", PageName.SIGN_IN, manager);
 		ButtonFactory guestButton = new ButtonFactory("Continuer en tant qu'invit�", PageName.GUEST, manager);
 		ParametersButton param = new ParametersButton(manager);
-		QuitAppButton quit = new QuitAppButton();
+		QuitAppButton quit = new QuitAppButton(manager);
 		
 		
 		JPanel logoPanel = new JPanel();
