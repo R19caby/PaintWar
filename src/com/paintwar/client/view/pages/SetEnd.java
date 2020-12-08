@@ -18,6 +18,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.SwingConstants;
+import javax.swing.Timer;
 
 public class SetEnd extends JPanel{
 	
@@ -33,6 +34,9 @@ public class SetEnd extends JPanel{
 	private static final Dimension DIMENSION_TEAM_LEADERBOARD = new Dimension(150, 30);
 	private static final Dimension DIMENSION_BUTTON_CHANGE_STAT_CATEGORY = new Dimension(250, 40);
 	private static final Color COLOR_STAT = Color.LIGHT_GRAY;
+	private int remainingTime = 30;
+	private JLabel timerLabel;
+	private Timer timer;
 	public SetEnd() {
 		setLayout(new BorderLayout(10, 100));
 		JPanel center = new JPanel();
@@ -81,7 +85,10 @@ public class SetEnd extends JPanel{
 		statsDisplayerPanel.add(statsPlayerLeadPanel, PLAY_LEAD_STATS);
 		statsDisplayerPanel.add(statsMapStatePanel, MAP_STATE_STATS);
 		
-		JLabel timerLabel = new JLabel("Manche suivante dans 29s");
+		timerLabel = new JLabel("Next round in " + remainingTime + "s");
+		incrFontSize(12, timerLabel);
+		ActionListener timerListener = new TimerActionListener();
+		timer = new Timer(1000, timerListener);
 		JPanel timerPanel = new JPanel();
 		timerPanel.setPreferredSize(DIMENSION_TIMER);
 		timerPanel.setBorder(BorderFactory.createLineBorder(Color.black));
@@ -144,6 +151,23 @@ public class SetEnd extends JPanel{
 		JLabel resultLabel = new JLabel("Raphaël a gagné !");
 		incrFontSize(10, resultLabel);
 		resultPanel.add(resultLabel);
+		
+		
+		timer.start();
+	}
+	
+	private class TimerActionListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if (remainingTime > 0) {
+			remainingTime --;
+			timerLabel.setText("Next round in " + remainingTime + "s");
+			} else  {
+				//Redirection vers page de jeu.
+				timer.stop();
+			}
+		}
 		
 	}
 	
