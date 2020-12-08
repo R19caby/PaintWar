@@ -22,27 +22,31 @@ import javax.swing.ScrollPaneConstants;
 import com.paintwar.client.view.components.ButtonFactory;
 import com.paintwar.client.view.components.Header;
 
-public class Collection extends JPanel {
+public class Codex extends JPanel{
 
-	private static final long serialVersionUID = -916442714757214449L;
+	private static final long serialVersionUID = -7550865054233894692L;
+	private final static String ITEM = "Éléments de cosmétique";
 	private final static String AVATAR = "Avatars";
 	private final static String BORDER = "Bordures";
 	private final static String CURSOR = "Curseurs";
 	private final static String TEXTURE = "Textures";
+	private final static String BIGITEM = "Grands éléments";
+	private final static String SPELL = "Sorts";
 	
-	private String playerName;
 	private JLabel effectiveTitle;
 	private JPanel container;
+	private JButton bigItemBtn;
+	private JButton spellBtn;
+	private JButton itemBtn;
 	private JButton avatarBtn;
 	private JButton borderBtn;
 	private JButton cursorBtn;
 	private JButton textureBtn;
 	
-	public Collection(String s) {
+	public Codex() {
 		super();
-		this.playerName = s;
 		this.setLayout(new BorderLayout());
-		
+		 
 		Header header = new Header();
 		this.add(header, BorderLayout.NORTH);
 		
@@ -51,23 +55,27 @@ public class Collection extends JPanel {
 		center.setLayout(new BorderLayout(10, 10));
 		JPanel titlePanel = new JPanel();
 		center.add(titlePanel, BorderLayout.NORTH);
-		effectiveTitle = new JLabel(AVATAR);
+		effectiveTitle = new JLabel(BIGITEM);
 		titlePanel.add(effectiveTitle);
-
+		
 		container = new JPanel();
 		center.add(container);
 		container.setLayout(new CardLayout());
+		JScrollPane bigItemPane = buildItemPanel(BIGITEM);
+		container.add(bigItemPane, BIGITEM);
+		JScrollPane spellPane = buildItemPanel(SPELL);
+		container.add(spellPane, SPELL);
+		JScrollPane itemPane = buildItemPanel(ITEM);
+		container.add(itemPane, ITEM);
 		JScrollPane avatarPane = buildItemPanel(AVATAR);
-		container.add(avatarPane, AVATAR);
-		
+		container.add(avatarPane, AVATAR);		
 		JScrollPane borderPane = buildItemPanel(BORDER);
-		container.add(borderPane, BORDER);
-		
+		container.add(borderPane, BORDER);		
 		JScrollPane cursorPane = buildItemPanel(CURSOR);
-		container.add(cursorPane, CURSOR);
-		
+		container.add(cursorPane, CURSOR);		
 		JScrollPane texturePane = buildItemPanel(TEXTURE);
 		container.add(texturePane, TEXTURE);
+		
 		
 		
 		JPanel west = new JPanel();
@@ -75,42 +83,52 @@ public class Collection extends JPanel {
 		west.setLayout(new BorderLayout(100, 100));
 		west.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
 		
-		ButtonFactory codex = new ButtonFactory("Codex", PageName.CODEX);
-		codex.setPreferredSize(new Dimension(200, 60));
-		west.add(codex, BorderLayout.NORTH);
+		ButtonFactory inventory = new ButtonFactory("Inventaire", PageName.COLLECTION);
+		inventory.setPreferredSize(new Dimension(200, 60));
+		west.add(inventory, BorderLayout.NORTH);
 		
 		JPanel categories = new JPanel();
-		west.add(categories, BorderLayout.CENTER);
 		categories.setLayout(new BoxLayout(categories, BoxLayout.PAGE_AXIS));
-		JLabel categoriesTitle = new JLabel("Cat�gories");
-		categoriesTitle.setAlignmentX(CENTER_ALIGNMENT);
-		categories.add(categoriesTitle);
-		avatarBtn = new JButton(AVATAR);
-		avatarBtn.setAlignmentX(CENTER_ALIGNMENT);
-		categories.add(avatarBtn);
-		avatarBtn.setEnabled(false);
-		avatarBtn.addActionListener(new CategoryListener(AVATAR, avatarBtn));
-		borderBtn = new JButton(BORDER);
-		borderBtn.setAlignmentX(CENTER_ALIGNMENT);
-		categories.add(borderBtn);
-		borderBtn.addActionListener(new CategoryListener(BORDER, borderBtn));	
-		cursorBtn = new JButton(CURSOR);
-		cursorBtn.setAlignmentX(CENTER_ALIGNMENT);
-		categories.add(cursorBtn);
-		cursorBtn.addActionListener(new CategoryListener(CURSOR, cursorBtn));
-		textureBtn = new JButton(TEXTURE);
-		textureBtn.setAlignmentX(CENTER_ALIGNMENT);
-		categories.add(textureBtn);
-		textureBtn.addActionListener(new CategoryListener(TEXTURE, textureBtn));
-			
+		west.add(categories, BorderLayout.CENTER);
+		bigItemBtn = new JButton(BIGITEM);
+		bigItemBtn.setPreferredSize(new Dimension(200, 60));
+		bigItemBtn.setAlignmentX(CENTER_ALIGNMENT);
+		categories.add(bigItemBtn);
+		bigItemBtn.setEnabled(false);
+		bigItemBtn.addActionListener(new CategoryListener(BIGITEM, bigItemBtn));
+		spellBtn = new JButton(SPELL);
+		spellBtn.setPreferredSize(new Dimension(200, 60));
+		spellBtn.setAlignmentX(CENTER_ALIGNMENT);
+		categories.add(spellBtn);
+		spellBtn.addActionListener(new CategoryListener(SPELL, spellBtn));
+		itemBtn = new JButton(ITEM);
+		itemBtn.setPreferredSize(new Dimension(200, 60));
+		itemBtn.setAlignmentX(CENTER_ALIGNMENT);
+		categories.add(itemBtn);
+		itemBtn.addActionListener(new CategoryListener(ITEM, itemBtn));
+				
+		JPanel itemCategories = new JPanel();
+		itemCategories.setLayout(new BoxLayout(itemCategories, BoxLayout.PAGE_AXIS));
+		categories.add(itemCategories);
+		avatarBtn = new JButton("► Avatars");
+		avatarBtn.setAlignmentX(LEFT_ALIGNMENT);
+		itemCategories.add(avatarBtn);
+		avatarBtn.addActionListener(new CategoryListener(ITEM + " : " + AVATAR, avatarBtn));
+		borderBtn = new JButton("► Bordures");
+		borderBtn.setAlignmentX(LEFT_ALIGNMENT);
+		itemCategories.add(borderBtn);
+		borderBtn.addActionListener(new CategoryListener(ITEM + " : " + BORDER, borderBtn));	
+		cursorBtn = new JButton("► Curseurs");
+		cursorBtn.setAlignmentX(LEFT_ALIGNMENT);
+		itemCategories.add(cursorBtn);
+		cursorBtn.addActionListener(new CategoryListener(ITEM + " : " + CURSOR, cursorBtn));
+		textureBtn = new JButton("► Textures");
+		textureBtn.setAlignmentX(LEFT_ALIGNMENT);
+		itemCategories.add(textureBtn);
+		textureBtn.addActionListener(new CategoryListener(ITEM + " : " + TEXTURE, textureBtn));
 		
 		JPanel filterPanel = buildFilterPanel();
 		west.add(filterPanel, BorderLayout.SOUTH);
-		
-		
-		
-		
-		
 	}
 	
 	public JScrollPane buildItemPanel(String cat) {
@@ -118,7 +136,7 @@ public class Collection extends JPanel {
 		itemCard.setMinimumSize(new Dimension(800, 800));
 		JScrollPane itemPane = new JScrollPane(itemCard, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		JPanel itemGrid = new JPanel();
-		itemGrid.setLayout(new GridLayout(0, 3, 10, 10));
+		itemGrid.setLayout(new GridLayout(0, 1, 10, 10));
 		itemGrid.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		itemGrid.setMinimumSize(new Dimension(800, 800));
 		itemCard.add(itemGrid);
@@ -134,17 +152,17 @@ public class Collection extends JPanel {
 		JPanel card9 = new JPanel();
 		JPanel card10 = new JPanel();
 		JPanel card11 = new JPanel();
-		JLabel title1 = new JLabel(cat+"1");
-		JLabel title2 = new JLabel(cat+"2");
-		JLabel title3 = new JLabel(cat+"3");
-		JLabel title4 = new JLabel(cat+"4");
-		JLabel title5 = new JLabel(cat+"5");
-		JLabel title6 = new JLabel(cat+"6");
-		JLabel title7 = new JLabel(cat+"7");
-		JLabel title8 = new JLabel(cat+"8");
-		JLabel title9 = new JLabel(cat+"9");
-		JLabel title10 = new JLabel(cat+"10");
-		JLabel title11 = new JLabel(cat+"11");
+		JLabel title1 = new JLabel(cat+"1"+" \n "+"Explications, détail et description de l'item.");
+		JLabel title2 = new JLabel(cat+"2"+" \n "+"Explications, détail et description de l'item.");
+		JLabel title3 = new JLabel(cat+"3"+" \n "+"Explications, détail et description de l'item.");
+		JLabel title4 = new JLabel(cat+"4"+" \n "+"Explications, détail et description de l'item.");
+		JLabel title5 = new JLabel(cat+"5"+" \n "+"Explications, détail et description de l'item.");
+		JLabel title6 = new JLabel(cat+"6"+" \n "+"Explications, détail et description de l'item.");
+		JLabel title7 = new JLabel(cat+"7"+" \n "+"Explications, détail et description de l'item.");
+		JLabel title8 = new JLabel(cat+"8"+" \n "+"Explications, détail et description de l'item.");
+		JLabel title9 = new JLabel(cat+"9"+" \n "+"Explications, détail et description de l'item.");
+		JLabel title10 = new JLabel(cat+"10"+" \n "+"Explications, détail et description de l'item.");
+		JLabel title11 = new JLabel(cat+"11"+" \n "+"Explications, détail et description de l'item.");
 		card1.add(title1);
 		card2.add(title2);
 		card3.add(title3);
@@ -157,28 +175,17 @@ public class Collection extends JPanel {
 		card10.add(title10);
 		card11.add(title11);
 		
-		card1.setMaximumSize(new Dimension(100, 75));
-		card2.setMaximumSize(new Dimension(100, 75));
-		card3.setMaximumSize(new Dimension(100, 75));
-		card4.setMaximumSize(new Dimension(100, 75));
-		card5.setMaximumSize(new Dimension(100, 75));
-		card6.setMaximumSize(new Dimension(100, 75));
-		card7.setMaximumSize(new Dimension(100, 75));
-		card8.setMaximumSize(new Dimension(100, 75));
-		card9.setMaximumSize(new Dimension(100, 75));
-		card10.setMaximumSize(new Dimension(100, 75));
-		card11.setMaximumSize(new Dimension(100, 75));
-		card1.setMinimumSize(new Dimension(100, 25));
-		card2.setMinimumSize(new Dimension(100, 25));
-		card3.setMinimumSize(new Dimension(100, 25));
-		card4.setMinimumSize(new Dimension(100, 25));
-		card5.setMinimumSize(new Dimension(100, 25));
-		card6.setMinimumSize(new Dimension(100, 25));
-		card7.setMinimumSize(new Dimension(100, 25));
-		card8.setMinimumSize(new Dimension(100, 25));
-		card9.setMinimumSize(new Dimension(100, 25));
-		card10.setMinimumSize(new Dimension(100, 25));
-		card11.setMinimumSize(new Dimension(100, 25));
+		card1.setMinimumSize(new Dimension(800, 60));
+		card2.setMinimumSize(new Dimension(800, 60));
+		card3.setMinimumSize(new Dimension(800, 60));
+		card4.setMinimumSize(new Dimension(800, 60));
+		card5.setMinimumSize(new Dimension(800, 60));
+		card6.setMinimumSize(new Dimension(800, 60));
+		card7.setMinimumSize(new Dimension(800, 60));
+		card8.setMinimumSize(new Dimension(800, 60));
+		card9.setMinimumSize(new Dimension(800, 60));
+		card10.setMinimumSize(new Dimension(800, 60));
+		card11.setMinimumSize(new Dimension(800, 60));
 		
 		card1.setBackground(Color.white);
 		card2.setBackground(Color.white);
@@ -218,6 +225,7 @@ public class Collection extends JPanel {
 		return itemPane;
 	}
 	
+	
 	public JPanel buildFilterPanel() {
 		JPanel filterPanel = new JPanel();
 		filterPanel.setLayout(new BoxLayout(filterPanel, BoxLayout.PAGE_AXIS));
@@ -230,10 +238,10 @@ public class Collection extends JPanel {
 		filterType.setPreferredSize(new Dimension(200, 20));
 		filterType.setMaximumSize(new Dimension(200, 20));
 		filterType.addItemListener(new SelectType(filterType));
-		filterType.addItem("Ordre alphab�tique");
-		filterType.addItem("Ordre alphab�tique inverse");
+		filterType.addItem("Ordre alphabétique");
+		filterType.addItem("Ordre alphabétique inverse");
 		filterType.addItem("Date d'acquisition croissante");
-		filterType.addItem("Date d'acquisition d�croissante");
+		filterType.addItem("Date d'acquisition décroissante");
 				
 		JPanel voidPanel = new JPanel();
 		voidPanel.setPreferredSize((new Dimension(200, 100)));
@@ -242,29 +250,7 @@ public class Collection extends JPanel {
 		return filterPanel;
 	}
 	
-	
-	public class CategoryListener implements ActionListener{
-		private String category;
-		private JButton button;
-		public CategoryListener(String category, JButton button) {
-			this.category = category;
-			this.button = button;
-		}
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			CardLayout cl = (CardLayout) (container.getLayout());
-            cl.show(container, category);
-			effectiveTitle.setText(category);
-			avatarBtn.setEnabled(true);
-			borderBtn.setEnabled(true);
-			cursorBtn.setEnabled(true);
-			textureBtn.setEnabled(true);
-			button.setEnabled(false);
-			
-		}
-	}
-	
-	public class SelectType implements ItemListener {
+public class SelectType implements ItemListener {
 		
 		private JComboBox<String> choice;
 		
@@ -282,10 +268,28 @@ public class Collection extends JPanel {
 		
 	}
 	
-	public void addItem(String category, String name, String description, boolean unlocked, String imgSourcePath) {
-		//get all the info to create the item and than add it in the good category
+	public class CategoryListener implements ActionListener{
+		private String category;
+		private JButton button;
+		public CategoryListener(String category, JButton button) {
+			this.category = category;
+			this.button = button;
+		}
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			CardLayout cl = (CardLayout) (container.getLayout());
+            cl.show(container, category);
+			effectiveTitle.setText(category);
+			avatarBtn.setEnabled(true);
+			borderBtn.setEnabled(true);
+			cursorBtn.setEnabled(true);
+			textureBtn.setEnabled(true);
+			bigItemBtn.setEnabled(true);
+			spellBtn.setEnabled(true);
+			itemBtn.setEnabled(true);
+			button.setEnabled(false);
+			
+		}
 	}
-	
-	
 
 }
