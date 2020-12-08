@@ -3,25 +3,48 @@ package com.paintwar.client.controller.game;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Point;
+import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.swing.JFrame;
 
 import com.paintwar.client.logger.Logger;
+import com.paintwar.client.model.communication.gameio.GameIOReceiver;
 import com.paintwar.client.view.pages.game.GamePage;
+import com.paintwar.client.view.pages.game.elements.DrawZone;
 import com.paintwar.client.view.pages.game.listeners.FrameResizeListener;
+import com.paintwar.server.service.game.DrawServerProxy;
+import com.paintwar.server.service.game.IDrawServerProxy;
 
 
 public class GameEntity implements IGameEntity {
 	
 	private int drawCount;
+	private DrawZone drawZone;
+	private GameIOReceiver ioClient;
 	private HashMap<String, DrawingProxy> drawings;
+	private List<Thread> threads;
+	private JFrame currentWindow;
+	private GamePage gamepage;
 	
 	GameEntity() {
 		drawings = new HashMap<String, DrawingProxy>();
+		threads = new ArrayList<Thread>();
 		drawCount = 0;
+		currentWindow = new JFrame();
+		gamepage = new GamePage(this, threads);
+		this.drawZone = gamepage.getDrawZone();
+		
+		currentWindow.addComponentListener(new FrameResizeListener(gamepage));
+		currentWindow.getContentPane().add(gamepage, BorderLayout.CENTER);
 	}
 	
+	public void setIoClient(GameIOReceiver ioClient) {
+		this.ioClient = ioClient;
+	}
+
 	private void deleteAllDrawings() {
 		drawings.clear();
 		drawCount = 0;
@@ -32,45 +55,75 @@ public class GameEntity implements IGameEntity {
 		this.deleteAllDrawings();
 	}
 
-	@Override
-	public String paint(Point p1, Point p2, Color c) {
-		String drawName = "draw" + drawCount++;
-		
-		drawings.put(drawName, new DrawingProxy(p1, p2, c, DrawingProxy.RECTANGLE));
+	@Override 
+	public String paintClient(Point p1, Point p2, Color c) {
+		//create drawing on server and retrieve draw name 
+		String drawName = ioClient.createDrawing(p1, p2, c, DrawingProxy.RECTANGLE);
 		Logger.print("[Game] Putting drawing named " + drawName);
 		return drawName;
 	}
 	
 	@Override
-	public void updateCoordPaint(String name, Point p1, Point p2) {
-		DrawingProxy drawToChange = drawings.get(name);
-		if (drawToChange != null) {
-			drawToChange.setBounds(p1, p2);
-		} else {
-			Logger.print("[Game] Couldn't find drawing proxy to change coord");
-		}
+	public DrawingProxy addDrawing(IDrawServerProxy proxy, String name, Point p1, Point p2, Color c) {
+		//create drawing
+		DrawingProxy drawing = new DrawingProxy(proxy, p1, p2, c, DrawingProxy.RECTANGLE);
+		
+		//add to the list
+		drawings.put(name, drawing);
+		
+		//update zone
+		drawZone.addDrawing(name, p1, p2, c);
+		
+		return drawing;
 	}
 	
 	@Override
-	public void updateEndPointPaint(String name, Point p) {
+	public void removeDrawing(String name) {
+		drawZone.deleteDrawing(name);
+	}
+	
+	@Override
+	public void updateCoordPaint(String name, Point p1, Point p2) {
+		drawZone.updateDraw(name, p1, p2);
+	}
+	
+	@Override
+	public void updateCoordPaint(String name, Point p) {
+		drawZone.updateEndPointDraw(name, p);
+		DrawingProxy drawToChange = drawings.get(name);
+	}
+	
+	@Override
+	public void updateCoordPaintClient(String name, Point p) {
 		DrawingProxy drawToChange = drawings.get(name);
 		if (drawToChange != null) {
-			drawToChange.setBounds(drawToChange.getCoord(), p);
+			ioClient.updateBoundsrequest(name, drawToChange.getCoord(), p);
 		} else {
 			Logger.print("[Game] Couldn't find drawing proxy to change coord");
 		}
 	}
+
 	
-	public static void main(String[] args) {
-		JFrame window = new JFrame();
-		GameEntity ge = new GameEntity();
-		GamePage gp = new GamePage(ge);
-		
-		window.addComponentListener(new FrameResizeListener(gp));
-		window.getContentPane().add(gp, BorderLayout.CENTER);
-		
-		window.setVisible(true);
-		window.setSize(700, 400);
-		gp.updatePage(700, 400);
+	public boolean hasDrawing(String name) {
+		return drawings.containsKey(name);
 	}
+	
+	public void openGame() {
+		currentWindow.setVisible(true);
+		currentWindow.setSize(700, 400);
+		gamepage.updatePage(700, 400);
+	}
+	
+	public void closeGame() {
+		//close window
+		currentWindow.setVisible(false);
+		currentWindow.dispose();
+		currentWindow = null;
+		
+		//stop all threads
+		for (Thread thread : threads) {
+			thread.interrupt();
+		}
+	}
+
 }

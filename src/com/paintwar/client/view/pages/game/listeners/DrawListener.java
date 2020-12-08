@@ -1,5 +1,6 @@
 package com.paintwar.client.view.pages.game.listeners ;
 
+import java.awt.Color;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -41,7 +42,7 @@ public class DrawListener implements MouseListener, MouseMotionListener {
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		entityDrawnName = drawZone.initializeDraw(e.getPoint());
+		entityDrawnName = drawZone.initializeDraw(e.getPoint(), Color.black);
 	}
 
 	@Override

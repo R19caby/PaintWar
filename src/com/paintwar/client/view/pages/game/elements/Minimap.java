@@ -79,6 +79,23 @@ public class Minimap extends JPanel {
 		} else if (name != null) {
 			Logger.print("[Game/minimap] Couldn't find drawing to change coord");
 		}
+	}
+	
+	public void updatePointPaint(String name, Point oldP1, Point oldP2) {
+		Point newP1 = oldP1.getLocation();
+		Point newP2 = oldP2.getLocation();
+		reScale(newP1);
+		reScale(newP2);
+		Drawing drawToUpdate = miniDraws.get(name);
+		if (drawToUpdate != null) {
+			Rectangle r = new Rectangle(newP1);
+			r.add(newP2);
+			drawToUpdate.setBounds(r);
+			drawToUpdate.setInitPoint(newP1);
+			drawToUpdate.setEndPoint(newP2);
+		} else if (name != null) {
+			Logger.print("[Game/minimap] Couldn't find drawing to change coord");
+		}
 	}	
 	
 	public void updateCameraFrame(int newWidth, int newHeight) {
@@ -90,6 +107,14 @@ public class Minimap extends JPanel {
 		reScale(newPos);
 		//System.out.println("New pos : " + x + "; " + y + " rescaled to " + newPos.x + " ; " + newPos.y);
 		cameraFrame.setLocation(newPos);
+	}
+
+	public void deleteDraw(String name) {
+		Drawing miniDraw = miniDraws.get(name);
+		if (miniDraw != null) {
+			this.remove(miniDraw);
+			this.repaint();
+		}
 	}
 
 

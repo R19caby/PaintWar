@@ -34,10 +34,10 @@ public class DrawZone extends JPanel {
 	}
 	
 	/*Add a drawing to zone and gameEntity*/
-	public String initializeDraw(Point p) {
-		String entiName = gameEntity.paint(p, p, Color.black);
-		minimap.paint(entiName, p, p, Color.black);
-		Drawing newDraw = new Drawing(Color.black);
+	public String initializeDraw(Point p, Color color) {
+		String entiName = gameEntity.paintClient(p, p, color);
+		minimap.paint(entiName, p, p, color);
+		Drawing newDraw = new Drawing(color);
 		drawPanels.put(entiName, newDraw);
 		newDraw.setBounds(new Rectangle(p));
 		newDraw.setInitPoint(p);
@@ -55,8 +55,23 @@ public class DrawZone extends JPanel {
 			r.add(p);
 			drawToUpdate.setBounds(r);
 			drawToUpdate.setEndPoint(p);
-			gameEntity.updateEndPointPaint(name, p);
 			minimap.updateEndPointPaint(name, p);
+			gameEntity.updateCoordPaintClient(name, p);
+		} else if (name != null) {
+			Logger.print("[Game] Couldn't find drawing to change coord");
+		}
+	}
+	
+	/*Update a drawing points*/
+	public void updateDraw(String name, Point p1, Point p2) {
+		Drawing drawToUpdate = drawPanels.get(name);
+		if (drawToUpdate != null) {
+			Rectangle r = new Rectangle(p1);
+			r.add(p2);
+			drawToUpdate.setBounds(r);
+			drawToUpdate.setInitPoint(p1);
+			drawToUpdate.setEndPoint(p2);
+			minimap.updatePointPaint(name, p1, p2);
 		} else if (name != null) {
 			Logger.print("[Game] Couldn't find drawing to change coord");
 		}
@@ -79,10 +94,33 @@ public class DrawZone extends JPanel {
 			r.add(endPoint);
 			currentDraw.setBounds(r);
 			currentDraw.setEndPoint(endPoint);
-			gameEntity.updateEndPointPaint(currentDrawingByUser, endPoint);
+			gameEntity.updateCoordPaintClient(currentDrawingByUser, endPoint);
 			minimap.updateEndPointPaint(currentDrawingByUser, endPoint);
 		}
 		
+	}
+	
+	public void addDrawing(String name, Point p1, Point p2, Color c) {
+		minimap.paint(name, p1, p2, c);
+		Drawing newDraw = new Drawing(c);
+		drawPanels.put(name, newDraw);
+		
+		//generate physical drawing
+		Rectangle r = new Rectangle(p1);
+		r.add(p2);
+		newDraw.setBounds(r);
+		newDraw.setInitPoint(p1);
+		newDraw.setEndPoint(p2);
+		add(newDraw);
+	}
+	
+	public void deleteDrawing(String name) {
+		minimap.deleteDraw(name);
+		Drawing drawing = drawPanels.get(name);
+		if (drawing != null) {
+			this.remove(drawing);
+			this.repaint();
+		}
 	}
 	
 }

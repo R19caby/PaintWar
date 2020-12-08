@@ -31,6 +31,7 @@ public class CameraMoverThread extends Thread implements Runnable {
 				sleep(20);
 			} catch (InterruptedException e) {
 				Logger.print("[Camera] Thread for camera interrupted while sleeping");
+				this.interrupt();
 			}
 		}
 	}

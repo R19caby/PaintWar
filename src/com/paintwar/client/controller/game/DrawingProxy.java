@@ -4,6 +4,9 @@ import java.awt.Color;
 import java.awt.Point;
 import java.awt.Rectangle;
 
+import com.paintwar.server.service.game.DrawServerProxy;
+import com.paintwar.server.service.game.IDrawServerProxy;
+
 public class DrawingProxy {
 	
 	public static int RECTANGLE=0;
@@ -14,8 +17,10 @@ public class DrawingProxy {
 	private int w;
 	private Color color;
 	private int type;
-	
-	public DrawingProxy(int x, int y, int h, int w, Color color, int type) {
+	private IDrawServerProxy proxyServer;
+
+
+	public DrawingProxy(DrawServerProxy proxyServer, int x, int y, int h, int w, Color color, int type) {
 		super();
 		this.x = x;
 		this.y = y;
@@ -23,9 +28,10 @@ public class DrawingProxy {
 		this.w = w;
 		this.color = color;
 		this.type = type;
+		this.proxyServer = proxyServer;
 	}
 	
-	public DrawingProxy(Point p1, Point p2, Color color, int type) {
+	public DrawingProxy(IDrawServerProxy proxy, Point p1, Point p2, Color color, int type) {
 		super();
 		Rectangle r = new Rectangle(p1);
 		r.add(p2);
@@ -35,6 +41,7 @@ public class DrawingProxy {
 		this.w = (int) r.getWidth();
 		this.color = color;
 		this.type = type;
+		this.proxyServer = proxy;
 	}
 	
 	public Point getCoord() {
@@ -88,6 +95,12 @@ public class DrawingProxy {
 		this.type = type;
 	}
 	
-	
+	public IDrawServerProxy getProxyServer() {
+		return proxyServer;
+	}
+
+	public void setProxyServer(IDrawServerProxy proxyServer) {
+		this.proxyServer = proxyServer;
+	}
 	
 }

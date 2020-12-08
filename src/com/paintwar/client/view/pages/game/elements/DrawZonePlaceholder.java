@@ -1,5 +1,7 @@
 package com.paintwar.client.view.pages.game.elements;
 
+import java.util.List;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -16,7 +18,7 @@ public class DrawZonePlaceholder extends JPanel {
 	private Minimap minimap;
 	private CameraMoverThread camThread;
 	
-	public DrawZonePlaceholder(DrawZone zone, Minimap minimap) {
+	public DrawZonePlaceholder(DrawZone zone, Minimap minimap, List<Thread> threads) {
 		super();
 		setLayout(null);
 		this.zoneToScout = zone;
@@ -28,6 +30,7 @@ public class DrawZonePlaceholder extends JPanel {
 		addMouseMotionListener(camLis);
 		
 		camThread.start();
+		threads.add(camThread);
 	}
 	
 	//update the placeholder when the frame gets resized

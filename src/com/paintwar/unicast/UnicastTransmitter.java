@@ -14,13 +14,17 @@ import com.paintwar.server.logger.Logger;
 
 public class UnicastTransmitter implements Serializable
 {
+
+	private static final long serialVersionUID = 1L;
 	private int transmissionPort;
 	private InetAddress transmissionAddress;
 	private transient DatagramSocket transmissionSocket;
+	private String clientIP;
 
-	public UnicastTransmitter(final InetAddress targetAddress, final int transmissionPort) throws RemoteException
+	public UnicastTransmitter(final InetAddress targetAddress, final int transmissionPort, String clientIP) throws RemoteException
 	{
 		this.transmissionPort = transmissionPort;
+		this.clientIP = clientIP;
 		Logger.print("Transmition on port " + transmissionPort + " to client : " + targetAddress);
 		transmissionAddress = targetAddress;
 		transmissionSocket = null;
@@ -68,5 +72,10 @@ public class UnicastTransmitter implements Serializable
 	public int getTransmissionPort() throws RemoteException
 	{
 		return transmissionPort;
+	}
+	
+	public String getClientIP() throws RemoteException
+	{
+		return clientIP;
 	}
 }

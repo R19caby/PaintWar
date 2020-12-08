@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
@@ -25,16 +26,17 @@ public class GamePage extends JLayeredPane {
 	private GameEntity gameEnt;
 	private DrawZonePlaceholder DZPlaceholder;
 	private GameLayerUI layerUI;
+	private DrawZone drawZone;
 	
-	public GamePage(GameEntity gameEnt) {
+	public GamePage(GameEntity gameEnt, List<Thread> threads) {
 		super();
 		this.gameEnt = gameEnt;
 		
 		this.layerUI = new GameLayerUI();
 		
-		DrawZone drawPanel = new DrawZone(gameEnt, layerUI.getMinimap());
+		drawZone = new DrawZone(gameEnt, layerUI.getMinimap());
 		setLayout(null);
-		DZPlaceholder = new DrawZonePlaceholder(drawPanel, layerUI.getMinimap());
+		DZPlaceholder = new DrawZonePlaceholder(drawZone, layerUI.getMinimap(), threads);
 		layerUI.setDZPlaceHolder(DZPlaceholder);
 
 		
@@ -51,5 +53,9 @@ public class GamePage extends JLayeredPane {
 		
 		DZPlaceholder.updateFrame(newFrameW, newFrameH);
 		layerUI.getMinimap().updateCameraFrame(newFrameW, newFrameH);
+	}
+
+	public DrawZone getDrawZone() {
+		return drawZone;
 	}
 }
