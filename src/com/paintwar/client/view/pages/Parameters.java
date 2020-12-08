@@ -30,7 +30,7 @@ public class Parameters extends JPanel {
 	private JLabel pageLabel;
 	private JPanel parametersContainer;
 	private List<JButton> buttonsList = new ArrayList<>();
-	private static final Dimension DIMENSION_PARAM_FIELD = new Dimension(600, 75);
+	private static final Dimension DIMENSION_PARAM_FIELD = new Dimension(700, 75);
 	private static final Dimension DIMENSION_BUTTON = new Dimension(100, 40);
 
 	public Parameters(MainWindow parent) {
@@ -80,23 +80,22 @@ public class Parameters extends JPanel {
 				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
 		parametersContainer.setAutoscrolls(true);
-		scrollPane.setPreferredSize(new Dimension(800, 600));
+		
 		JPanel parametersPanel = new JPanel();
-		parametersPanel.setLayout(new BoxLayout(parametersPanel, BoxLayout.Y_AXIS));
-
+		parametersPanel.setLayout(new BorderLayout(0, 10));
 		pageLabelPanel.add(pageLabel);
-		parametersPanel.add(pageLabelPanel);
-		parametersPanel.add(scrollPane);
+		parametersPanel.add(pageLabelPanel, BorderLayout.NORTH);
+		parametersPanel.add(scrollPane, BorderLayout.CENTER);
 
 		JSplitPane splitPane = new JSplitPane();
-		splitPane.setPreferredSize(new Dimension(800, 600));
+		splitPane.setPreferredSize(new Dimension(900, 720));
 		splitPane.setLeftComponent(categoryPanel);
 		splitPane.setRightComponent(parametersPanel);
 		center.add(splitPane);
 	}
 	
 	private enum Category {
-		GAMEPLAY("Gameplay"), ACCOUNT("Account"),AUDIO("Audio"), VIDEO("Vidéo") ;
+		GAMEPLAY("Gameplay"), ACCOUNT("Account"), AUDIO("Audio"), VIDEO("Vidéo") ;
 		final String name;
 		Category(String name) {
 			this.name = name;
