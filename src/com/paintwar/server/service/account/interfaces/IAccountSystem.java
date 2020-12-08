@@ -54,9 +54,9 @@ public interface IAccountSystem extends Remote
 	 * @param username        The new user's username.
 	 * @param cryptedPassword The new user's crypted password.
 	 * @param salt            The salt used to create the user's crypted password.
-	 * @throws RemoteException              When the server can't be reached.
+	 * @throws RemoteException                  When the server can't be reached.
 	 * @throws AlreadyExistingUsernameException When an user with the same username
-	 *                                      already exists
+	 *                                          already exists
 	 */
 	public void createUser(String username, String cryptedPassword, byte[] salt)
 			throws RemoteException, AlreadyExistingUsernameException;
@@ -69,5 +69,15 @@ public interface IAccountSystem extends Remote
 	 * @throws NoSuchUsernameException When the username doesn't exist.
 	 */
 	public void deleteUser(String username) throws RemoteException, NoSuchUsernameException;
+
+	/**
+	 * Gets the desired user from the database.
+	 * 
+	 * @param username The user's username.
+	 * @return The remote representation of the user.
+	 * @throws RemoteException         When the server can't be reached.
+	 * @throws NoSuchUsernameException When the username doesn't exit.
+	 */
+	public IUser getUser(String username) throws RemoteException, NoSuchUsernameException;
 
 }

@@ -75,4 +75,10 @@ public class AccountSystem implements IAccountSystem
 		}
 	}
 
+	@Override
+	public IUser getUser(String username) throws RemoteException, NoSuchUsernameException
+	{
+		return users.get(username);
+	}
+
 }
