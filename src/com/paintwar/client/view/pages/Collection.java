@@ -19,6 +19,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 
+import com.paintwar.client.view.MainWindow;
 import com.paintwar.client.view.components.ButtonFactory;
 import com.paintwar.client.view.components.Header;
 
@@ -38,12 +39,15 @@ public class Collection extends JPanel {
 	private JButton cursorBtn;
 	private JButton textureBtn;
 	
-	public Collection(String s) {
+	private MainWindow manager;
+	
+	public Collection(String s, MainWindow parent) {
 		super();
+		manager = parent;
 		this.playerName = s;
 		this.setLayout(new BorderLayout());
 		
-		Header header = new Header();
+		Header header = new Header(manager);
 		this.add(header, BorderLayout.NORTH);
 		
 		JPanel center = new JPanel();
@@ -75,14 +79,14 @@ public class Collection extends JPanel {
 		west.setLayout(new BorderLayout(100, 100));
 		west.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
 		
-		ButtonFactory codex = new ButtonFactory("Codex", PageName.CODEX);
+		ButtonFactory codex = new ButtonFactory("Codex", PageName.CODEX, manager);
 		codex.setPreferredSize(new Dimension(200, 60));
 		west.add(codex, BorderLayout.NORTH);
 		
 		JPanel categories = new JPanel();
 		west.add(categories, BorderLayout.CENTER);
 		categories.setLayout(new BoxLayout(categories, BoxLayout.PAGE_AXIS));
-		JLabel categoriesTitle = new JLabel("Catégories");
+		JLabel categoriesTitle = new JLabel("Catï¿½gories");
 		categoriesTitle.setAlignmentX(CENTER_ALIGNMENT);
 		categories.add(categoriesTitle);
 		avatarBtn = new JButton(AVATAR);
@@ -230,10 +234,10 @@ public class Collection extends JPanel {
 		filterType.setPreferredSize(new Dimension(200, 20));
 		filterType.setMaximumSize(new Dimension(200, 20));
 		filterType.addItemListener(new SelectType(filterType));
-		filterType.addItem("Ordre alphabétique");
-		filterType.addItem("Ordre alphabétique inverse");
+		filterType.addItem("Ordre alphabï¿½tique");
+		filterType.addItem("Ordre alphabï¿½tique inverse");
 		filterType.addItem("Date d'acquisition croissante");
-		filterType.addItem("Date d'acquisition décroissante");
+		filterType.addItem("Date d'acquisition dï¿½croissante");
 				
 		JPanel voidPanel = new JPanel();
 		voidPanel.setPreferredSize((new Dimension(200, 100)));

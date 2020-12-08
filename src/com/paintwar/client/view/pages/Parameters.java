@@ -17,10 +17,12 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.ScrollPaneConstants;
 
+import com.paintwar.client.view.MainWindow;
 import com.paintwar.client.view.components.ButtonFactory;
 
 public class Parameters extends JPanel {
 	private static final long serialVersionUID = -2023081651434102668L;
+	private MainWindow manager;
 	private JLabel pageLabel;
 	private JPanel parametersContainer;
 	private JButton gameplayCategory;
@@ -28,8 +30,9 @@ public class Parameters extends JPanel {
 	private JButton audioCategory;
 	private JButton videoCategory;
 
-	public Parameters() {
+	public Parameters(MainWindow parent) {
 		super();
+		manager = parent;
 		setLayout(new BorderLayout());
 		JPanel north = new JPanel();
 		JPanel center = new JPanel();
@@ -44,7 +47,7 @@ public class Parameters extends JPanel {
 		titlePanel.add(parametersTitle);
 		north.add(titlePanel);
 
-		ButtonFactory validateButton = new ButtonFactory("Valider", PageName.PARAMETERS);
+		ButtonFactory validateButton = new ButtonFactory("Valider", PageName.PARAMETERS, manager);
 		south.add(validateButton);
 
 		gameplayCategory = new JButton("Gameplay");

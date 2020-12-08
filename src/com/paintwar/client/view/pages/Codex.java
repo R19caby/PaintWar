@@ -19,6 +19,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 
+import com.paintwar.client.view.MainWindow;
 import com.paintwar.client.view.components.ButtonFactory;
 import com.paintwar.client.view.components.Header;
 
@@ -33,6 +34,7 @@ public class Codex extends JPanel{
 	private final static String BIGITEM = "Grands éléments";
 	private final static String SPELL = "Sorts";
 	
+	private MainWindow manager;
 	private JLabel effectiveTitle;
 	private JPanel container;
 	private JButton bigItemBtn;
@@ -43,11 +45,12 @@ public class Codex extends JPanel{
 	private JButton cursorBtn;
 	private JButton textureBtn;
 	
-	public Codex() {
+	public Codex(MainWindow parent) {
 		super();
+		this.manager = parent;
 		this.setLayout(new BorderLayout());
 		 
-		Header header = new Header();
+		Header header = new Header(manager);
 		this.add(header, BorderLayout.NORTH);
 		
 		JPanel center = new JPanel();
@@ -83,7 +86,7 @@ public class Codex extends JPanel{
 		west.setLayout(new BorderLayout(100, 100));
 		west.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
 		
-		ButtonFactory inventory = new ButtonFactory("Inventaire", PageName.COLLECTION);
+		ButtonFactory inventory = new ButtonFactory("Inventaire", PageName.COLLECTION, manager);
 		inventory.setPreferredSize(new Dimension(200, 60));
 		west.add(inventory, BorderLayout.NORTH);
 		

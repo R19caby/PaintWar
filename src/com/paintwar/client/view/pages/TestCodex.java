@@ -9,7 +9,7 @@ public class TestCodex {
 	public static void main(String[] args) {
 		JFrame window = new JFrame();
 		window.setSize(new Dimension(1920, 1080));
-		window.add(new Codex());
+		window.add(new Codex(null));
 		window.setVisible(true);
 	}
 

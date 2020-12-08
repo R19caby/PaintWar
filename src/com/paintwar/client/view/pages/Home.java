@@ -18,6 +18,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
+import com.paintwar.client.view.MainWindow;
 import com.paintwar.client.view.components.Header;
 
 public class Home extends JPanel {
@@ -25,14 +26,16 @@ public class Home extends JPanel {
 	private static final long serialVersionUID = -1539937711095867060L;
 	
 	private String playerName;
+	private MainWindow manager;
 	
-	public Home(String name) {
+	public Home(String name, MainWindow parent) {
 		super();
+		manager = parent;
 		this.playerName = name;
 		setLayout(new BorderLayout());
 		
 		
-		add(new Header(), BorderLayout.NORTH);
+		add(new Header(manager), BorderLayout.NORTH);
 		
 		
 		JPanel center = new JPanel();

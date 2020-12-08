@@ -9,19 +9,18 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.ScrollPaneConstants;
 
+import com.paintwar.client.view.MainWindow;
 import com.paintwar.client.view.components.Header;
 
 public class Shop extends JPanel {
 	
 	private static final long serialVersionUID = 8825220079126392422L;
+	private MainWindow manager;
 	private String playerName;
 	private JLabel effectiveTitle;
 	private JPanel container;
@@ -30,12 +29,13 @@ public class Shop extends JPanel {
 	private JButton cursors;
 	private JButton appearances;
 	
-	public Shop(String s) {
+	public Shop(String s, MainWindow parent) {
 		super();
+		manager = parent;
 		playerName = s;
 		setLayout(new BorderLayout());
 		
-		add(new Header(), BorderLayout.NORTH);
+		add(new Header(manager), BorderLayout.NORTH);
 		
 		JPanel center = new JPanel();
 		add(center, BorderLayout.CENTER);

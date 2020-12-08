@@ -11,6 +11,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import com.paintwar.client.view.MainWindow;
 import com.paintwar.client.view.components.BackButton;
 import com.paintwar.client.view.components.ButtonFactory;
 import com.paintwar.client.view.components.ParametersButton;
@@ -18,15 +19,17 @@ import com.paintwar.client.view.components.ParametersButton;
 public class AccountCreation extends JPanel {
 	
 	private static final long serialVersionUID = 6599217595831008888L;
+	private MainWindow manager;
 	
-	public AccountCreation() {
+	public AccountCreation(MainWindow parent) {
 		super();
+		manager = parent;
 		setLayout(new BorderLayout());
 		
 		JPanel shortcuts = new JPanel();
 		shortcuts.setLayout(new FlowLayout(FlowLayout.RIGHT));
-		shortcuts.add(new ParametersButton());
-		shortcuts.add(new BackButton(PageName.CONNEXION_CHOICE));
+		shortcuts.add(new ParametersButton(manager));
+		shortcuts.add(new BackButton(PageName.CONNEXION_CHOICE, manager));
 		add(shortcuts, BorderLayout.NORTH);
 		shortcuts.setAlignmentX(RIGHT_ALIGNMENT);
 		
@@ -70,7 +73,7 @@ public class AccountCreation extends JPanel {
 		
 		JPanel south = new JPanel();
 		add(south, BorderLayout.SOUTH);
-		ButtonFactory validate = new ButtonFactory("Valider", PageName.HOME);
+		ButtonFactory validate = new ButtonFactory("Valider", PageName.HOME, parent);
 		south.add(validate, BorderLayout.SOUTH);
 		
 		
