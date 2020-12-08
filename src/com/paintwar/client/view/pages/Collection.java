@@ -9,8 +9,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -22,60 +24,109 @@ import javax.swing.ScrollPaneLayout;
 import com.paintwar.client.view.components.ButtonFactory;
 import com.paintwar.client.view.components.Header;
 import com.paintwar.client.view.pages.Home.SelectType;
+import com.paintwar.client.view.pages.Shop.CategoryChooserListener;
 
 public class Collection extends JPanel {
 
 	private static final long serialVersionUID = -916442714757214449L;
-	private final static String AVATAR = "Avatar";
-	private final static String BORDER = "Bordure";
-	private final static String CURSOR = "Cursor";
-	private final static String TEXTURE = "Texture";
+	private final static String AVATAR = "Avatars";
+	private final static String BORDER = "Bordures";
+	private final static String CURSOR = "Curseurs";
+	private final static String TEXTURE = "Textures";
 	
-	public Collection() {
+	private String playerName;
+	private JLabel effectiveTitle;
+	private JPanel container;
+	private JButton avatarBtn;
+	private JButton borderBtn;
+	private JButton cursorBtn;
+	private JButton textureBtn;
+	
+	public Collection(String s) {
 		super();
+		this.playerName = s;
 		this.setLayout(new BorderLayout());
 		
 		Header header = new Header();
 		this.add(header, BorderLayout.NORTH);
-
-		JPanel west = new JPanel();
-		west.setLayout(new BorderLayout(200, 1000));
-		ButtonFactory codex = new ButtonFactory("Codex", PageName.CODEX);
-		codex.setPreferredSize(new Dimension(200, 70));
-		west.add(codex, BorderLayout.NORTH);
 		
 		JPanel center = new JPanel();
-		center.setLayout(new CardLayout());
-		center.setAlignmentX(RIGHT_ALIGNMENT);
+		add(center, BorderLayout.CENTER);
+		center.setLayout(new BorderLayout(10, 10));
+		JPanel titlePanel = new JPanel();
+		center.add(titlePanel, BorderLayout.NORTH);
+		effectiveTitle = new JLabel(AVATAR);
+		titlePanel.add(effectiveTitle);
+
+		container = new JPanel();
+		center.add(container);
+		container.setLayout(new CardLayout());
+		JPanel avatarCard = new JPanel();
+		JScrollPane avatarPane = new JScrollPane(avatarCard, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		JPanel avatarGrid = new JPanel();
+		avatarGrid.setLayout(new GridLayout(3, 3, 10, 10));
+		avatarCard.add(avatarGrid);
+		container.add(avatarPane, AVATAR);
 		
-		JPanel catPanel = new JPanel();
-		catPanel.setLayout(new BoxLayout(catPanel, BoxLayout.PAGE_AXIS));
-		catPanel.setAlignmentX(CENTER_ALIGNMENT);
-		catPanel.setPreferredSize(new Dimension(200, 600));
-		ButtonGroup categories =new ButtonGroup();
-		JRadioButton avatar = new JRadioButton("Avatars");
-		avatar.setSelected(true);
-		avatar.addActionListener(new CategoryListener(center, AVATAR));
-		categories.add(avatar);
-		catPanel.add(avatar);
-		JRadioButton border = new JRadioButton("Bordures");
-		border.addActionListener(new CategoryListener(center, BORDER));
-		categories.add(border);
-		catPanel.add(border);
-		JRadioButton cursor = new JRadioButton("Curseurs");
-		cursor.addActionListener(new CategoryListener(center, CURSOR));
-		categories.add(cursor);
-		catPanel.add(cursor);
-		JRadioButton texture = new JRadioButton("Textures");
-		texture.addActionListener(new CategoryListener(center, TEXTURE));
-		categories.add(texture);
-		catPanel.add(texture);
-		catPanel.setVisible(true);
-		west.add(catPanel, BorderLayout.CENTER);
+		JPanel borderCard = new JPanel();
+		JScrollPane borderPane = new JScrollPane(borderCard, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		JPanel borderGrid = new JPanel();
+		borderGrid.setLayout(new GridLayout(3, 3, 10, 10));
+		borderCard.add(borderGrid);
+		container.add(borderPane, BORDER);
 		
+		JPanel cursorCard = new JPanel();
+		JScrollPane cursorPane = new JScrollPane(cursorCard, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		JPanel cursorGrid = new JPanel();
+		cursorGrid.setLayout(new GridLayout(3, 3, 10, 10));
+		cursorCard.add(cursorGrid);
+		container.add(cursorPane, CURSOR);
+		
+		JPanel textureCard = new JPanel();
+		JScrollPane texturePane = new JScrollPane(textureCard, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		JPanel textureGrid = new JPanel();
+		textureGrid.setLayout(new GridLayout(3, 3, 10, 10));
+		textureCard.add(textureGrid);
+		container.add(texturePane, TEXTURE);
+		
+		
+		JPanel west = new JPanel();
+		add(west, BorderLayout.WEST);
+		west.setLayout(new BorderLayout(100, 100));
+		west.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
+		
+		ButtonFactory codex = new ButtonFactory("Codex", PageName.CODEX);
+		codex.setPreferredSize(new Dimension(200, 60));
+		west.add(codex, BorderLayout.NORTH);
+		
+		JPanel categories = new JPanel();
+		west.add(categories, BorderLayout.CENTER);
+		categories.setLayout(new BoxLayout(categories, BoxLayout.PAGE_AXIS));
+		JLabel categoriesTitle = new JLabel("Catégories");
+		categoriesTitle.setAlignmentX(CENTER_ALIGNMENT);
+		categories.add(categoriesTitle);
+		avatarBtn = new JButton(AVATAR);
+		avatarBtn.setAlignmentX(CENTER_ALIGNMENT);
+		categories.add(avatarBtn);
+		avatarBtn.setEnabled(false);
+		avatarBtn.addActionListener(new CategoryListener(AVATAR, avatarBtn));
+		borderBtn = new JButton(BORDER);
+		borderBtn.setAlignmentX(CENTER_ALIGNMENT);
+		categories.add(borderBtn);
+		borderBtn.addActionListener(new CategoryListener(BORDER, borderBtn));	
+		cursorBtn = new JButton(CURSOR);
+		cursorBtn.setAlignmentX(CENTER_ALIGNMENT);
+		categories.add(cursorBtn);
+		cursorBtn.addActionListener(new CategoryListener(CURSOR, cursorBtn));
+		textureBtn = new JButton(TEXTURE);
+		textureBtn.setAlignmentX(CENTER_ALIGNMENT);
+		categories.add(textureBtn);
+		textureBtn.addActionListener(new CategoryListener(TEXTURE, textureBtn));
+			
 		
 		JPanel filterPanel = new JPanel();
 		filterPanel.setLayout(new BoxLayout(filterPanel, BoxLayout.PAGE_AXIS));
+		west.add(filterPanel, BorderLayout.SOUTH);
 		JLabel filterLabel = new JLabel("Filtrer par :");
 		filterLabel.setAlignmentX(CENTER_ALIGNMENT);
 		filterPanel.add(filterLabel);
@@ -93,18 +144,6 @@ public class Collection extends JPanel {
 		JPanel voidPanel = new JPanel();
 		voidPanel.setPreferredSize((new Dimension(200, 100)));
 		filterPanel.add(voidPanel);
-		
-		west.add(filterPanel, BorderLayout.SOUTH);
-		
-		this.add(west, BorderLayout.WEST);
-		
-		
-		JPanel avatarCard = new JPanel();
-		JScrollPane avatarPane = new JScrollPane(avatarCard, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		JPanel avatarGrid = new JPanel();
-		avatarGrid.setLayout(new GridLayout(3, 3, 10, 10));
-		avatarCard.add(avatarGrid);		
-		center.add(avatarPane, AVATAR);
 		
 		//Samples added to the avatarCard:
 		JLabel item1 = new JLabel("Item");
@@ -135,33 +174,27 @@ public class Collection extends JPanel {
 		item9.setPreferredSize(new Dimension(100,100));
 		avatarGrid.add(item9);
 		
-		JPanel borderCard = new JPanel();
-		borderCard.setLayout(new GridLayout(3, 3, 10, 10));
-		center.add(borderCard, BORDER);
 		
-		JPanel cursorCard = new JPanel();
-		cursorCard.setLayout(new GridLayout(3, 3, 10, 10));
-		center.add(cursorCard, CURSOR);
-		
-		JPanel textureCard = new JPanel();
-		textureCard.setLayout(new GridLayout(3, 3, 10, 10));
-		center.add(textureCard, TEXTURE);
-		
-		this.add(center, BorderLayout.CENTER);
 	}
 	
 	
 	public class CategoryListener implements ActionListener{
 		private String category;
-		private JPanel center;
-		public CategoryListener(JPanel center, String category) {
+		private JButton button;
+		public CategoryListener(String category, JButton button) {
 			this.category = category;
-			this.center = center;
+			this.button = button;
 		}
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			CardLayout cl = (CardLayout)(center.getLayout());
-			cl.show(center, category);
+			CardLayout cl = (CardLayout) (container.getLayout());
+            cl.show(container, category);
+			effectiveTitle.setText(category);
+			avatarBtn.setEnabled(true);
+			borderBtn.setEnabled(true);
+			cursorBtn.setEnabled(true);
+			textureBtn.setEnabled(true);
+			button.setEnabled(false);
 			
 		}
 	}
