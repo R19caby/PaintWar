@@ -52,6 +52,7 @@ public class ButtonFactory
 	{
 		JButton b = new CustomButton(name, pageName, manager);
 		b.setBorder(new RoundedBorder(10));
+		b.setOpaque(false);
 		return b;
 	}
 
@@ -84,6 +85,7 @@ public class ButtonFactory
 			super(name);
 			this.pageName = pageName;
 			this.manager = manager;
+			setOpaque(false);
 
 			addActionListener(this);
 		}
@@ -121,7 +123,7 @@ public class ButtonFactory
 		@Override
 		public boolean isBorderOpaque()
 		{
-			return true;
+			return false;
 		}
 	}
 }

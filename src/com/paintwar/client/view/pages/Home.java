@@ -27,7 +27,13 @@ public class Home extends JPanel {
 	
 	private String playerName;
 	private MainWindow manager;
-	
+	private static final Dimension DIMENSION_PLAYGAME = new Dimension(200, 75);
+	private static final Dimension DIMENSION_CREATE_GAME = new Dimension(200, 100);
+	private static final Dimension DIMENSION_JOIN_GAME = new Dimension(200, 75);
+	private static final Dimension DIMENSION_GAME_TYPE = new Dimension(200, 25);
+	private static final Dimension DIMENSION_GAME_PASSWORD = new Dimension(200, 25);
+	private static final Dimension DIMENSION_PLAYER_DATA = new Dimension(500, 300);
+	// Note : 75 + 25 = 100 -> (Ergo = <3)
 	public Home(String name, MainWindow parent) {
 		super();
 		manager = parent;
@@ -41,19 +47,22 @@ public class Home extends JPanel {
 		JPanel center = new JPanel();
 		add(center, BorderLayout.CENTER);
 		center.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
-		center.setLayout(new BorderLayout(200, 200));
+		center.setLayout(new BorderLayout());
 		
 		JPanel centerNorth = new JPanel();
 		centerNorth.setLayout(new BoxLayout(centerNorth, BoxLayout.PAGE_AXIS));
 		center.add(centerNorth, BorderLayout.NORTH);
 		JButton playGame = new JButton("Jouer");
-		centerNorth.add(playGame);
+		JPanel playGamePanel = new JPanel();
+		playGamePanel.add(playGame);
+		playGame.setPreferredSize(DIMENSION_PLAYGAME);
+		centerNorth.add(playGamePanel);
 		playGame.setAlignmentX(CENTER_ALIGNMENT);
 		JComboBox<String> gameType = new JComboBox<>();
-		centerNorth.add(gameType);
-		gameType.setAlignmentX(CENTER_ALIGNMENT);
-		gameType.setPreferredSize(new Dimension(200, 20));
-		gameType.setMaximumSize(new Dimension(200, 20));
+		JPanel gameTypePanel = new JPanel();
+		gameTypePanel.add(gameType);
+		centerNorth.add(gameTypePanel);
+		gameType.setPreferredSize(DIMENSION_GAME_TYPE);
 		gameType.addItemListener(new SelectType(gameType));
 		gameType.addItem("Partie classée");
 		gameType.addItem("Partie non classée");
@@ -61,6 +70,7 @@ public class Home extends JPanel {
 		JPanel centerCenter = new JPanel();
 		center.add(centerCenter);
 		JButton createGame = new JButton("Créer une partie");
+		createGame.setPreferredSize(DIMENSION_CREATE_GAME);
 		centerCenter.add(createGame, BorderLayout.CENTER);
 		createGame.setAlignmentX(CENTER_ALIGNMENT);
 		
@@ -68,13 +78,15 @@ public class Home extends JPanel {
 		center.add(centerSouth, BorderLayout.SOUTH);
 		centerSouth.setLayout(new BoxLayout(centerSouth, BoxLayout.PAGE_AXIS));
 		JButton joinGame = new JButton("Rejoindre une partie");
-		centerSouth.add(joinGame);
-		joinGame.setAlignmentX(CENTER_ALIGNMENT);
+		JPanel joinGamePanel = new JPanel();
+		joinGame.setPreferredSize(DIMENSION_JOIN_GAME);
+		centerSouth.add(joinGamePanel);
+		joinGamePanel.add(joinGame);
 		JTextField gamePassword = new JTextField("Code de la partie");
-		centerSouth.add(gamePassword);
-		gamePassword.setAlignmentX(CENTER_ALIGNMENT);
-		gamePassword.setPreferredSize(new Dimension(200, 20));
-		gamePassword.setMaximumSize(new Dimension(200, 20));
+		JPanel gamePasswordPanel = new JPanel();
+		centerSouth.add(gamePasswordPanel);
+		gamePasswordPanel.add(gamePassword);
+		gamePassword.setPreferredSize(DIMENSION_GAME_PASSWORD);
 		gamePassword.addMouseListener(new ResetText(gamePassword, "Code de la partie"));
 		
 		JPanel west = new JPanel();
@@ -82,8 +94,7 @@ public class Home extends JPanel {
 		west.setLayout(new BorderLayout(10, 10));
 		JPanel playerData = new JPanel();
 		west.add(playerData, BorderLayout.NORTH);
-		playerData.setPreferredSize(new Dimension(300, 300));
-		playerData.setMaximumSize(new Dimension(300, 300));
+		playerData.setPreferredSize(DIMENSION_PLAYER_DATA);
 		playerData.setLayout(new BoxLayout(playerData, BoxLayout.PAGE_AXIS));
 		playerData.setBorder(BorderFactory.createLineBorder(Color.black));
 		JLabel id = new JLabel("Nom du joueur : " + playerName);
