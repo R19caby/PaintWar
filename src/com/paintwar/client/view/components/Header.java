@@ -25,7 +25,7 @@ public class Header extends JPanel
 
 	public Header(MainWindow manager)
 	{
-
+		this.setOpaque(false);
 		this.setLayout(new FlowLayout());
 
 		home = ButtonFactory.getInstance().getButton("Home", PageName.HOME, manager);

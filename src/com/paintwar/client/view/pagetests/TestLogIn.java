@@ -12,6 +12,7 @@ public class TestLogIn {
 		JFrame window = new JFrame();
 		window.setSize(new Dimension(500, 500));
 		window.add(new LogIn(null));
+		window.setDefaultCloseOperation(3);
 		window.setVisible(true);
 	}
 
