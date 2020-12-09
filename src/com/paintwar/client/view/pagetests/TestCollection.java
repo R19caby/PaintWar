@@ -13,6 +13,7 @@ public class TestCollection {
 		window.setSize(new Dimension(1080, 720));
 		window.add(new Collection("Player1", null));
 		window.setVisible(true);
+		window.setDefaultCloseOperation(3);
 	}
 
 }
