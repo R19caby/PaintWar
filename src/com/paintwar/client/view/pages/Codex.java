@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -33,6 +34,13 @@ public class Codex extends JPanel{
 	private final static String TEXTURE = "Textures";
 	private final static String BIGITEM = "Grands éléments";
 	private final static String SPELL = "Sorts";
+	private static final Dimension DIMENSION_INVENTORY = new Dimension(200, 60);
+	private final static Dimension DIMENSION_FILTERS = new Dimension(200, 40);
+	private final static Dimension DIMENSION_ARTICLE = new Dimension(900, 300);
+	private final static Dimension DIMENSION_ITEM_CARD = new Dimension(1400, 1800);
+	private final static Dimension DIMENSION_ITEM_GRID = new Dimension(1400, 1800);
+	private final static Dimension DIMENSION_BUTTON = new Dimension(400, 50);
+	private final static Dimension DIMENSION_CATEGORIES = new Dimension(200, 40);
 	
 	private MainWindow manager;
 	private JLabel effectiveTitle;
@@ -59,6 +67,7 @@ public class Codex extends JPanel{
 		JPanel titlePanel = new JPanel();
 		center.add(titlePanel, BorderLayout.NORTH);
 		effectiveTitle = new JLabel(BIGITEM);
+		effectiveTitle.setFont(new Font(effectiveTitle.getFont().getName(), effectiveTitle.getFont().getSize(), effectiveTitle.getFont().getSize()+10));
 		titlePanel.add(effectiveTitle);
 		
 		container = new JPanel();
@@ -87,144 +96,98 @@ public class Codex extends JPanel{
 		west.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
 		
 		JButton inventory = ButtonFactory.getInstance().getButton("Inventaire", PageName.COLLECTION, manager);
-		inventory.setPreferredSize(new Dimension(200, 60));
+		inventory.setPreferredSize(DIMENSION_INVENTORY);
 		west.add(inventory, BorderLayout.NORTH);
 		
+		JPanel categoriesContainer = new JPanel();
+		categoriesContainer.setLayout(new GridLayout(0,1));
 		JPanel categories = new JPanel();
-		categories.setLayout(new BoxLayout(categories, BoxLayout.PAGE_AXIS));
-		west.add(categories, BorderLayout.CENTER);
+		categoriesContainer.add(categories);
+		categories.setLayout(new GridLayout(0,1, 25, 25));
+		west.add(categoriesContainer, BorderLayout.CENTER);
 		bigItemBtn = new JButton(BIGITEM);
-		bigItemBtn.setPreferredSize(new Dimension(200, 60));
+		bigItemBtn.setPreferredSize(DIMENSION_BUTTON);
+		JPanel bigItemBtnPanel = new JPanel();
+		bigItemBtnPanel.add(bigItemBtn);
 		bigItemBtn.setAlignmentX(CENTER_ALIGNMENT);
-		categories.add(bigItemBtn);
+		categories.add(bigItemBtnPanel);
 		bigItemBtn.setEnabled(false);
 		bigItemBtn.addActionListener(new CategoryListener(BIGITEM, bigItemBtn));
 		spellBtn = new JButton(SPELL);
-		spellBtn.setPreferredSize(new Dimension(200, 60));
+		JPanel spellBtnPanel = new JPanel();
+		spellBtn.setPreferredSize(DIMENSION_BUTTON);
+		spellBtnPanel.add(spellBtn);
 		spellBtn.setAlignmentX(CENTER_ALIGNMENT);
-		categories.add(spellBtn);
+		categories.add(spellBtnPanel);
 		spellBtn.addActionListener(new CategoryListener(SPELL, spellBtn));
 		itemBtn = new JButton(ITEM);
-		itemBtn.setPreferredSize(new Dimension(200, 60));
+		JPanel itemBtnPanel = new JPanel();
+		itemBtn.setPreferredSize(DIMENSION_BUTTON);
+		itemBtnPanel.add(itemBtn);
 		itemBtn.setAlignmentX(CENTER_ALIGNMENT);
-		categories.add(itemBtn);
+		categories.add(itemBtnPanel);
 		itemBtn.addActionListener(new CategoryListener(ITEM, itemBtn));
-				
 		JPanel itemCategories = new JPanel();
-		itemCategories.setLayout(new BoxLayout(itemCategories, BoxLayout.PAGE_AXIS));
-		categories.add(itemCategories);
+		itemCategories.setLayout(new BoxLayout(itemCategories, BoxLayout.Y_AXIS));
+		categoriesContainer.add(itemCategories);
 		avatarBtn = new JButton("► Avatars");
-		avatarBtn.setAlignmentX(LEFT_ALIGNMENT);
-		itemCategories.add(avatarBtn);
+		avatarBtn.setPreferredSize(DIMENSION_CATEGORIES);
+		avatarBtn.setAlignmentX(CENTER_ALIGNMENT);
+		JPanel avatarBtnPanel = new JPanel();
+		avatarBtnPanel.add(avatarBtn);
+		itemCategories.add(avatarBtnPanel);
 		avatarBtn.addActionListener(new CategoryListener(ITEM + " : " + AVATAR, avatarBtn));
 		borderBtn = new JButton("► Bordures");
-		borderBtn.setAlignmentX(LEFT_ALIGNMENT);
-		itemCategories.add(borderBtn);
+		borderBtn.setPreferredSize(DIMENSION_CATEGORIES);
+		borderBtn.setAlignmentX(CENTER_ALIGNMENT);
+		JPanel borderBtnPanel = new JPanel();
+		borderBtnPanel.add(borderBtn);
+		itemCategories.add(borderBtnPanel);
 		borderBtn.addActionListener(new CategoryListener(ITEM + " : " + BORDER, borderBtn));	
 		cursorBtn = new JButton("► Curseurs");
-		cursorBtn.setAlignmentX(LEFT_ALIGNMENT);
-		itemCategories.add(cursorBtn);
+		cursorBtn.setPreferredSize(DIMENSION_CATEGORIES);
+		cursorBtn.setAlignmentX(CENTER_ALIGNMENT);
+		JPanel cursorBtnPanel = new JPanel();
+		cursorBtnPanel.add(cursorBtn);
+		itemCategories.add(cursorBtnPanel);
 		cursorBtn.addActionListener(new CategoryListener(ITEM + " : " + CURSOR, cursorBtn));
 		textureBtn = new JButton("► Textures");
-		textureBtn.setAlignmentX(LEFT_ALIGNMENT);
-		itemCategories.add(textureBtn);
+		textureBtn.setPreferredSize(DIMENSION_CATEGORIES);
+		textureBtn.setAlignmentX(CENTER_ALIGNMENT);
+		JPanel textureBtnPanel = new JPanel();
+		textureBtnPanel.add(textureBtn);
+		itemCategories.add(textureBtnPanel);
 		textureBtn.addActionListener(new CategoryListener(ITEM + " : " + TEXTURE, textureBtn));
 		
 		JPanel filterPanel = buildFilterPanel();
 		west.add(filterPanel, BorderLayout.SOUTH);
 	}
 	
+	private class CardArticle extends JPanel {
+		CardArticle(String title) {
+			super();
+			JLabel titleLabel = new JLabel(title);
+			setPreferredSize(DIMENSION_ARTICLE);
+			add(titleLabel);
+			setBackground(Color.white);
+			setBorder(BorderFactory.createLineBorder(Color.black));
+
+		}
+	}
+	
 	public JScrollPane buildItemPanel(String cat) {
 		JPanel itemCard = new JPanel();
-		itemCard.setMinimumSize(new Dimension(800, 800));
+		itemCard.setMinimumSize(DIMENSION_ITEM_CARD);
 		JScrollPane itemPane = new JScrollPane(itemCard, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		JPanel itemGrid = new JPanel();
 		itemGrid.setLayout(new GridLayout(0, 1, 10, 10));
 		itemGrid.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-		itemGrid.setMinimumSize(new Dimension(800, 800));
+		itemGrid.setMinimumSize(DIMENSION_ITEM_GRID);
 		itemCard.add(itemGrid);
-		
-		JPanel card1 = new JPanel();
-		JPanel card2 = new JPanel();
-		JPanel card3 = new JPanel();
-		JPanel card4 = new JPanel();
-		JPanel card5 = new JPanel();
-		JPanel card6 = new JPanel();
-		JPanel card7 = new JPanel();
-		JPanel card8 = new JPanel();
-		JPanel card9 = new JPanel();
-		JPanel card10 = new JPanel();
-		JPanel card11 = new JPanel();
-		JLabel title1 = new JLabel(cat+"1"+" \n "+"Explications, détail et description de l'item.");
-		JLabel title2 = new JLabel(cat+"2"+" \n "+"Explications, détail et description de l'item.");
-		JLabel title3 = new JLabel(cat+"3"+" \n "+"Explications, détail et description de l'item.");
-		JLabel title4 = new JLabel(cat+"4"+" \n "+"Explications, détail et description de l'item.");
-		JLabel title5 = new JLabel(cat+"5"+" \n "+"Explications, détail et description de l'item.");
-		JLabel title6 = new JLabel(cat+"6"+" \n "+"Explications, détail et description de l'item.");
-		JLabel title7 = new JLabel(cat+"7"+" \n "+"Explications, détail et description de l'item.");
-		JLabel title8 = new JLabel(cat+"8"+" \n "+"Explications, détail et description de l'item.");
-		JLabel title9 = new JLabel(cat+"9"+" \n "+"Explications, détail et description de l'item.");
-		JLabel title10 = new JLabel(cat+"10"+" \n "+"Explications, détail et description de l'item.");
-		JLabel title11 = new JLabel(cat+"11"+" \n "+"Explications, détail et description de l'item.");
-		card1.add(title1);
-		card2.add(title2);
-		card3.add(title3);
-		card4.add(title4);
-		card5.add(title5);
-		card6.add(title6);
-		card7.add(title7);
-		card8.add(title8);
-		card9.add(title9);
-		card10.add(title10);
-		card11.add(title11);
-		
-		card1.setMinimumSize(new Dimension(800, 60));
-		card2.setMinimumSize(new Dimension(800, 60));
-		card3.setMinimumSize(new Dimension(800, 60));
-		card4.setMinimumSize(new Dimension(800, 60));
-		card5.setMinimumSize(new Dimension(800, 60));
-		card6.setMinimumSize(new Dimension(800, 60));
-		card7.setMinimumSize(new Dimension(800, 60));
-		card8.setMinimumSize(new Dimension(800, 60));
-		card9.setMinimumSize(new Dimension(800, 60));
-		card10.setMinimumSize(new Dimension(800, 60));
-		card11.setMinimumSize(new Dimension(800, 60));
-		
-		card1.setBackground(Color.white);
-		card2.setBackground(Color.white);
-		card3.setBackground(Color.white);
-		card4.setBackground(Color.white);
-		card5.setBackground(Color.white);
-		card6.setBackground(Color.white);
-		card7.setBackground(Color.white);
-		card8.setBackground(Color.white);
-		card9.setBackground(Color.white);
-		card10.setBackground(Color.white);
-		card11.setBackground(Color.white);
-		card1.setBorder(BorderFactory.createLineBorder(Color.black));
-		card2.setBorder(BorderFactory.createLineBorder(Color.black));
-		card3.setBorder(BorderFactory.createLineBorder(Color.black));
-		card4.setBorder(BorderFactory.createLineBorder(Color.black));
-		card5.setBorder(BorderFactory.createLineBorder(Color.black));
-		card6.setBorder(BorderFactory.createLineBorder(Color.black));
-		card7.setBorder(BorderFactory.createLineBorder(Color.black));
-		card8.setBorder(BorderFactory.createLineBorder(Color.black));
-		card9.setBorder(BorderFactory.createLineBorder(Color.black));
-		card10.setBorder(BorderFactory.createLineBorder(Color.black));
-		card11.setBorder(BorderFactory.createLineBorder(Color.black));
-
-		itemGrid.add(card1);
-		itemGrid.add(card2);
-		itemGrid.add(card3);
-		itemGrid.add(card4);
-		itemGrid.add(card5);
-		itemGrid.add(card6);
-		itemGrid.add(card7);
-		itemGrid.add(card8);
-		itemGrid.add(card9);
-		itemGrid.add(card10);
-		itemGrid.add(card11);
-		
+		for (int index = 0; index < 22; index++) {
+			CardArticle card = new CardArticle(cat+(index+1)+" \n "+"Explications, détail et description de l'item.");
+			itemGrid.add(card);
+		}
 		return itemPane;
 	}
 	
@@ -238,8 +201,7 @@ public class Codex extends JPanel{
 		JComboBox<String> filterType = new JComboBox<>();
 		filterPanel.add(filterType);
 		filterType.setAlignmentX(CENTER_ALIGNMENT);
-		filterType.setPreferredSize(new Dimension(200, 20));
-		filterType.setMaximumSize(new Dimension(200, 20));
+		filterType.setPreferredSize(DIMENSION_FILTERS);
 		filterType.addItemListener(new SelectType(filterType));
 		filterType.addItem("Ordre alphabétique");
 		filterType.addItem("Ordre alphabétique inverse");
