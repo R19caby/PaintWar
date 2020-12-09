@@ -1,8 +1,10 @@
 package com.paintwar.client.view.pages;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -25,73 +27,104 @@ public class AccountCreation extends JPanel {
 	private static final long serialVersionUID = 6599217595831008888L;
 	private MainWindow manager;
 	private char defaultEchoChar;
+	private static final Dimension DIMENSION_NICKNAME = new Dimension(415, 30);
+	private static final Dimension DIMENSION_ADDRESS = new Dimension(415, 30);
+	private static final Dimension DIMENSION_PASSWORD = new Dimension(200, 30);
 	
 	public AccountCreation(MainWindow parent) {
 		super();
 		manager = parent;
-		setLayout(new BorderLayout());
+		setLayout(new BorderLayout(0, 50));
 		
 		JPanel shortcuts = new JPanel();
 		shortcuts.setLayout(new FlowLayout(FlowLayout.RIGHT));
-		shortcuts.add(ButtonFactory.getInstance().getButton("Parameters", PageName.PARAMETERS, manager));
+		shortcuts.add(ButtonFactory.getInstance().getParameterButton(manager));
 		shortcuts.add(ButtonFactory.getInstance().getButton("Back", PageName.CONNEXION_CHOICE, manager));
 		add(shortcuts, BorderLayout.NORTH);
 		shortcuts.setAlignmentX(RIGHT_ALIGNMENT);
 		
 		JPanel center = new JPanel();
-		center.setLayout(new BoxLayout(center, BoxLayout.PAGE_AXIS));
-		add(center, BorderLayout.CENTER);
-		
-		JLabel logo = new JLabel("Logo");
-		center.add(logo);
-		logo.setAlignmentX(CENTER_ALIGNMENT);
-		
+		JPanel logoDataPanel = new JPanel(new BorderLayout(0, 100));
+		JPanel logoPanel = new JPanel();
 		JPanel dataToEnter = new JPanel();
-		center.add(dataToEnter);
-		dataToEnter.setLayout(new BoxLayout(dataToEnter, BoxLayout.PAGE_AXIS));
+		JPanel nicknameAddressPanel = new JPanel();
+		JPanel nicknamePanel = new JPanel();
+		JPanel addressPanel = new JPanel();
+		JPanel passwordsCheckBoxesPanel = new JPanel();
+		JPanel passwordsPanel = new JPanel();
+		JPanel checkBoxesPanel = new JPanel();
+		JPanel enterPanel = new JPanel();
+		JPanel confirmPanel = new JPanel();
+		JPanel showFirstPanel = new JPanel();
+		JPanel showSecondPanel = new JPanel();
+		
+		add(center, BorderLayout.CENTER);
+		center.add(logoDataPanel);
+		logoDataPanel.add(logoPanel, BorderLayout.NORTH);
+		logoDataPanel.add(dataToEnter, BorderLayout.CENTER);
+		dataToEnter.add(nicknameAddressPanel);
+		nicknameAddressPanel.add(nicknamePanel);
+		nicknameAddressPanel.add(addressPanel);
+		dataToEnter.add(passwordsCheckBoxesPanel);
+		passwordsCheckBoxesPanel.add(passwordsPanel);
+		passwordsCheckBoxesPanel.add(checkBoxesPanel);
+		passwordsPanel.add(enterPanel);
+		passwordsPanel.add(confirmPanel);
+		checkBoxesPanel.add(showFirstPanel);
+		checkBoxesPanel.add(showSecondPanel);
+		
+		dataToEnter.setLayout(new BoxLayout(dataToEnter, BoxLayout.Y_AXIS));
+		nicknameAddressPanel.setLayout(new BoxLayout(nicknameAddressPanel, BoxLayout.Y_AXIS));
+		passwordsCheckBoxesPanel.setLayout(new BoxLayout(passwordsCheckBoxesPanel, BoxLayout.Y_AXIS));
+		
+		
+		center.setOpaque(false);
+		logoDataPanel.setOpaque(false);
+		nicknamePanel.setOpaque(false);
+		logoPanel.setOpaque(false);
+		dataToEnter.setOpaque(false);
+		nicknameAddressPanel.setOpaque(false);
+		addressPanel.setOpaque(false);
+		
+		JLabel logo = new JLabel("Paint War");
+		logo.setFont(new Font(logo.getFont().getName(), logo.getFont().getSize(), logo.getFont().getSize() + 100));
+		logoPanel.add(logo);
+		
 		JTextField nickname = new JTextField();
-		dataToEnter.add(nickname);
-		nickname.setPreferredSize(new Dimension(200, 20));
-		nickname.setMaximumSize(new Dimension(200, 20));
+		nicknamePanel.add(nickname);
 		nickname.setText("Pseudo");
 		nickname.addMouseListener(new ResetSimpleText(nickname, "Pseudo"));
+		nickname.setPreferredSize(DIMENSION_NICKNAME);
+		
 		JTextField address = new JTextField();
-		dataToEnter.add(address);
-		address.setPreferredSize(new Dimension(200, 20));
-		address.setMaximumSize(new Dimension(200, 20));
+		addressPanel.add(address);
 		address.setText("Adresse mail");
 		address.addMouseListener(new ResetSimpleText(address, "Adresse mail"));
+		address.setPreferredSize(DIMENSION_ADDRESS);
 		
-		JPanel passwords = new JPanel();
-		dataToEnter.add(passwords);
-		passwords.setMaximumSize(new Dimension(800, 50));
-		passwords.setLayout(new GridLayout(2, 2));
-		JPanel enterP = new JPanel();
 		JPasswordField enter = new JPasswordField();
-		enterP.add(enter);
-		enter.setPreferredSize(new Dimension(200, 20));
+		enterPanel.add(enter);
 		enter.setText("Entrez le mot de passe");
 		defaultEchoChar = enter.getEchoChar();
 		enter.setEchoChar((char) 0);
+		enter.setPreferredSize(DIMENSION_PASSWORD);
+		
 		JCheckBox showFirst = new JCheckBox("Afficher le mot de passe");
 		showFirst.addActionListener(new HideText(showFirst, enter, "Entrez le mot de passe"));
 		enter.addMouseListener(new ResetPasswordText(enter, "Entrez le mot de passe", showFirst));
+		showFirstPanel.add(showFirst);
 		
-		JPanel confirmP = new JPanel();
 		JPasswordField confirm = new JPasswordField();
-		confirmP.add(confirm);
-		confirm.setPreferredSize(new Dimension(200, 20));
+		confirmPanel.add(confirm);
 		confirm.setText("Confirmez le mot de passe");
 		confirm.setEchoChar((char) 0);
+		confirm.setPreferredSize(DIMENSION_PASSWORD);
+		
 		JCheckBox showSecond = new JCheckBox("Afficher la confirmation");
 		showSecond.addActionListener(new HideText(showSecond, confirm, "Confirmez le mot de passe"));
 		confirm.addMouseListener(new ResetPasswordText(confirm, "Confirmez le mot de passe", showSecond));
-		
+		showSecondPanel.add(showSecond);
 
-		passwords.add(enterP);
-		passwords.add(confirmP);
-		passwords.add(showFirst);
-		passwords.add(showSecond);
 		
 		JPanel south = new JPanel();
 		add(south, BorderLayout.SOUTH);
