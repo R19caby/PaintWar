@@ -91,6 +91,7 @@ public class Codex extends JPanel {
 		bigItemBtnPanel.setOpaque(false);
 		spellBtnPanel.setOpaque(false);
 		itemBtnPanel.setOpaque(false);
+		itemCategories.setOpaque(false);
 		avatarBtnPanel.setOpaque(false);
 		borderBtnPanel.setOpaque(false);
 		cursorBtnPanel.setOpaque(false);
@@ -205,12 +206,15 @@ public class Codex extends JPanel {
 		itemCard.setMinimumSize(DIMENSION_ITEM_CARD);
 		JScrollPane itemPane = new JScrollPane(itemCard, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
 				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		itemPane.getViewport().setOpaque(false);
+		itemPane.setBorder(null);
 		JPanel itemGrid = new JPanel();
-		itemCard.setBackground(Color.black);
-		itemPane.setBackground(Color.black);
-		itemPane.setBackground(Color.black);
+		
+		itemCard.setOpaque(false);
+		itemPane.setOpaque(false);
+		itemGrid.setOpaque(false);
 		itemGrid.setLayout(new GridLayout(0, 1, 10, 10));
-		itemGrid.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		//itemGrid.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		itemGrid.setMinimumSize(DIMENSION_ITEM_GRID);
 		itemCard.add(itemGrid);
 		for (int index = 0; index < 22; index++) {
