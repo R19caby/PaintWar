@@ -13,6 +13,7 @@ public class TestCodex {
 		window.setSize(new Dimension(1920, 1080));
 		window.add(new Codex(null));
 		window.setVisible(true);
+		window.setDefaultCloseOperation(3);
 	}
 
 }

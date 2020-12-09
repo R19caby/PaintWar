@@ -5,12 +5,17 @@ import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.io.File;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -57,20 +62,48 @@ public class Codex extends JPanel{
 		super();
 		this.manager = parent;
 		this.setLayout(new BorderLayout());
+		this.setOpaque(false);
 		 
 		Header header = new Header(manager);
 		this.add(header, BorderLayout.NORTH);
 		
 		JPanel center = new JPanel();
+		JPanel titlePanel = new JPanel();
+		container = new JPanel();
+		JPanel west = new JPanel();
+		JPanel categoriesContainer = new JPanel();
+		JPanel categories = new JPanel();
+		JPanel bigItemBtnPanel = new JPanel();
+		JPanel spellBtnPanel = new JPanel();
+		JPanel itemBtnPanel = new JPanel();
+		JPanel itemCategories = new JPanel();
+		JPanel avatarBtnPanel = new JPanel();
+		JPanel borderBtnPanel = new JPanel();
+		JPanel cursorBtnPanel = new JPanel();
+		JPanel textureBtnPanel = new JPanel();
+		
+		center.setOpaque(false);
+		titlePanel.setOpaque(false);
+		container.setOpaque(false);
+		west.setOpaque(false);
+		categoriesContainer.setOpaque(false);
+		categories.setOpaque(false);
+		bigItemBtnPanel.setOpaque(false);
+		spellBtnPanel.setOpaque(false);
+		itemBtnPanel.setOpaque(false);
+		avatarBtnPanel.setOpaque(false);
+		borderBtnPanel.setOpaque(false);
+		cursorBtnPanel.setOpaque(false);
+		textureBtnPanel.setOpaque(false);
+		
+		
 		add(center, BorderLayout.CENTER);
 		center.setLayout(new BorderLayout(10, 10));
-		JPanel titlePanel = new JPanel();
 		center.add(titlePanel, BorderLayout.NORTH);
 		effectiveTitle = new JLabel(BIGITEM);
 		effectiveTitle.setFont(new Font(effectiveTitle.getFont().getName(), effectiveTitle.getFont().getSize(), effectiveTitle.getFont().getSize()+10));
 		titlePanel.add(effectiveTitle);
 		
-		container = new JPanel();
 		center.add(container);
 		container.setLayout(new CardLayout());
 		JScrollPane bigItemPane = buildItemPanel(BIGITEM);
@@ -89,8 +122,6 @@ public class Codex extends JPanel{
 		container.add(texturePane, TEXTURE);
 		
 		
-		
-		JPanel west = new JPanel();
 		add(west, BorderLayout.WEST);
 		west.setLayout(new BorderLayout(100, 100));
 		west.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
@@ -99,65 +130,64 @@ public class Codex extends JPanel{
 		inventory.setPreferredSize(DIMENSION_INVENTORY);
 		west.add(inventory, BorderLayout.NORTH);
 		
-		JPanel categoriesContainer = new JPanel();
 		categoriesContainer.setLayout(new GridLayout(0,1));
-		JPanel categories = new JPanel();
 		categoriesContainer.add(categories);
 		categories.setLayout(new GridLayout(0,1, 25, 25));
 		west.add(categoriesContainer, BorderLayout.CENTER);
+		
+		
 		bigItemBtn = new JButton(BIGITEM);
 		bigItemBtn.setPreferredSize(DIMENSION_BUTTON);
-		JPanel bigItemBtnPanel = new JPanel();
 		bigItemBtnPanel.add(bigItemBtn);
 		bigItemBtn.setAlignmentX(CENTER_ALIGNMENT);
 		categories.add(bigItemBtnPanel);
 		bigItemBtn.setEnabled(false);
 		bigItemBtn.addActionListener(new CategoryListener(BIGITEM, bigItemBtn));
+		
 		spellBtn = new JButton(SPELL);
-		JPanel spellBtnPanel = new JPanel();
 		spellBtn.setPreferredSize(DIMENSION_BUTTON);
 		spellBtnPanel.add(spellBtn);
 		spellBtn.setAlignmentX(CENTER_ALIGNMENT);
 		categories.add(spellBtnPanel);
 		spellBtn.addActionListener(new CategoryListener(SPELL, spellBtn));
+		
 		itemBtn = new JButton(ITEM);
-		JPanel itemBtnPanel = new JPanel();
 		itemBtn.setPreferredSize(DIMENSION_BUTTON);
 		itemBtnPanel.add(itemBtn);
 		itemBtn.setAlignmentX(CENTER_ALIGNMENT);
 		categories.add(itemBtnPanel);
 		itemBtn.addActionListener(new CategoryListener(ITEM, itemBtn));
-		JPanel itemCategories = new JPanel();
 		itemCategories.setLayout(new BoxLayout(itemCategories, BoxLayout.Y_AXIS));
 		categoriesContainer.add(itemCategories);
+		
 		avatarBtn = new JButton("► Avatars");
 		avatarBtn.setPreferredSize(DIMENSION_CATEGORIES);
 		avatarBtn.setAlignmentX(CENTER_ALIGNMENT);
-		JPanel avatarBtnPanel = new JPanel();
 		avatarBtnPanel.add(avatarBtn);
 		itemCategories.add(avatarBtnPanel);
 		avatarBtn.addActionListener(new CategoryListener(ITEM + " : " + AVATAR, avatarBtn));
+		
 		borderBtn = new JButton("► Bordures");
 		borderBtn.setPreferredSize(DIMENSION_CATEGORIES);
 		borderBtn.setAlignmentX(CENTER_ALIGNMENT);
-		JPanel borderBtnPanel = new JPanel();
 		borderBtnPanel.add(borderBtn);
 		itemCategories.add(borderBtnPanel);
 		borderBtn.addActionListener(new CategoryListener(ITEM + " : " + BORDER, borderBtn));	
+		
 		cursorBtn = new JButton("► Curseurs");
 		cursorBtn.setPreferredSize(DIMENSION_CATEGORIES);
 		cursorBtn.setAlignmentX(CENTER_ALIGNMENT);
-		JPanel cursorBtnPanel = new JPanel();
 		cursorBtnPanel.add(cursorBtn);
 		itemCategories.add(cursorBtnPanel);
 		cursorBtn.addActionListener(new CategoryListener(ITEM + " : " + CURSOR, cursorBtn));
+		
 		textureBtn = new JButton("► Textures");
 		textureBtn.setPreferredSize(DIMENSION_CATEGORIES);
 		textureBtn.setAlignmentX(CENTER_ALIGNMENT);
-		JPanel textureBtnPanel = new JPanel();
 		textureBtnPanel.add(textureBtn);
 		itemCategories.add(textureBtnPanel);
 		textureBtn.addActionListener(new CategoryListener(ITEM + " : " + TEXTURE, textureBtn));
+		
 		
 		JPanel filterPanel = buildFilterPanel();
 		west.add(filterPanel, BorderLayout.SOUTH);
@@ -180,6 +210,9 @@ public class Codex extends JPanel{
 		itemCard.setMinimumSize(DIMENSION_ITEM_CARD);
 		JScrollPane itemPane = new JScrollPane(itemCard, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		JPanel itemGrid = new JPanel();
+		itemCard.setBackground(Color.black);
+		itemPane.setBackground(Color.black);
+		itemPane.setBackground(Color.black);
 		itemGrid.setLayout(new GridLayout(0, 1, 10, 10));
 		itemGrid.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		itemGrid.setMinimumSize(DIMENSION_ITEM_GRID);
@@ -194,6 +227,7 @@ public class Codex extends JPanel{
 	
 	public JPanel buildFilterPanel() {
 		JPanel filterPanel = new JPanel();
+		filterPanel.setOpaque(false);
 		filterPanel.setLayout(new BoxLayout(filterPanel, BoxLayout.PAGE_AXIS));
 		JLabel filterLabel = new JLabel("Filtrer par :");
 		filterLabel.setAlignmentX(CENTER_ALIGNMENT);
@@ -209,6 +243,7 @@ public class Codex extends JPanel{
 		filterType.addItem("Date d'acquisition décroissante");
 				
 		JPanel voidPanel = new JPanel();
+		voidPanel.setOpaque(false);
 		voidPanel.setPreferredSize((new Dimension(200, 100)));
 		filterPanel.add(voidPanel);
 		
@@ -256,5 +291,17 @@ public class SelectType implements ItemListener {
 			
 		}
 	}
+	
+	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		Image icon = null;
+		try {
+			icon = ImageIO.read(new File(System.getProperty("user.dir") + "/src/graphicResources/paint_HQ.png"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		if(icon != null)
+			g.drawImage(icon, 0, 0, getWidth(), getHeight(), null);
+		}
 
 }

@@ -56,7 +56,6 @@ public class MainWindow extends JFrame {
 		connexionChoicePage = new ConnexionChoice(this);
 		logInPage = new LogIn(this);
 		accountCreationPage = new AccountCreation(this);
-		parametersPage = new Parameters(this);
 		contentContainer.add(PageName.CONNEXION_CHOICE.toString(), connexionChoicePage);
 		contentContainer.add(PageName.LOG_IN.toString(), logInPage);
 		contentContainer.add(PageName.SIGN_IN.toString(), accountCreationPage);

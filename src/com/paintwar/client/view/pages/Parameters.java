@@ -6,12 +6,20 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.util.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.awt.image.BufferedImageOp;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -27,14 +35,16 @@ import com.paintwar.client.view.components.ButtonFactory;
 public class Parameters extends JPanel {
 	private static final long serialVersionUID = -2023081651434102668L;
 	private MainWindow manager;
+	private JPanel background;
 	private JLabel pageLabel;
 	private JPanel parametersContainer;
 	private List<JButton> buttonsList = new ArrayList<>();
 	private static final Dimension DIMENSION_PARAM_FIELD = new Dimension(700, 75);
 	private static final Dimension DIMENSION_BUTTON = new Dimension(100, 40);
 
-	public Parameters(MainWindow parent) {
+	public Parameters(JPanel previousPage, MainWindow parent) {
 		super();
+		background = previousPage;
 		manager = parent;
 		setLayout(new BorderLayout(10, 50));
 		JPanel north = new JPanel();
@@ -146,4 +156,28 @@ public class Parameters extends JPanel {
 		}
 
 	}
+	
+/*
+	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		Image icon = null;
+		icon = getBlurredImage(background);
+		if(icon != null)
+			g.drawImage(icon, 0, 0, getWidth(), getHeight(), null);
+		}
+*/
+	
+	
+	public Image getBlurredImage(JPanel component){ 
+		   if(component==null){return null;} 
+		   int width = component.getWidth(); 
+		   int height = component.getHeight(); 
+		   BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB); 
+		   Graphics2D g = image.createGraphics(); 
+		   component.paintAll(g); 
+		   g.dispose(); 
+		   Image img = image;
+		   return img; 
+		}
+	
 }
