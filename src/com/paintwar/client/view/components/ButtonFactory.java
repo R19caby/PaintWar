@@ -2,6 +2,7 @@ package com.paintwar.client.view.components;
 
 import java.awt.CardLayout;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
@@ -33,6 +34,7 @@ public class ButtonFactory
 {
 	private ButtonFactory()
 	{
+
 	}
 
 	private static ButtonFactory instance;
@@ -67,7 +69,7 @@ public class ButtonFactory
 		b.setOpaque(false);
 		b.setContentAreaFilled(false);
 		b.setBorderPainted(false);
-		// b.setPreferredSize(new Dimension(30, 30));
+		b.setPreferredSize(new Dimension(30, 30));
 
 		return b;
 	}
@@ -90,7 +92,7 @@ public class ButtonFactory
 		public void actionPerformed(ActionEvent e)
 		{
 			CardLayout cl = (CardLayout) (manager.getContentContainer().getLayout());
-			cl.show(manager.getContentContainer(), getName());
+			cl.show(manager.getContentContainer(), pageName+"");
 		}
 
 	}

@@ -86,7 +86,7 @@ public class Codex extends JPanel{
 		west.setLayout(new BorderLayout(100, 100));
 		west.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
 		
-		ButtonFactory inventory = new ButtonFactory("Inventaire", PageName.COLLECTION, manager);
+		JButton inventory = ButtonFactory.getInstance().getButton("Inventaire", PageName.COLLECTION, manager);
 		inventory.setPreferredSize(new Dimension(200, 60));
 		west.add(inventory, BorderLayout.NORTH);
 		

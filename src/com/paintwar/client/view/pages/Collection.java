@@ -79,7 +79,7 @@ public class Collection extends JPanel {
 		west.setLayout(new BorderLayout(100, 100));
 		west.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
 		
-		ButtonFactory codex = new ButtonFactory("Codex", PageName.CODEX, manager);
+		JButton codex = ButtonFactory.getInstance().getButton("Codex", PageName.CODEX, manager);
 		codex.setPreferredSize(new Dimension(200, 60));
 		west.add(codex, BorderLayout.NORTH);
 		

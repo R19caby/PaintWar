@@ -8,12 +8,20 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.GridLayout;
+import java.awt.Image;
+import java.io.File;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.plaf.PanelUI;
 
 public class ConnexionChoice extends JPanel {
 	
@@ -24,9 +32,13 @@ public class ConnexionChoice extends JPanel {
 		super();
 		manager = parent;
 		setLayout(new BorderLayout(0, 50));
+		setOpaque(false);
 		JPanel center = new JPanel();
+		center.setOpaque(false);
 		JPanel north = new JPanel();
+		north.setOpaque(false);
 		north.setLayout(new FlowLayout(FlowLayout.RIGHT));
+		
 		
 		JLabel logo = new JLabel("Paint War");
 		logo.setFont(new Font(logo.getFont().getName(), logo.getFont().getSize(), logo.getFont().getSize() + 100));
@@ -39,6 +51,9 @@ public class ConnexionChoice extends JPanel {
 		JPanel logInButtonPanel = new JPanel();
 		JPanel signInButtonPanel = new JPanel();
 		JPanel guestButtonPanel = new JPanel();
+		logInButtonPanel.setOpaque(false);
+		signInButtonPanel.setOpaque(false);
+		guestButtonPanel.setOpaque(false);
 		logInButtonPanel.add(logInButton);
 		signInButtonPanel.add(signInButton);
 		guestButtonPanel.add(guestButton);
@@ -49,6 +64,10 @@ public class ConnexionChoice extends JPanel {
 		JPanel buttonsPanel = new JPanel();
 		JPanel buttonTopPanel = new JPanel();		
 		JPanel logoButtonsPanel = new JPanel();
+		logoPanel.setOpaque(false);
+		buttonsPanel.setOpaque(false);
+		buttonTopPanel.setOpaque(false);
+		logoButtonsPanel.setOpaque(false);
 		
 		logoPanel.add(logo);
 		buttonsPanel.add(logInButtonPanel);
@@ -73,5 +92,16 @@ public class ConnexionChoice extends JPanel {
 		add(north, BorderLayout.NORTH);
 	}
 	
+	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		Image icon = null;
+		try {
+			icon = ImageIO.read(new File(System.getProperty("user.dir") + "/src/graphicResources/paint_HQ.png"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		if(icon != null)
+			g.drawImage(icon, 0, 0, getWidth(), getHeight(), null);
+		}
 	
 }
