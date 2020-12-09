@@ -40,7 +40,7 @@ public class Drawing extends JPanel {
 			if (Math.abs(w) > Math.abs(h)) {
 				/*Expand right*/
 				fillP1 = new Point(0, 0);
-				fillP2 = new Point(0, w);
+				fillP2 = new Point(0, h);
 			} else {
 				/*Expand down*/
 				fillP1 = new Point(0, 0);
@@ -74,6 +74,7 @@ public class Drawing extends JPanel {
 				return new Point(newX, newY);
 			};
 		}
+		Logger.print("Init points " + initPoint + "; " + endPoint);
 		setFilling(.0);
 	}
 	
@@ -111,11 +112,16 @@ public class Drawing extends JPanel {
 			setOpacity(100);
 			fillingDraw.setOpacity(100);
 		}
-		if (percent > 0) Logger.print("[Client/Draw] filling to " + percent);
 		fillP2 = fillDraw.apply(percent);
 		Rectangle r = new Rectangle(fillP1);
 		r.add(fillP2);
+
 		fillingDraw.setBounds(r);
+		r.translate(Math.min(this.initPoint.x, this.endPoint.x), Math.min(this.initPoint.y, this.endPoint.y));
+		if (percent > 0) {
+			Logger.print("[Client/Draw] Current shadow bounds " + this.getBounds());
+			Logger.print("[Client/Draw] filling to with " + r + " at " + percent);
+		}
 		this.repaint();
 	}
 	

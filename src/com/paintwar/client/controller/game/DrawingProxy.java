@@ -17,10 +17,9 @@ public class DrawingProxy {
 	private int w;
 	private Color color;
 	private int type;
-	private IDrawServerProxy proxyServer;
 	private double completion;
 
-	public DrawingProxy(IDrawServerProxy proxyServer, int x, int y, int h, int w, Color color, int type) {
+	public DrawingProxy(int x, int y, int h, int w, Color color, int type) {
 		super();
 		this.x = x;
 		this.y = y;
@@ -28,10 +27,9 @@ public class DrawingProxy {
 		this.w = w;
 		this.color = color;
 		this.type = type;
-		this.proxyServer = proxyServer;
 	}
 	
-	public DrawingProxy(IDrawServerProxy proxy, Point p1, Point p2, Color color, int type) {
+	public DrawingProxy(Point p1, Point p2, Color color, int type) {
 		super();
 		this.x = (int) p1.getX();
 		this.y = (int) p1.getY();
@@ -39,7 +37,6 @@ public class DrawingProxy {
 		this.w = (int) (p2.getY() - p1.getY());
 		this.color = color;
 		this.type = type;
-		this.proxyServer = proxy;
 	}
 	
 	public Point getCoord() {
@@ -99,14 +96,6 @@ public class DrawingProxy {
 
 	public void setCompletion(double completion) {
 		this.completion = completion;
-	}
-
-	public IDrawServerProxy getProxyServer() {
-		return proxyServer;
-	}
-
-	public void setProxyServer(IDrawServerProxy proxyServer) {
-		this.proxyServer = proxyServer;
 	}
 	
 }

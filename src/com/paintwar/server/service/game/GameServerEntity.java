@@ -5,9 +5,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.io.Serializable;
 import java.net.InetAddress;
-import java.net.MalformedURLException;
 import java.rmi.Naming;
-import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
@@ -40,16 +38,23 @@ public class GameServerEntity extends UnicastRemoteObject implements IGameServer
 	
 	// une strutcure pour stocker tous les dessins et y accÃ©der facilement 
 	private HashMap<String, DrawServerProxy> drawingProxies = new HashMap<String, DrawServerProxy> () ;
+	
+	// structure to store all hitboxes of drawings currently filling
+	private DrawZoneProxy drawZoneProxy;
+	
+	//main thread for the game
+	private GameLoop gameLoop;
 
-	// le constructeur du serveur : il le déclare sur un port rmi de la machine d'exécution
+	// le constructeur du serveur : il le dï¿½clare sur un port rmi de la machine d'exï¿½cution
 	protected GameServerEntity (String gameName, String serverIP, int RMIPort, int transmitterPort) throws RemoteException {
 		this.gameName = gameName ;
 		this.serverIP = serverIP ;
 		this.RMIPort = RMIPort ;
 		this.transmitterPort = transmitterPort ;
+		this.drawZoneProxy = new DrawZoneProxy();
 		transmitters = new ArrayList<UnicastTransmitter> () ;
 		try {
-			// attachcement sur serveur sur un port identifié de la machine d'exÃ©cution
+			// attachcement sur serveur sur un port identifiï¿½ de la machine d'exÃ©cution
 			Naming.rebind ("//" + serverIP + ":" + RMIPort + "/" + gameName, this) ;
 			Logger.print("[Server/GameEntity] RMI ready on " + "//" + serverIP + ":" + RMIPort + "/" + gameName);
 		} catch (Exception e) {
@@ -68,7 +73,7 @@ public class GameServerEntity extends UnicastRemoteObject implements IGameServer
 		return (emetteur.getTransmissionPort()) ;
 	}
 	
-	// méthode permettant juste de vérifier que le serveur est lancé
+	// mï¿½thode permettant juste de vï¿½rifier que le serveur est lancï¿½
 	@Override
 	public void answer (String question) throws RemoteException {
 		Logger.print("[Server/GameEntity] the question was : " + question) ;   
@@ -79,7 +84,7 @@ public class GameServerEntity extends UnicastRemoteObject implements IGameServer
 		return RMIPort;
 	}
 	
-	// méthode permettant d'enregistrer un dessin sur un port rmi sur la machine du serveur :
+	// mï¿½thode permettant d'enregistrer un dessin sur un port rmi sur la machine du serveur :
 	// - comme cela on pourra Ã©galement invoquer directement des mÃ©thodes en rmi Ã©galement sur chaque dessin
 	public void registerObject (DrawServerProxy drawing) {
 		try {
@@ -106,7 +111,7 @@ public class GameServerEntity extends UnicastRemoteObject implements IGameServer
 		// ajout du dessin dans la liste des dessins pour accÃ¨s plus efficace au dessin
 		drawingProxies.put (dessin.getName (), dessin) ;
 		
-		//Envoi du message à tous les éditeurs
+		//Envoi du message ï¿½ tous les ï¿½diteurs
 		HashMap<String, Object> hm = new HashMap <String, Object> () ;
 		hm.put ("x", Integer.valueOf(0)) ;
 		hm.put ("y", Integer.valueOf(0)) ;
@@ -124,8 +129,8 @@ public class GameServerEntity extends UnicastRemoteObject implements IGameServer
 		return dessin ;
 	}
 	
-	// méthode qui incrémente le compteur de dessins pour avoir un id unique pour chaque dessin :
-	// dans une version ultérieure avec récupération de dessins à partir d'une sauvegarde, il faudra Ã©galement avoir sauvegardÃ© ce nombre...
+	// mï¿½thode qui incrï¿½mente le compteur de dessins pour avoir un id unique pour chaque dessin :
+	// dans une version ultï¿½rieure avec rï¿½cupï¿½ration de dessins ï¿½ partir d'une sauvegarde, il faudra Ã©galement avoir sauvegardÃ© ce nombre...
 	public int nextId () {
 		drawingID++ ; 
 		return drawingID ; 
@@ -182,8 +187,16 @@ public class GameServerEntity extends UnicastRemoteObject implements IGameServer
 	public void startFillingDraw(String name) throws RemoteException {
 		Logger.print("[Server/GameEntity] Starting thread for filling " + name);
 		DrawServerProxy drawing = drawingProxies.get(name);
-		if (drawing != null)
-			drawing.startFilling();
+
+		if (drawing != null) {
+			Point p1 = new Point(drawing.getX(), drawing.getY());
+			Point p2 = p1.getLocation();
+			p2.translate(drawing.getWidth(), drawing.getHeight());
+			Logger.print("Getting these points " + p1 + "; " + p2);
+			drawZoneProxy.addBox(name, new HitboxProxy(drawing.getColor(), p1, p2));
+		
+			drawing.startFilling(drawZoneProxy);
+		}
 	}
 	
 	@Override

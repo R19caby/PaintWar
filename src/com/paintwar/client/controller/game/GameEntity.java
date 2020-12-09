@@ -64,9 +64,9 @@ public class GameEntity implements IGameEntity {
 	}
 	
 	@Override
-	public DrawingProxy addDrawing(IDrawServerProxy proxy, String name, Point p1, Point p2, Color c) {
+	public DrawingProxy addDrawing(String name, Point p1, Point p2, Color c) {
 		//create drawing
-		DrawingProxy drawing = new DrawingProxy(proxy, p1, p2, c, DrawingProxy.RECTANGLE);
+		DrawingProxy drawing = new DrawingProxy(p1, p2, c, DrawingProxy.RECTANGLE);
 		
 		//add to the list
 		drawings.put(name, drawing);
@@ -117,8 +117,8 @@ public class GameEntity implements IGameEntity {
 	
 	public void openGame() {
 		currentWindow.setVisible(true);
-		currentWindow.setSize(700, 400);
-		gamepage.updatePage(700, 400);
+		currentWindow.setSize(1200, 600);
+		gamepage.updatePage(1200, 600);
 	}
 	
 	public void closeGame() {

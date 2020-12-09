@@ -60,7 +60,7 @@ public class GameIOReceiver {
 			Logger.print("[Client/Communication/GameIO] Received drawing proxies : " + proxiesDrawings);
 			// ajout de tous les dessins dans la zone de dessin
 			for (IDrawServerProxy rd : proxiesDrawings) {
-				addDrawing (rd, rd.getName(), rd.getX (), rd.getY (), rd.getWidth(), rd. getHeight ()) ;
+				addDrawing (rd.getName(), rd.getX (), rd.getY (), rd.getWidth(), rd. getHeight ()) ;
 			}
 		} catch (Exception e) {
 			Logger.print ("[Client/Communication/GameIO] couldn't connect to " + "//" + serverIp + ":" + serverRMIPort + "/" + gameName) ;
@@ -104,48 +104,25 @@ public class GameIOReceiver {
 		} 
 	
 		Logger.print("[Client/Communication/GameIO] creating new drawing " + proxyName) ;
-		// adding new drawing in the list if not already in  :
+		// adding new drawing in the list if not already inï¿½ :
 		// -> Could have received a new drawing while we are adding that one
 		if (! gameEntity.hasDrawing(proxyName)) {
-			gameEntity.addDrawing(proxy, proxyName, p1, p2, color);
+			gameEntity.addDrawing(proxyName, p1, p2, color);
 		} else {
 			Logger.print ("[Client/Communication/GameIO] drawing " + proxyName + " already there") ;
 		}
 		return proxyName;
 	}
-	
-	// add drawing from server
-	// -> will be used when receiving a message from server
-	public synchronized void addDrawing (String proxyName, int x, int y, int w, int h) {
-		Logger.print("[Client/Communication/GameIO] add drawing requested from server " + proxyName);
-		// adding only if the client hasn't already created it
-		if (! gameEntity.hasDrawing(proxyName)) {
-			IDrawServerProxy proxy = null ;
-			try {
-				// getting server proxy
-				proxy = server.getDrawing(proxyName);
-			} catch (RemoteException e) {
-				e.printStackTrace();
-			}
-			if (proxy == null) {
-				Logger.print("[Client/Communication/GameIO] proxy " + proxyName + " null");
-			}
-			// adding drawing
-			addDrawing (proxy, proxyName, x, y, w, h) ;
-		} else {
-			Logger.print("[Client/Communication/GameIO] drawing " + proxyName + " already there") ;
-		}
-	}
 
 	// Adding a drawing to client
-	public void addDrawing (IDrawServerProxy proxy, String proxyName, int x, int y, int w, int h) {
+	public void addDrawing (String proxyName, int x, int y, int w, int h) {
 		//generating coords
 		Point p1 = new Point(x, y);
 		Point p2 = p1.getLocation();
 		p2.translate(w, h);
 		
 		//adding drawing to gameEntity
-		gameEntity.addDrawing(proxy, proxyName, p1, p2, Color.black);
+		gameEntity.addDrawing(proxyName, p1, p2, Color.black);
 		
 	}
 	

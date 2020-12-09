@@ -23,10 +23,10 @@ public class DrawServerProxy extends UnicastRemoteObject implements IDrawServerP
 	private Color currentColor;
 	
 	//thread to start fillers
-	private transient DrawFillerThread filler;
+	private transient GameLoop filler;
 
-	// un attribut permettant au Dessin de diffuser directement ses mises à jour, sans passer par le serveur associé
-	// - cet attribut n'est pas Serializable, du coup on le déclare transient pour qu'il ne soit pas inclu dans la sérialisation
+	// un attribut permettant au Dessin de diffuser directement ses mises ï¿½ jour, sans passer par le serveur associï¿½
+	// - cet attribut n'est pas Serializable, du coup on le dï¿½clare transient pour qu'il ne soit pas inclu dans la sï¿½rialisation
 	protected transient List<UnicastTransmitter> emetteurs ;
 
 	private static final long serialVersionUID = 1L ;
@@ -55,8 +55,8 @@ public class DrawServerProxy extends UnicastRemoteObject implements IDrawServerP
 		//Logger.print("[Server/drawProxy] Setbounds " + getName() + " setBounds : " + x + " " + y + " " + w + " " + h) ;
 		this.x = (int) p1.getX();
 		this.y = (int) p1.getY();
-		this.h = (int) (p2.getX() - p1.getX());
-		this.w = (int) (p2.getY() - p1.getY());
+		this.w = (int) (p2.getX() - p1.getX());
+		this.h = (int) (p2.getY() - p1.getY());
 	}
 	
 	public void setColor (Color color) throws RemoteException {
@@ -94,8 +94,8 @@ public class DrawServerProxy extends UnicastRemoteObject implements IDrawServerP
 	}
 	
 	@Override
-	public void startFilling() throws RemoteException {
-		filler = new DrawFillerThread(name, 0.01, emetteurs);
+	public void startFilling(DrawZoneProxy dz) throws RemoteException {
+		filler = new GameLoop(name, 0.01, emetteurs, dz);
 		filler.start();
 	}
 	
