@@ -23,13 +23,16 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 
 import com.paintwar.client.view.MainWindow;
 import com.paintwar.client.view.components.Header;
+import com.paintwar.client.view.pages.Home.ResetText;
+import com.paintwar.client.view.pages.Home.SelectType;
 
-public class Home extends JPanel {
+public class Guest extends JPanel {
 	
 	private static final long serialVersionUID = -1539937711095867060L;
 	
@@ -44,7 +47,7 @@ public class Home extends JPanel {
 	private static final Dimension DIMENSION_EAST_TITLE = new Dimension(500, 25);
 	private static final Dimension DIMENSION_EAST_SCROLLER = new Dimension(500, 300);
 	// Note : 75 + 25 = 100 -> (Ergo = <3)
-	public Home(String name, MainWindow parent) {
+	public Guest(String name, MainWindow parent) {
 		super();
 		manager = parent;
 		this.playerName = name;
@@ -68,8 +71,7 @@ public class Home extends JPanel {
 		JPanel news = new JPanel();
 		JPanel east = new JPanel();
 		JPanel eastTitlePanel = new JPanel();
-		JPanel favoriteFriends = new JPanel();
-		JPanel allFriends = new JPanel();
+		JPanel warningPanel = new JPanel();
 		
 		center.setOpaque(false);
 		centerNorthContainer.setOpaque(false);
@@ -84,11 +86,10 @@ public class Home extends JPanel {
 		west.setOpaque(false);
 		east.setOpaque(false);
 		eastTitlePanel.setOpaque(false);
+		warningPanel.setOpaque(false);
 		
 		playerData.setBackground(Color.white);
 		news.setBackground(Color.white);
-		favoriteFriends.setBackground(Color.white);
-		allFriends.setBackground(Color.white);
 		
 		
 		add(center, BorderLayout.CENTER);
@@ -133,13 +134,14 @@ public class Home extends JPanel {
 		add(west, BorderLayout.WEST);
 		west.setLayout(new BorderLayout(10, 10));
 		west.add(playerData, BorderLayout.NORTH);
+		JLabel id = new JLabel("Nom du joueur : " + playerName);
+		JLabel toBecome = new JLabel("Ici seront affichées les informations sur le compte du joueur");
 		playerData.setPreferredSize(DIMENSION_PLAYER_DATA);
 		playerData.setLayout(new BoxLayout(playerData, BoxLayout.PAGE_AXIS));
 		playerData.setBorder(BorderFactory.createLineBorder(Color.black));
-		JLabel id = new JLabel("Nom du joueur : " + playerName);
 		playerData.add(id);
-		JLabel toBecome = new JLabel("Ici seront affichées les informations sur le compte du joueur");
 		playerData.add(toBecome);
+		
 		west.add(news, BorderLayout.SOUTH);
 		news.setPreferredSize(DIMENSION_PLAYER_DATA);
 		news.setBorder(BorderFactory.createLineBorder(Color.black));
@@ -149,33 +151,21 @@ public class Home extends JPanel {
 		
 		
 		add(east, BorderLayout.EAST);
+		//east.setLayout(new BoxLayout(east, BoxLayout.PAGE_AXIS));
+		east.setLayout(new GridLayout(2, 1));
 		east.setBorder(BorderFactory.createLineBorder(Color.black));
-		east.setLayout(new BoxLayout(east, BoxLayout.PAGE_AXIS));
+		east.add(eastTitlePanel);
 		JLabel eastTitle = new JLabel("Liste d'amis");
 		eastTitle.setPreferredSize(DIMENSION_EAST_TITLE);
 		incrFontSize(eastTitle, 10); 
-		east.add(eastTitlePanel);
-		
 		eastTitlePanel.add(eastTitle);
-		JScrollPane favoriteScroller= new JScrollPane(favoriteFriends, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
-				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		favoriteFriends.setAutoscrolls(true);
-		favoriteScroller.setPreferredSize(DIMENSION_EAST_SCROLLER);
-		east.add(favoriteScroller);
-		favoriteFriends.setLayout(new BorderLayout(10, 10));
-		JLabel favoriteTitle = new JLabel("Favoris");
-		incrFontSize(favoriteTitle, 6);
-		favoriteFriends.add(favoriteTitle, BorderLayout.NORTH);
 		
-		JScrollPane allScroller= new JScrollPane(allFriends, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
-				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		allFriends.setAutoscrolls(true);
-		allScroller.setPreferredSize(DIMENSION_EAST_SCROLLER);
-		east.add(allScroller);
-		allFriends.setLayout(new BorderLayout(10, 10));
-		JLabel allTitle = new JLabel("Tous");
-		incrFontSize(allTitle, 6);
-		allFriends.add(allTitle, BorderLayout.NORTH);
+		east.add(warningPanel);
+		JTextArea warning = new JTextArea("La liste d'amis n'est disponible que si vous avez un compte !");
+		warning.setBackground(Color.white);
+		warning.setBorder(BorderFactory.createLineBorder(Color.black));
+		incrFontSize(warning, 5);
+		warningPanel.add(warning);
 		
 		
 	}
