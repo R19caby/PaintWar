@@ -9,14 +9,13 @@ import javax.swing.JButton;
 import com.paintwar.client.view.MainWindow;
 import com.paintwar.client.view.pages.PageName;
 
-public class ButtonFactory extends RoundButton {
+public class ButtonFactory extends JButton {
 	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 2910361933495135715L;
 	
-	private String cardName;
 	private MainWindow manager;
 	
 	public ButtonFactory(String name, PageName pageName, MainWindow parent) {

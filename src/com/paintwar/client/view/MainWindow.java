@@ -3,10 +3,18 @@ package com.paintwar.client.view;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.File;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import com.paintwar.client.view.pages.AccountCreation;
@@ -35,15 +43,33 @@ public class MainWindow extends JFrame {
 	private JPanel contentContainer;
 	private String playerName;
 	
-	
 	public MainWindow() {
 		super();
+		getContentPane().setLayout(new BorderLayout());
 		addWindowListener(new MyWindowListener());
-		setLayout(new BorderLayout());
 		setVisible(true);
 		
+		/*
+		ImageIcon icon = null;
+		try {
+			icon = new ImageIcon(ImageIO.read(new File(System.getProperty("user.dir") + "/src/graphicResources/paint.png")));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		JLabel contentPane = new JLabel(icon) {
+			private static final long serialVersionUID = -9148089519644484286L;
+			@Override
+			public void paintComponent(Graphics g) {
+				super.paintComponent(g);
+			    if(getIcon() != null)
+			    	g.drawImage(((ImageIcon)getIcon()).getImage(), 0, 0, getWidth(), getHeight(), null);
+			  }
+		};
+		setContentPane(contentPane);
+		*/
+		
 		contentContainer = new JPanel();
-		add(contentContainer, BorderLayout.CENTER);
+		getContentPane().add(contentContainer, BorderLayout.CENTER);
 		contentContainer.setLayout(new CardLayout());
 		
 		connexionChoicePage = new ConnexionChoice(this);

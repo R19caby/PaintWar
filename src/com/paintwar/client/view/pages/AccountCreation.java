@@ -3,14 +3,19 @@ package com.paintwar.client.view.pages;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Graphics;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.File;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
-import javax.swing.JButton;
+import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -30,8 +35,29 @@ public class AccountCreation extends JPanel {
 	
 	public AccountCreation(MainWindow parent) {
 		super();
+		JPanel myPanel = new JPanel()
+		{
+            protected void paintComponent(Graphics g) 
+            {
+                super.paintComponent(g);
+                ImageIcon m = null;
+                try
+                {
+                	m = new ImageIcon(ImageIO.read(new File(System.getProperty("user.dir") + "/src/graphicResources/paint.png")));
+                }
+                catch (IOException e)
+                {
+                	e.printStackTrace();
+                }
+                Image monImage = m.getImage();
+                g.drawImage(monImage, 0, 0,this);
+            }
+        };
 		manager = parent;
 		setLayout(new BorderLayout());
+		setOpaque(false);
+		repaint();
+		
 		
 		JPanel shortcuts = new JPanel();
 		shortcuts.setLayout(new FlowLayout(FlowLayout.RIGHT));
@@ -103,6 +129,20 @@ public class AccountCreation extends JPanel {
 		
 	}
 	
+	/*
+	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		ImageIcon icon = null;
+		try {
+			icon = new ImageIcon(ImageIO.read(new File(System.getProperty("user.dir") + "/src/graphicResources/paint.png")));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		if(icon != null)
+			g.drawImage(icon.getImage(), 0, 0, getWidth(), getHeight(), null);
+		}
+		
+	*/
 	
 	
 	public class HideText implements ActionListener {
