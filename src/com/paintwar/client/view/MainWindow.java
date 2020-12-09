@@ -49,25 +49,6 @@ public class MainWindow extends JFrame {
 		addWindowListener(new MyWindowListener());
 		setVisible(true);
 		
-		/*
-		ImageIcon icon = null;
-		try {
-			icon = new ImageIcon(ImageIO.read(new File(System.getProperty("user.dir") + "/src/graphicResources/paint.png")));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		JLabel contentPane = new JLabel(icon) {
-			private static final long serialVersionUID = -9148089519644484286L;
-			@Override
-			public void paintComponent(Graphics g) {
-				super.paintComponent(g);
-			    if(getIcon() != null)
-			    	g.drawImage(((ImageIcon)getIcon()).getImage(), 0, 0, getWidth(), getHeight(), null);
-			  }
-		};
-		setContentPane(contentPane);
-		*/
-		
 		contentContainer = new JPanel();
 		getContentPane().add(contentContainer, BorderLayout.CENTER);
 		contentContainer.setLayout(new CardLayout());
@@ -88,7 +69,7 @@ public class MainWindow extends JFrame {
 		return contentContainer;
 	}
 	
-	
+
 	public class MyWindowListener implements WindowListener {
 		public void windowActivated(WindowEvent arg0) {
 		}

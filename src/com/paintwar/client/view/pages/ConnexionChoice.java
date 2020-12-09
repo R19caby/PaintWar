@@ -11,6 +11,7 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
 
@@ -92,14 +93,14 @@ public class ConnexionChoice extends JPanel {
 	
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		ImageIcon icon = null;
+		Image icon = null;
 		try {
-			icon = new ImageIcon(ImageIO.read(new File(System.getProperty("user.dir") + "/src/graphicResources/paint.png")));
+			icon = ImageIO.read(new File(System.getProperty("user.dir") + "/src/graphicResources/paint_HQ.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		if(icon != null)
-			g.drawImage(icon.getImage(), 0, 0, getWidth(), getHeight(), null);
+			g.drawImage(icon, 0, 0, getWidth(), getHeight(), null);
 		}
 	
 }
