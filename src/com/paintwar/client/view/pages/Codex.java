@@ -207,6 +207,7 @@ public class Codex extends JPanel {
 		JScrollPane itemPane = new JScrollPane(itemCard, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
 				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		itemPane.getViewport().setOpaque(false);
+		itemPane.getVerticalScrollBar().setUnitIncrement(50);
 		itemPane.setBorder(null);
 		JPanel itemGrid = new JPanel();
 		
@@ -214,7 +215,7 @@ public class Codex extends JPanel {
 		itemPane.setOpaque(false);
 		itemGrid.setOpaque(false);
 		itemGrid.setLayout(new GridLayout(0, 1, 10, 10));
-		//itemGrid.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		
 		itemGrid.setMinimumSize(DIMENSION_ITEM_GRID);
 		itemCard.add(itemGrid);
 		for (int index = 0; index < 22; index++) {

@@ -165,18 +165,21 @@ public class Collection extends JPanel {
 
 	public JScrollPane buildItemPanel(String cat) {
 		JPanel itemCard = new JPanel();
-		itemCard.setOpaque(false);
+		
 		itemCard.setPreferredSize(DIMENSION_ITEM_CARD);
 		JScrollPane itemPane = new JScrollPane(itemCard, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
 				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		itemPane.getViewport().setOpaque(false);
+		itemPane.getVerticalScrollBar().setUnitIncrement(50);
+		itemPane.setBorder(null);
 		itemPane.setAutoscrolls(true);
 		itemPane.setOpaque(false);
+		itemCard.setOpaque(false);
 		JPanel itemGrid = new JPanel();
-//		itemGrid.setBackground(Color.black);
-		itemGrid.setLayout(new GridLayout(0, 5, 10, 10));
-		itemGrid.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-		itemGrid.setPreferredSize(DIMENSION_ITEM_GRID);
 		itemGrid.setOpaque(false);
+		itemGrid.setLayout(new GridLayout(0, 5, 10, 10));
+		itemGrid.setPreferredSize(DIMENSION_ITEM_GRID);
+		
 		itemCard.add(itemGrid);
 
 		for (int index = 0; index < 22; index++) {
