@@ -63,6 +63,7 @@ public class MainWindow extends JFrame {
 		contentContainer.add(PageName.PARAMETERS.toString(), parametersPage);
 		
 		
+		this.setDefaultCloseOperation(3);
 	}
 	
 	public JPanel getContentContainer() {

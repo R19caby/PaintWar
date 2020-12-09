@@ -39,24 +39,6 @@ public class AccountCreation extends JPanel {
 	
 	public AccountCreation(MainWindow parent) {
 		super();
-		JPanel myPanel = new JPanel()
-		{
-            protected void paintComponent(Graphics g) 
-            {
-                super.paintComponent(g);
-                ImageIcon m = null;
-                try
-                {
-                	m = new ImageIcon(ImageIO.read(new File(System.getProperty("user.dir") + "/src/graphicResources/paint.png")));
-                }
-                catch (IOException e)
-                {
-                	e.printStackTrace();
-                }
-                Image monImage = m.getImage();
-                g.drawImage(monImage, 0, 0,this);
-            }
-        };
 		manager = parent;
 		setLayout(new BorderLayout(0, 50));
 		setOpaque(false);
@@ -64,7 +46,7 @@ public class AccountCreation extends JPanel {
 		JPanel shortcuts = new JPanel();
 		shortcuts.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		shortcuts.add(ButtonFactory.getInstance().getParameterButton(manager));
-		shortcuts.add(ButtonFactory.getInstance().getButton("Back", PageName.CONNEXION_CHOICE, manager));
+		shortcuts.add(ButtonFactory.getInstance().getButton("Retour", PageName.CONNEXION_CHOICE, manager));
 		add(shortcuts, BorderLayout.NORTH);
 		shortcuts.setAlignmentX(RIGHT_ALIGNMENT);
 		
@@ -82,6 +64,26 @@ public class AccountCreation extends JPanel {
 		JPanel confirmPanel = new JPanel();
 		JPanel showFirstPanel = new JPanel();
 		JPanel showSecondPanel = new JPanel();
+		JPanel south = new JPanel();
+		
+
+		shortcuts.setOpaque(false);
+		center.setOpaque(false);
+		logoDataPanel.setOpaque(false);
+		logoPanel.setOpaque(false);
+		dataToEnter.setOpaque(false);
+		nicknameAddressPanel.setOpaque(false);
+		nicknamePanel.setOpaque(false);
+		addressPanel.setOpaque(false);
+		passwordsCheckBoxesPanel.setOpaque(false);
+		passwordsPanel.setOpaque(false);
+		checkBoxesPanel.setOpaque(false);
+		enterPanel.setOpaque(false);
+		confirmPanel.setOpaque(false);
+		showFirstPanel.setOpaque(false);
+		showSecondPanel.setOpaque(false);
+		south.setOpaque(false);
+		
 		
 		add(center, BorderLayout.CENTER);
 		center.add(logoDataPanel);
@@ -102,14 +104,6 @@ public class AccountCreation extends JPanel {
 		nicknameAddressPanel.setLayout(new BoxLayout(nicknameAddressPanel, BoxLayout.Y_AXIS));
 		passwordsCheckBoxesPanel.setLayout(new BoxLayout(passwordsCheckBoxesPanel, BoxLayout.Y_AXIS));
 		
-		
-		center.setOpaque(false);
-		logoDataPanel.setOpaque(false);
-		nicknamePanel.setOpaque(false);
-		logoPanel.setOpaque(false);
-		dataToEnter.setOpaque(false);
-		nicknameAddressPanel.setOpaque(false);
-		addressPanel.setOpaque(false);
 		
 		JLabel logo = new JLabel("Paint War");
 		logo.setFont(new Font(logo.getFont().getName(), logo.getFont().getSize(), logo.getFont().getSize() + 100));
@@ -135,6 +129,7 @@ public class AccountCreation extends JPanel {
 		enter.setPreferredSize(DIMENSION_PASSWORD);
 		
 		JCheckBox showFirst = new JCheckBox("Afficher le mot de passe");
+		showFirst.setOpaque(false);
 		showFirst.addActionListener(new HideText(showFirst, enter, "Entrez le mot de passe"));
 		enter.addMouseListener(new ResetPasswordText(enter, "Entrez le mot de passe", showFirst));
 		showFirstPanel.add(showFirst);
@@ -146,12 +141,12 @@ public class AccountCreation extends JPanel {
 		confirm.setPreferredSize(DIMENSION_PASSWORD);
 		
 		JCheckBox showSecond = new JCheckBox("Afficher la confirmation");
+		showSecond.setOpaque(false);
 		showSecond.addActionListener(new HideText(showSecond, confirm, "Confirmez le mot de passe"));
 		confirm.addMouseListener(new ResetPasswordText(confirm, "Confirmez le mot de passe", showSecond));
 		showSecondPanel.add(showSecond);
 
 		
-		JPanel south = new JPanel();
 		add(south, BorderLayout.SOUTH);
 		JButton validate = ButtonFactory.getInstance().getButton("Valider", PageName.HOME, parent);
 		south.add(validate, BorderLayout.SOUTH);
@@ -159,20 +154,17 @@ public class AccountCreation extends JPanel {
 		
 	}
 	
-	/*
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		ImageIcon icon = null;
+		Image icon = null;
 		try {
-			icon = new ImageIcon(ImageIO.read(new File(System.getProperty("user.dir") + "/src/graphicResources/paint.png")));
+			icon = ImageIO.read(new File(System.getProperty("user.dir") + "/src/graphicResources/paint_HQ.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		if(icon != null)
-			g.drawImage(icon.getImage(), 0, 0, getWidth(), getHeight(), null);
+			g.drawImage(icon, 0, 0, getWidth(), getHeight(), null);
 		}
-		
-	*/
 	
 	
 	public class HideText implements ActionListener {
