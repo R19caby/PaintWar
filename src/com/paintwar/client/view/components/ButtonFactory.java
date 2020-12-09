@@ -34,6 +34,7 @@ public class ButtonFactory
 {
 	private ButtonFactory()
 	{
+
 	}
 
 	private static ButtonFactory instance;
