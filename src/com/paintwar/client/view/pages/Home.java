@@ -2,8 +2,10 @@ package com.paintwar.client.view.pages;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
@@ -32,13 +34,15 @@ public class Home extends JPanel {
 	private static final Dimension DIMENSION_JOIN_GAME = new Dimension(200, 75);
 	private static final Dimension DIMENSION_GAME_TYPE = new Dimension(200, 25);
 	private static final Dimension DIMENSION_GAME_PASSWORD = new Dimension(200, 25);
-	private static final Dimension DIMENSION_PLAYER_DATA = new Dimension(500, 300);
+	private static final Dimension DIMENSION_PLAYER_DATA = new Dimension(700, 400);
+	private static final Dimension DIMENSION_EAST_TITLE = new Dimension(700, 25);
+	private static final Dimension DIMENSION_EAST_SCROLLER = new Dimension(700, 400);
 	// Note : 75 + 25 = 100 -> (Ergo = <3)
 	public Home(String name, MainWindow parent) {
 		super();
 		manager = parent;
 		this.playerName = name;
-		setLayout(new BorderLayout());
+		setLayout(new BorderLayout(25, 25));
 		
 		
 		add(new Header(manager), BorderLayout.NORTH);
@@ -46,12 +50,14 @@ public class Home extends JPanel {
 		
 		JPanel center = new JPanel();
 		add(center, BorderLayout.CENTER);
-		center.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
-		center.setLayout(new BorderLayout());
+		center.setBorder(BorderFactory.createEmptyBorder(50, 0, 50, 0));
+		center.setLayout(new GridLayout(0, 1));
 		
+		JPanel centerNorthContainer = new JPanel();
 		JPanel centerNorth = new JPanel();
 		centerNorth.setLayout(new BoxLayout(centerNorth, BoxLayout.PAGE_AXIS));
-		center.add(centerNorth, BorderLayout.NORTH);
+		center.add(centerNorthContainer);
+		centerNorthContainer.add(centerNorth);
 		JButton playGame = new JButton("Jouer");
 		JPanel playGamePanel = new JPanel();
 		playGamePanel.add(playGame);
@@ -74,8 +80,10 @@ public class Home extends JPanel {
 		centerCenter.add(createGame, BorderLayout.CENTER);
 		createGame.setAlignmentX(CENTER_ALIGNMENT);
 		
+		JPanel centerSouthContainer = new JPanel();
 		JPanel centerSouth = new JPanel();
-		center.add(centerSouth, BorderLayout.SOUTH);
+		center.add(centerSouthContainer);
+		centerSouthContainer.add(centerSouth);
 		centerSouth.setLayout(new BoxLayout(centerSouth, BoxLayout.PAGE_AXIS));
 		JButton joinGame = new JButton("Rejoindre une partie");
 		JPanel joinGamePanel = new JPanel();
@@ -103,10 +111,10 @@ public class Home extends JPanel {
 		playerData.add(toBecome);
 		JPanel news = new JPanel();
 		west.add(news, BorderLayout.SOUTH);
-		news.setPreferredSize(new Dimension(300, 300));
-		news.setMaximumSize(new Dimension(300, 300));
+		news.setPreferredSize(DIMENSION_PLAYER_DATA);
 		news.setBorder(BorderFactory.createLineBorder(Color.black));
-		JLabel title = new JLabel("Actualité du jeu");
+		JLabel title = new JLabel("Actualités du jeu");
+		incrFontSize(title, 8);
 		news.add(title);
 		
 		
@@ -114,31 +122,38 @@ public class Home extends JPanel {
 		add(east, BorderLayout.EAST);
 		east.setBorder(BorderFactory.createLineBorder(Color.black));
 		east.setLayout(new BoxLayout(east, BoxLayout.PAGE_AXIS));
+		JPanel eastTitlePanel = new JPanel();
 		JLabel eastTitle = new JLabel("Liste d'amis");
-		eastTitle.setFont(new Font(eastTitle.getFont().getName(), eastTitle.getFont().getSize(), eastTitle.getFont().getSize()+10));
-		east.add(eastTitle);
+		eastTitle.setPreferredSize(DIMENSION_EAST_TITLE);
+		incrFontSize(eastTitle, 10); 
+		east.add(eastTitlePanel);
 		
+		eastTitlePanel.add(eastTitle);
 		JPanel favoriteFriends = new JPanel();
 		east.add(favoriteFriends);
 		favoriteFriends.setLayout(new BorderLayout(10, 10));
 		JLabel favoriteTitle = new JLabel("Favoris");
+		incrFontSize(favoriteTitle, 6);
 		favoriteFriends.add(favoriteTitle, BorderLayout.NORTH);
 		JScrollPane favoriteScroller = new JScrollPane();
 		favoriteFriends.add(favoriteScroller, BorderLayout.CENTER);
-		favoriteScroller.setPreferredSize(new Dimension(300, 300));
-		favoriteScroller.setMaximumSize(new Dimension(300, 300));
+		favoriteScroller.setPreferredSize(DIMENSION_EAST_SCROLLER);
 		
 		JPanel allFriends = new JPanel();
 		east.add(allFriends);
 		allFriends.setLayout(new BorderLayout(10, 10));
 		JLabel allTitle = new JLabel("Tous");
+		incrFontSize(allTitle, 6);
 		allFriends.add(allTitle, BorderLayout.NORTH);
 		JScrollPane allScroller = new JScrollPane();
 		allFriends.add(allScroller, BorderLayout.CENTER);
-		allScroller.setPreferredSize(new Dimension(300, 300));
-		allScroller.setMaximumSize(new Dimension(300, 300));
+		allScroller.setPreferredSize(DIMENSION_EAST_SCROLLER);
 		
 		
+	}
+	
+	private void incrFontSize(Component component, int delta) {
+		component.setFont(new Font(component.getFont().getName(), component.getFont().getSize(), component.getFont().getSize() + delta));
 	}
 	
 	public class SelectType implements ItemListener {
