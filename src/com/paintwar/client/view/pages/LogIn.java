@@ -34,6 +34,7 @@ public class LogIn extends JPanel {
 		this.setLayout(new BorderLayout(0, 50));
 
 		JPanel shortcuts = new JPanel();
+		shortcuts.setOpaque(false);
 		shortcuts.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		shortcuts.add(ButtonFactory.getInstance().getParameterButton(manager));
 		shortcuts.add(ButtonFactory.getInstance().getButton("Retour", PageName.CONNEXION_CHOICE, manager));
@@ -41,22 +42,27 @@ public class LogIn extends JPanel {
 		shortcuts.setAlignmentX(RIGHT_ALIGNMENT);
 
 		JPanel center = new JPanel();
+		center.setOpaque(false);
 		add(center, BorderLayout.CENTER);
 
 		JPanel logoDataPanel = new JPanel(new BorderLayout(0, 100));
+		logoDataPanel.setOpaque(false);
 		center.add(logoDataPanel);
 
 		JLabel logo = new JLabel("Paint War");
 		logo.setFont(new Font(logo.getFont().getName(), logo.getFont().getSize(), logo.getFont().getSize() + 100));
 		JPanel logoPanel = new JPanel();
+		logoPanel.setOpaque(false);
 		logoPanel.add(logo);
 		logoDataPanel.add(logoPanel, BorderLayout.NORTH);
 
 		JPanel loginData = new JPanel();
+		loginData.setOpaque(false);
 		logoDataPanel.add(loginData, BorderLayout.CENTER);
 		loginData.setLayout(new BoxLayout(loginData, BoxLayout.Y_AXIS));
 		JTextField userID = new JTextField();
 		JPanel userIDPanel = new JPanel();
+		userIDPanel.setOpaque(false);
 		userIDPanel.add(userID);
 		loginData.add(userIDPanel);
 		userID.setPreferredSize(new Dimension(300, 20));
@@ -65,6 +71,7 @@ public class LogIn extends JPanel {
 		userID.addMouseListener(new ResetSimpleText(userID, "Pseudo/Adresse mail"));
 		JPasswordField mdp = new JPasswordField();
 		JPanel mdpPanel = new JPanel();
+		mdp.setOpaque(false);
 		mdpPanel.add(mdp);
 		loginData.add(mdpPanel);
 		mdp.setPreferredSize(new Dimension(300, 20));
@@ -74,6 +81,7 @@ public class LogIn extends JPanel {
 		mdp.setText("Mot de passe");
 		JCheckBox showPassword = new JCheckBox("Afficher le mot de passe");
 		JPanel showPasswordPanel = new JPanel();
+		showPasswordPanel.setOpaque(false);
 		showPasswordPanel.add(showPassword);
 		loginData.add(showPasswordPanel);
 		mdp.addMouseListener(new ResetPasswordText(mdp, "Mot de passe", showPassword));
@@ -81,6 +89,7 @@ public class LogIn extends JPanel {
 
 		JButton validate = new JButton("Valider");
 		JPanel validatePanel = new JPanel();
+		validatePanel.setOpaque(false);
 		add(validatePanel, BorderLayout.SOUTH);
 		validatePanel.add(validate);
 
