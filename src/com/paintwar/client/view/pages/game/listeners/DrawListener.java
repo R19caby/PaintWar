@@ -5,6 +5,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
+import javax.swing.SwingUtilities;
+
 import com.paintwar.client.view.pages.game.elements.DrawZone;
 
 public class DrawListener implements MouseListener, MouseMotionListener {
@@ -19,8 +21,10 @@ public class DrawListener implements MouseListener, MouseMotionListener {
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
-		drawZone.updateEndPointDraw(entityDrawnName, e.getPoint());
-		drawZone.repaint();
+		if (SwingUtilities.isLeftMouseButton(e)) {
+			drawZone.updateEndPointDraw(entityDrawnName, e.getPoint());
+			drawZone.repaint();
+		}
 		
 		//sending event to other listeners
 		e.translatePoint(drawZone.getX(), drawZone.getY());
@@ -42,13 +46,18 @@ public class DrawListener implements MouseListener, MouseMotionListener {
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		entityDrawnName = drawZone.initializeDraw(e.getPoint(), Color.black);
+		if (SwingUtilities.isLeftMouseButton(e)) {
+			entityDrawnName = drawZone.initializeDraw(e.getPoint(), Color.black);
+		}
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		entityDrawnName = null;
-		drawZone.setCurrentDrawing(null);
+		if (SwingUtilities.isLeftMouseButton(e)) {
+			drawZone.startFilling(entityDrawnName);
+			entityDrawnName = null;
+			drawZone.setCurrentDrawing(null);
+		}
 	}
 
 	@Override

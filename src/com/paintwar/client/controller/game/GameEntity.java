@@ -103,6 +103,13 @@ public class GameEntity implements IGameEntity {
 		}
 	}
 
+	public void startFilling(String name) {
+		ioClient.startFilling(name);
+	}
+	
+	public void updateFilling(String name, Double percent) {
+		drawZone.updateFilling(name, percent);
+	}
 	
 	public boolean hasDrawing(String name) {
 		return drawings.containsKey(name);

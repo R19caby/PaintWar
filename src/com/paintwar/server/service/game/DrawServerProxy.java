@@ -9,6 +9,7 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
 import java.util.List;
 
+import com.paintwar.server.logger.Logger;
 import com.paintwar.unicast.UnicastTransmitter;
 
 public class DrawServerProxy extends UnicastRemoteObject implements IDrawServerProxy, Serializable {
@@ -20,6 +21,9 @@ public class DrawServerProxy extends UnicastRemoteObject implements IDrawServerP
 	private int h ;
 	private String name ;
 	private Color currentColor;
+	
+	//thread to start fillers
+	private transient DrawFillerThread filler;
 
 	// un attribut permettant au Dessin de diffuser directement ses mises à jour, sans passer par le serveur associé
 	// - cet attribut n'est pas Serializable, du coup on le déclare transient pour qu'il ne soit pas inclu dans la sérialisation
@@ -48,13 +52,11 @@ public class DrawServerProxy extends UnicastRemoteObject implements IDrawServerP
 	}
 	
 	public void setBounds (Point p1, Point p2) throws RemoteException {
-		//System.out.println (getName() + " setBounds : " + x + " " + y + " " + w + " " + h) ;
-		Rectangle r = new Rectangle(p1);
-		r.add(p2);
-		this.x = (int) r.getX();
-		this.y = (int) r.getY();
-		this.h = (int) r.getHeight();
-		this.w = (int) r.getWidth();
+		//Logger.print("[Server/drawProxy] Setbounds " + getName() + " setBounds : " + x + " " + y + " " + w + " " + h) ;
+		this.x = (int) p1.getX();
+		this.y = (int) p1.getY();
+		this.h = (int) (p2.getX() - p1.getX());
+		this.w = (int) (p2.getY() - p1.getY());
 	}
 	
 	public void setColor (Color color) throws RemoteException {
@@ -89,6 +91,20 @@ public class DrawServerProxy extends UnicastRemoteObject implements IDrawServerP
 	@Override
 	public Color getColor() throws RemoteException {
 		return currentColor;
+	}
+	
+	@Override
+	public void startFilling() throws RemoteException {
+		filler = new DrawFillerThread(name, 0.01, emetteurs);
+		filler.start();
+	}
+	
+	@Override
+	public void stopFilling() throws RemoteException {
+		if (filler != null) {
+			filler.interrupt();
+			filler = null;
+		}
 	}
 
 }

@@ -18,5 +18,6 @@ public interface IGameServerEntity extends Remote {
 	void updateBoundsDrawing(String name, Point p1, Point p2, String clientIP) throws RemoteException;
 	void deleteDrawing(String name) throws RemoteException ;
 	void stopServer() throws RemoteException ;
+	void startFillingDraw(String name) throws RemoteException;
 	
 }

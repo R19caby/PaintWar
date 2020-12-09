@@ -13,6 +13,7 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
 
 import com.paintwar.server.logger.Logger;
 import com.paintwar.unicast.UnicastTransmitter;
@@ -177,9 +178,19 @@ public class GameServerEntity extends UnicastRemoteObject implements IGameServer
 			Logger.print("[Server/GameEntity] Entity not found");
 		}
 	}
+	@Override
+	public void startFillingDraw(String name) throws RemoteException {
+		Logger.print("[Server/GameEntity] Starting thread for filling " + name);
+		DrawServerProxy drawing = drawingProxies.get(name);
+		if (drawing != null)
+			drawing.startFilling();
+	}
 	
 	@Override
 	public void deleteDrawing(String name) throws RemoteException {
+		DrawServerProxy drawing = drawingProxies.get(name);
+		if (drawing != null)
+			drawing.stopFilling();
 		drawingProxies.remove(name);
 		// envoi des mises à jour à tous les clients, via la liste des émetteurs
 		for (UnicastTransmitter sender : transmitters) {
@@ -189,6 +200,11 @@ public class GameServerEntity extends UnicastRemoteObject implements IGameServer
 	}
 
 	public void stopServer() throws RemoteException {
+		//stop all threads filling drawings
+		for (Entry<String, DrawServerProxy> drawing : drawingProxies.entrySet()) {
+			drawing.getValue().stopFilling();
+		}
+		
 		try {
 			Naming.unbind("//" + serverIP + ":" + RMIPort + "/" + gameName);
 		} catch (Exception e) {

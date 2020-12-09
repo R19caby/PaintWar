@@ -194,4 +194,19 @@ public class GameIOReceiver {
 		//TODO is that all?
 	}
 
+	//ask server to start filling the draw
+	public void startFilling(String name) {
+		try {
+			server.startFillingDraw(name);
+		} catch (RemoteException e) {
+			Logger.print("[Client/GameIO] Couldn't start filling of " + name + " on server");
+			e.printStackTrace();
+		}
+	}
+	
+	//update filling -> after receiving message
+	public synchronized void updateFilling(String name, Double percent) {
+		gameEntity.updateFilling(name, percent);
+	}
+
 }

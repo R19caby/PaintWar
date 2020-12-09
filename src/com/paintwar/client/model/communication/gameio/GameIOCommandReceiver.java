@@ -20,6 +20,7 @@ public class GameIOCommandReceiver implements IClientCommandReceiver {
 		commands.add("Bounds");
 		commands.add("Draw");
 		commands.add("Delete");
+		commands.add("Fill");
 	}
 
 	@Override
@@ -29,6 +30,7 @@ public class GameIOCommandReceiver implements IClientCommandReceiver {
 
 	@Override
 	public void executeCommand(String command, String name, HashMap<String, Object> args) {
+		Logger.print("[Client/GameIO/Received message] received message " + command);
 		switch (command) {
 			case ("Bounds"): {
 				gameReceiver.objectUpdateBounds(name, (int)args.get ("x"), (int)args.get ("y"), (int)args.get ("w"), (int)args.get ("h"));
@@ -40,6 +42,10 @@ public class GameIOCommandReceiver implements IClientCommandReceiver {
 			}
 			case ("Delete"): {
 				gameReceiver.deleteDessin(name);
+				break;
+			}
+			case ("Fill"): {
+				gameReceiver.updateFilling(name, (Double)args.get("percent"));
 				break;
 			}
 			default: {

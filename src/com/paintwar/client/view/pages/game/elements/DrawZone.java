@@ -18,6 +18,7 @@ public class DrawZone extends JPanel {
 	private HashMap<String, Drawing> drawPanels;
 	private String currentDrawingByUser;
 	private Minimap minimap;
+	private static int SCHEMA_OPACITY = 30;
 	
 	public DrawZone(GameEntity gameEntity, Minimap minimap) {
 		this.gameEntity = gameEntity;
@@ -36,8 +37,8 @@ public class DrawZone extends JPanel {
 	/*Add a drawing to zone and gameEntity*/
 	public String initializeDraw(Point p, Color color) {
 		String entiName = gameEntity.paintClient(p, p, color);
-		minimap.paint(entiName, p, p, color);
-		Drawing newDraw = new Drawing(color);
+		minimap.paint(entiName, p, p, color, SCHEMA_OPACITY);
+		Drawing newDraw = new Drawing(color, SCHEMA_OPACITY);
 		drawPanels.put(entiName, newDraw);
 		newDraw.setBounds(new Rectangle(p));
 		newDraw.setInitPoint(p);
@@ -101,8 +102,8 @@ public class DrawZone extends JPanel {
 	}
 	
 	public void addDrawing(String name, Point p1, Point p2, Color c) {
-		minimap.paint(name, p1, p2, c);
-		Drawing newDraw = new Drawing(c);
+		minimap.paint(name, p1, p2, c, SCHEMA_OPACITY);
+		Drawing newDraw = new Drawing(c, SCHEMA_OPACITY);
 		drawPanels.put(name, newDraw);
 		
 		//generate physical drawing
@@ -121,6 +122,17 @@ public class DrawZone extends JPanel {
 			this.remove(drawing);
 			this.repaint();
 		}
+	}
+
+	public void updateFilling(String name, Double percent) {
+		Drawing drawing = drawPanels.get(name);
+		if (drawing != null)
+			drawing.setFilling(percent);
+		minimap.updateFilling(name, percent);
+	}
+
+	public void startFilling(String entityDrawnName) {
+		gameEntity.startFilling(entityDrawnName);
 	}
 	
 }

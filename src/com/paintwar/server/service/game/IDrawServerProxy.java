@@ -16,6 +16,8 @@ public interface IDrawServerProxy extends Remote {
    int getWidth () throws RemoteException ;
    int getHeight () throws RemoteException ;
    Color getColor () throws RemoteException ;
+   void startFilling() throws RemoteException ;
+   void stopFilling() throws RemoteException ;
 
 
 }

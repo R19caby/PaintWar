@@ -52,12 +52,12 @@ public class Minimap extends JPanel {
 		p.setLocation((int) ((p.x - cameraFrame.getWidth()/2)/ratio), (int) ((p.y - cameraFrame.getHeight()/2)/ratio));
 	}
 	
-	public void paint(String name, Point oldP, Point oldP2, Color black) {
+	public void paint(String name, Point oldP, Point oldP2, Color color, int opacity) {
 		Point p = oldP.getLocation();
 		Point p2 = oldP2.getLocation();
 		reScale(p);
 		reScale(p2);
-		Drawing newDraw = new Drawing(Color.black);
+		Drawing newDraw = new Drawing(color, opacity);
 		miniDraws.put(name, newDraw);
 		Rectangle r = new Rectangle(p);
 		r.add(p2);
@@ -115,6 +115,12 @@ public class Minimap extends JPanel {
 			this.remove(miniDraw);
 			this.repaint();
 		}
+	}
+
+	public void updateFilling(String name, Double percent) {
+		Drawing drawToUpdate = miniDraws.get(name);
+		if (drawToUpdate != null)
+			drawToUpdate.setFilling(percent);
 	}
 
 
