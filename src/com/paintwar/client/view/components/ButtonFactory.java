@@ -4,6 +4,7 @@ import java.awt.CardLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -57,23 +58,48 @@ public class ButtonFactory
 	}
 
 	public JButton getParameterButton(MainWindow manager)
-	{
-		JButton b = new JButton("Failed");
-		try
-		{
-			b = new JButton(new ImageIcon(new URL("https://img.icons8.com/ios/452/settings.png")));
-		} catch (MalformedURLException e)
-		{
-			Logger.print(e);
-		}
+    {
+        JButton b = new JButton("Failed");
+        int size = 30;
+        try
+        {
+            ImageIcon icon = new ImageIcon(new URL("https://img.icons8.com/ios/452/settings.png"));
+            Image image = icon.getImage();
+            icon = new ImageIcon(image.getScaledInstance(size, size, java.awt.Image.SCALE_SMOOTH));
 
-		b.setOpaque(false);
-		b.setContentAreaFilled(false);
-		b.setBorderPainted(false);
-		b.setPreferredSize(new Dimension(30, 30));
+            b = new JButton(icon);
 
-		return b;
-	}
+            b.setOpaque(false);
+            b.setContentAreaFilled(false);
+            b.setBorderPainted(false);
+            b.setPreferredSize(new Dimension(size, size));
+
+        } catch (MalformedURLException e)
+        {
+            Logger.print(e);
+        }
+        return b;
+    }
+//
+//	public JButton getParameterButton(MainWindow manager)
+//	{
+//		JButton b = new JButton("Failed");
+//		int size = 30;
+//		try
+//		{
+//			b = new JButton(new ImageIcon(new URL("https://img.icons8.com/ios/452/settings.png")));
+//		} catch (MalformedURLException e)
+//		{
+//			Logger.print(e);
+//		}
+//
+//		b.setOpaque(false);
+//		b.setContentAreaFilled(false);
+//		b.setBorderPainted(false);
+//		b.setPreferredSize(new Dimension(30, 30));
+//
+//		return b;
+//	}
 
 	private class CustomButton extends JButton implements ActionListener
 	{
