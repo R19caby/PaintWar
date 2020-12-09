@@ -1,10 +1,11 @@
 package com.paintwar.server.service.account.impl;
 
+import java.io.Serializable;
 import java.rmi.RemoteException;
 
 import com.paintwar.server.service.account.interfaces.ILevel;
 
-public class Level implements ILevel
+public class Level implements ILevel, Serializable
 {
 	private final static int[] XP_TABLE =
 	{ 1, 2, 3, 4, 5, 6, 7, 8, 9 };

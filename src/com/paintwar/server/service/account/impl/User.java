@@ -1,13 +1,15 @@
 package com.paintwar.server.service.account.impl;
 
+import java.io.Serializable;
 import java.rmi.RemoteException;
 
+import com.paintwar.server.logger.Logger;
 import com.paintwar.server.service.account.interfaces.IUser;
 import com.paintwar.server.service.account.interfaces.IUserFriendlist;
 import com.paintwar.server.service.account.interfaces.IUserInventory;
 import com.paintwar.server.service.account.interfaces.IUserMetadata;
 
-public class User implements IUser
+public class User implements IUser, Serializable
 {
 	private IUserMetadata metadata;
 	private IUserInventory inventory;
@@ -50,4 +52,20 @@ public class User implements IUser
 		return friendlist;
 	}
 
+	@Override
+	public String toString()
+	{
+		String username = "";
+		int level = 0;
+		try
+		{
+			username = metadata.getUsername();
+			level = metadata.getLevel().getValue();
+		} catch (RemoteException e)
+		{
+			Logger.print(e);
+		}
+
+		return String.format("User {0}, level {1}.", username, level);
+	}
 }

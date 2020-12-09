@@ -1,5 +1,6 @@
 package com.paintwar.server.service.account.impl;
 
+import java.io.Serializable;
 import java.rmi.RemoteException;
 
 import com.paintwar.server.service.account.interfaces.IGameHistory;
@@ -7,7 +8,7 @@ import com.paintwar.server.service.account.interfaces.ILevel;
 import com.paintwar.server.service.account.interfaces.IUserMetadata;
 import com.paintwar.server.service.account.interfaces.IUserStats;
 
-public class UserMetadata implements IUserMetadata
+public class UserMetadata implements IUserMetadata, Serializable
 {
 	private String username;
 	private String cryptedPassword;
@@ -73,6 +74,12 @@ public class UserMetadata implements IUserMetadata
 	public IGameHistory getGameHistory() throws RemoteException
 	{
 		return history;
+	}
+
+	@Override
+	public String getUsername() throws RemoteException
+	{
+		return username;
 	}
 
 }

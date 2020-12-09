@@ -69,6 +69,14 @@ public interface IUserMetadata extends Remote
 	public String getIdentificationToken() throws RemoteException;
 
 	/**
+	 * Gets the username of the user.
+	 * 
+	 * @return The username linked to the user.
+	 * @throws RemoteException When the server can't be reached.
+	 */
+	public String getUsername() throws RemoteException;
+
+	/**
 	 * Changes the username to a new username.
 	 * 
 	 * @param newUsername The new username.
