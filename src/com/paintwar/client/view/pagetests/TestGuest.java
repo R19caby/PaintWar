@@ -4,14 +4,14 @@ import java.awt.Dimension;
 
 import javax.swing.JFrame;
 
-import com.paintwar.client.view.pages.Collection;
+import com.paintwar.client.view.pages.Guest;
 
-public class TestCollection {
+public class TestGuest {
 	
 	public static void main(String[] args) {
 		JFrame window = new JFrame();
-		window.setSize(new Dimension(1080, 720));
-		window.add(new Collection("Player1", null));
+		window.setSize(new Dimension(2000, 1000));
+		window.add(new Guest("playerGuest", null));
 		window.setVisible(true);
 		window.setDefaultCloseOperation(3);
 	}

@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import javax.swing.JFrame;
 
 import com.paintwar.client.view.pages.LogIn;
+import com.paintwar.client.view.pages.Parameters;
 
 public class TestLogIn {
 	

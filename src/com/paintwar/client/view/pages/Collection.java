@@ -5,12 +5,17 @@ import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.io.File;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -57,16 +62,28 @@ public class Collection extends JPanel {
 		this.add(header, BorderLayout.NORTH);
 
 		JPanel center = new JPanel();
+		JPanel titlePanel = new JPanel();
+		container = new JPanel();
+		JPanel west = new JPanel();
+		JPanel categories = new JPanel();
+		
+		center.setOpaque(false);
+		titlePanel.setOpaque(false);
+		container.setOpaque(false);
+		west.setOpaque(false);
+		categories.setOpaque(false);
+		
+		
+		
 		add(center, BorderLayout.CENTER);
 		center.setLayout(new BorderLayout(10, 10));
-		JPanel titlePanel = new JPanel();
 		center.add(titlePanel, BorderLayout.NORTH);
 		effectiveTitle = new JLabel(AVATAR);
 		effectiveTitle.setFont(new Font(effectiveTitle.getFont().getName(), effectiveTitle.getFont().getSize(),
 				effectiveTitle.getFont().getSize() + 10));
 		titlePanel.add(effectiveTitle);
-
-		container = new JPanel();
+		
+		
 		center.add(container);
 		container.setLayout(new CardLayout());
 		JScrollPane avatarPane = buildItemPanel(AVATAR);
@@ -80,17 +97,18 @@ public class Collection extends JPanel {
 
 		JScrollPane texturePane = buildItemPanel(TEXTURE);
 		container.add(texturePane, TEXTURE);
-
-		JPanel west = new JPanel();
+		
+		
 		add(west, BorderLayout.WEST);
 		west.setLayout(new BorderLayout(0, 200));
 		west.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
-
+		
+		
 		JButton codex = ButtonFactory.getInstance().getButton("Codex", PageName.CODEX, manager);
 		codex.setPreferredSize(DIMENSION_CODEX);
 		west.add(codex, BorderLayout.NORTH);
-
-		JPanel categories = new JPanel();
+		
+		
 		west.add(categories, BorderLayout.CENTER);
 		categories.setLayout(new GridLayout(0, 1, 25, 25));
 		// JLabel categoriesTitle = new JLabel("Cat�gories");
@@ -113,11 +131,25 @@ public class Collection extends JPanel {
 		textureBtn.setAlignmentX(CENTER_ALIGNMENT);
 		categories.add(textureBtn);
 		textureBtn.addActionListener(new CategoryListener(TEXTURE, textureBtn));
-
+		
+		
 		JPanel filterPanel = buildFilterPanel();
+		filterPanel.setOpaque(false);
 		west.add(filterPanel, BorderLayout.SOUTH);
 
 	}
+	
+	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		Image icon = null;
+		try {
+			icon = ImageIO.read(new File(System.getProperty("user.dir") + "/src/graphicResources/paint_HQ.png"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		if(icon != null)
+			g.drawImage(icon, 0, 0, getWidth(), getHeight(), null);
+		}
 
 	private class CardArticle extends JPanel {
 		CardArticle(String title) {
@@ -138,6 +170,7 @@ public class Collection extends JPanel {
 				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		itemPane.setAutoscrolls(true);
 		JPanel itemGrid = new JPanel();
+		itemGrid.setBackground(Color.black);
 		itemGrid.setLayout(new GridLayout(0, 5, 10, 10));
 		itemGrid.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		itemGrid.setPreferredSize(DIMENSION_ITEM_GRID);
@@ -152,6 +185,7 @@ public class Collection extends JPanel {
 
 	public JPanel buildFilterPanel() {
 		JPanel filterPanel = new JPanel();
+		filterPanel.setOpaque(false);
 		filterPanel.setLayout(new BoxLayout(filterPanel, BoxLayout.PAGE_AXIS));
 		JLabel filterLabel = new JLabel("Filtrer par :");
 		filterLabel.setAlignmentX(CENTER_ALIGNMENT);
@@ -164,9 +198,10 @@ public class Collection extends JPanel {
 		filterType.addItem("Ordre alphabétique");
 		filterType.addItem("Ordre alphabétique inverse");
 		filterType.addItem("Date d'acquisition croissante");
-		filterType.addItem("Date d'acquisition d�croissante");
+		filterType.addItem("Date d'acquisition décroissante");
 
 		JPanel voidPanel = new JPanel();
+		voidPanel.setOpaque(false);
 		voidPanel.setPreferredSize((new Dimension(200, 100)));
 		filterPanel.add(voidPanel);
 
