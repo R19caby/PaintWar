@@ -111,7 +111,7 @@ public class Collection extends JPanel {
 		
 		west.add(categories, BorderLayout.CENTER);
 		categories.setLayout(new GridLayout(0, 1, 25, 25));
-		// JLabel categoriesTitle = new JLabel("Cat�gories");
+		// JLabel categoriesTitle = new JLabel("Catégories");
 		// categoriesTitle.setAlignmentX(CENTER_ALIGNMENT);
 		// categories.add(categoriesTitle);
 		avatarBtn = new JButton(AVATAR);
@@ -165,15 +165,18 @@ public class Collection extends JPanel {
 
 	public JScrollPane buildItemPanel(String cat) {
 		JPanel itemCard = new JPanel();
+		itemCard.setOpaque(false);
 		itemCard.setPreferredSize(DIMENSION_ITEM_CARD);
 		JScrollPane itemPane = new JScrollPane(itemCard, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
 				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		itemPane.setAutoscrolls(true);
+		itemPane.setOpaque(false);
 		JPanel itemGrid = new JPanel();
-		itemGrid.setBackground(Color.black);
+//		itemGrid.setBackground(Color.black);
 		itemGrid.setLayout(new GridLayout(0, 5, 10, 10));
 		itemGrid.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		itemGrid.setPreferredSize(DIMENSION_ITEM_GRID);
+		itemGrid.setOpaque(false);
 		itemCard.add(itemGrid);
 
 		for (int index = 0; index < 22; index++) {
