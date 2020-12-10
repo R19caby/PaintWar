@@ -15,13 +15,12 @@ import com.paintwar.client.model.communication.gameio.GameIOReceiver;
 import com.paintwar.client.view.pages.game.GamePage;
 import com.paintwar.client.view.pages.game.elements.DrawZone;
 import com.paintwar.client.view.pages.game.listeners.FrameResizeListener;
-import com.paintwar.server.service.game.DrawServerProxy;
-import com.paintwar.server.service.game.IDrawServerProxy;
+import com.paintwar.server.service.game.DrawingRemote;
+import com.paintwar.server.service.game.IDrawServerRemote;
 
 
 public class GameEntity implements IGameEntity {
-	
-	private int drawCount;
+
 	private DrawZone drawZone;
 	private GameIOReceiver ioClient;
 	private HashMap<String, DrawingProxy> drawings;
@@ -32,7 +31,6 @@ public class GameEntity implements IGameEntity {
 	GameEntity() {
 		drawings = new HashMap<String, DrawingProxy>();
 		threads = new ArrayList<Thread>();
-		drawCount = 0;
 		currentWindow = new JFrame();
 		gamepage = new GamePage(this, threads);
 		this.drawZone = gamepage.getDrawZone();
@@ -47,7 +45,6 @@ public class GameEntity implements IGameEntity {
 
 	private void deleteAllDrawings() {
 		drawings.clear();
-		drawCount = 0;
 	}
 	
 	@Override
@@ -109,6 +106,16 @@ public class GameEntity implements IGameEntity {
 	
 	public void updateFilling(String name, Double percent) {
 		drawZone.updateFilling(name, percent);
+	}
+	
+	public void setDrawn(String name) {
+		DrawingProxy drawToChange = drawings.get(name);
+		if (drawToChange != null) {
+			drawToChange.setDrawn(true);
+			drawZone.setDrawn(name);
+		} else {
+			Logger.print("[Game] Couldn't find drawing proxy to set it to drawn");
+		}
 	}
 	
 	public boolean hasDrawing(String name) {

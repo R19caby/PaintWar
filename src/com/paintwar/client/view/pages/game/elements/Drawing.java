@@ -108,9 +108,7 @@ public class Drawing extends JPanel {
 	public void setFilling(Double percent) {
 		if (percent >= 1) {
 			percent = 1.;
-			//remove transparent layer
-			setOpacity(100);
-			fillingDraw.setOpacity(100);
+			//fillingDraw.setOpacity(100);
 		}
 		fillP2 = fillDraw.apply(percent);
 		Rectangle r = new Rectangle(fillP1);
@@ -118,15 +116,15 @@ public class Drawing extends JPanel {
 
 		fillingDraw.setBounds(r);
 		r.translate(Math.min(this.initPoint.x, this.endPoint.x), Math.min(this.initPoint.y, this.endPoint.y));
-		if (percent > 0) {
+		/*if (percent > 0) {
 			Logger.print("[Client/Draw] Current shadow bounds " + this.getBounds());
 			Logger.print("[Client/Draw] filling to with " + r + " at " + percent);
-		}
+		}*/
 		this.repaint();
 	}
 	
-	public void setOpacity(int opacity) {
-		this.opacity = opacity;
+	public void setDrawn() {
+		this.opacity = 0;
 		this.repaint();
 	}
 

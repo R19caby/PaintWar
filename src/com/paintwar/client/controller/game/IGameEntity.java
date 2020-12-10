@@ -3,8 +3,8 @@ package com.paintwar.client.controller.game;
 import java.awt.Color;
 import java.awt.Point;
 
-import com.paintwar.server.service.game.DrawServerProxy;
-import com.paintwar.server.service.game.IDrawServerProxy;
+import com.paintwar.server.service.game.DrawingRemote;
+import com.paintwar.server.service.game.IDrawServerRemote;
 
 public interface IGameEntity {
 

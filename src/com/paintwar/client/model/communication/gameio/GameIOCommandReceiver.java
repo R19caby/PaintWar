@@ -21,6 +21,7 @@ public class GameIOCommandReceiver implements IClientCommandReceiver {
 		commands.add("Draw");
 		commands.add("Delete");
 		commands.add("Fill");
+		commands.add("Drawn");
 	}
 
 	@Override
@@ -33,19 +34,23 @@ public class GameIOCommandReceiver implements IClientCommandReceiver {
 		//Logger.print("[Client/GameIO/Received message] received message " + command);
 		switch (command) {
 			case ("Bounds"): {
-				gameReceiver.objectUpdateBounds(name, (int)args.get ("x"), (int)args.get ("y"), (int)args.get ("w"), (int)args.get ("h"));
+				gameReceiver.objectUpdateBounds(name, (int)args.get ("x1"), (int)args.get ("y1"), (int)args.get ("x2"), (int)args.get ("y2"));
 				break;
 			}
 			case ("Draw"): {
-				gameReceiver.addDrawing(name, (int)args.get ("x"), (int)args.get ("y"), (int)args.get ("w"), (int)args.get ("h"));
+				gameReceiver.addDrawing(name, (int)args.get ("x1"), (int)args.get ("y1"), (int)args.get ("x2"), (int)args.get ("y2"));
 				break;
 			}
 			case ("Delete"): {
-				gameReceiver.deleteDessin(name);
+				gameReceiver.deleteDrawing(name);
 				break;
 			}
 			case ("Fill"): {
 				gameReceiver.updateFilling(name, (Double)args.get("percent"));
+				break;
+			}
+			case ("Drawn"): {
+				gameReceiver.setDrawn(name);
 				break;
 			}
 			default: {

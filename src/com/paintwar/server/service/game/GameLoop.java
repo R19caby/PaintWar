@@ -1,5 +1,6 @@
 package com.paintwar.server.service.game;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -8,57 +9,82 @@ import com.paintwar.unicast.UnicastTransmitter;
 
 public class GameLoop extends Thread {
 	
-	private String drawName;
-	private Double percent;
-	private Double fillPerTick;
+	private List<String> drawFillingNames;
 	private volatile boolean running = true;
 	private DrawZoneProxy dz;
+	private int tick;
+	
 	private List<UnicastTransmitter> transmitters;
 	
-	public GameLoop(String drawName, Double fillPerTick, List<UnicastTransmitter> transmitters, DrawZoneProxy dz) {
+	public GameLoop(List<UnicastTransmitter> transmitters) {
 		super();
-		this.drawName = drawName;
-		this.percent = .0;
-		this.fillPerTick = fillPerTick;
+		this.drawFillingNames = new ArrayList<String>();
 		this.transmitters = transmitters;
-		this.dz = dz;
+		this.dz = new DrawZoneProxy();
+	}
+	
+	public void addTransmitter(UnicastTransmitter emetteur) {
+		transmitters.add(emetteur);
 	}
 
-	private void fillRect() throws InterruptedException {
+	private void updateFillDrawing(String drawName) {
 		//check if can update
-		if (dz.updateBox(drawName, percent)) {
-			Logger.print("[Server/filler] Filling at " + percent);
+		Double newPercent = dz.updateDrawing(drawName);
+		if (newPercent != null) {
+			Logger.print("[Server/gameloop " + tick + " ] Updating drawing " + drawName + " fill to " + newPercent);
 			HashMap<String, Object> hm = new HashMap <String, Object> () ;
-			hm.put ("percent", percent) ;
+			hm.put ("percent", newPercent) ;
 			for (UnicastTransmitter emetteur : transmitters) {
 				emetteur.diffuseMessage (this.getClass().getPackageName(), "Fill", drawName, hm) ;
 			}
+			if (newPercent.equals(1.)) {
+				Logger.print("[Server/filler] Finished filling for " + drawName);
+				stopFillingDrawing(drawName);
+			}
 		} else {
 			Logger.print("[Server/filler] Collision stopping filling " + drawName);
-			sleep(100);
-			this.interrupt();
+			stopFillingDrawing(drawName);
+			
 		}
 	}
 	
+	public void addDrawing(String name, DrawingServerProxy proxy) {
+		dz.addDrawing(name, proxy);
+		drawFillingNames.add(name);
+		
+	}
+	
+	public void stopFillingDrawing(String name) {
+		dz.stopDrawing(name);
+		drawFillingNames.remove(name);
+		for (UnicastTransmitter emetteur : transmitters) {
+			emetteur.diffuseMessage (this.getClass().getPackageName(), "Drawn", name, null) ;
+		}
+	}
+	
+	public void deleteDrawing(String name) {
+		dz.removeDrawing(name);
+		drawFillingNames.remove(name);
+	}
+	
+	//main game loop
 	public void run () {
 		while (running) {
+			List<String> currentDrawFillingNames = List.copyOf(drawFillingNames);
+			for (String drawing : currentDrawFillingNames) {
+				updateFillDrawing(drawing);
+			}
+			tick++;
 			try {
-				if (percent < 1) {
-					percent += fillPerTick;
-					fillRect();
-				} else {
-					percent = 1.;
-					fillRect();
-					Logger.print("[Server/filler] Finished filling " + drawName);
-					this.interrupt();
-				}
 				sleep(30);
 			} catch (InterruptedException e) {
-				Logger.print("[Server/filler] Thread for filler stopped successfully");
-				dz.removeBox(drawName);
+				Logger.print("[Server/filler] Thread of the game stopped successfully");
 				running = false;
 			}
 		}
 	}
+
+
+
 	
 }

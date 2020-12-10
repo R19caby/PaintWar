@@ -123,6 +123,12 @@ public class Minimap extends JPanel {
 			drawToUpdate.setFilling(percent);
 	}
 
+	public void setDrawn(String name) {
+		Drawing drawToUpdate = miniDraws.get(name);
+		if (drawToUpdate != null)
+			drawToUpdate.setDrawn();
+	}
+
 
 	
 }

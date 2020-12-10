@@ -12,9 +12,9 @@ public interface IGameServerEntity extends Remote {
 	int getPortEmission (String clientIP, InetAddress clientAdress) throws RemoteException ;
 	void answer (String question) throws RemoteException ;
 	int getRMIPort () throws RemoteException ;
-	IDrawServerProxy addDrawingProxy (int formType, Color color) throws RemoteException ;
-	ArrayList <IDrawServerProxy> getDrawingProxies () throws RemoteException ;
-	IDrawServerProxy getDrawing (String name) throws RemoteException ;
+	IDrawServerRemote addDrawingProxy (Point p1, Point p2, int formType, Color color) throws RemoteException ;
+	ArrayList <IDrawServerRemote> getDrawingProxies () throws RemoteException ;
+	IDrawServerRemote getDrawing (String name) throws RemoteException ;
 	void updateBoundsDrawing(String name, Point p1, Point p2, String clientIP) throws RemoteException;
 	void deleteDrawing(String name) throws RemoteException ;
 	void stopServer() throws RemoteException ;

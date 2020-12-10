@@ -18,29 +18,26 @@ import com.paintwar.unicast.UnicastTransmitter;
 
 public class GameServerEntity extends UnicastRemoteObject implements IGameServerEntity, Serializable {
 	
-	// le nom du serveur
+	// name of the game
 	protected String gameName ;
 
-	// le port sur lequel est déclaré le serveur
+	// RMI port for this server
 	protected int RMIPort ;
 	
-	// la machine sur laquelle se trouve le serveur
+	// IP of the server
 	protected String serverIP ;
 
-	// un entier pour générer des noms de dessins différents
+	// int to generate the ids of the drawings
 	protected int drawingID ;
 
-	// un entier pour générer des noms de dessins différents
+	// port used to send message to and from client
 	protected int transmitterPort ;
 	
-	// un diffuseur à une liste d'abonnés
+	// list of transmitters to send to every players
 	private List<UnicastTransmitter> transmitters ;
 	
-	// une strutcure pour stocker tous les dessins et y accéder facilement 
-	private HashMap<String, DrawServerProxy> drawingProxies = new HashMap<String, DrawServerProxy> () ;
-	
-	// structure to store all hitboxes of drawings currently filling
-	private DrawZoneProxy drawZoneProxy;
+	// hashmap to save all data of drawings to send to clients
+	private HashMap<String, DrawingRemote> drawingRemotes = new HashMap<String, DrawingRemote> () ;
 	
 	//main thread for the game
 	private GameLoop gameLoop;
@@ -51,12 +48,13 @@ public class GameServerEntity extends UnicastRemoteObject implements IGameServer
 		this.serverIP = serverIP ;
 		this.RMIPort = RMIPort ;
 		this.transmitterPort = transmitterPort ;
-		this.drawZoneProxy = new DrawZoneProxy();
 		transmitters = new ArrayList<UnicastTransmitter> () ;
+		this.gameLoop = new GameLoop(transmitters);
 		try {
 			// attachcement sur serveur sur un port identifi� de la machine d'exécution
 			Naming.rebind ("//" + serverIP + ":" + RMIPort + "/" + gameName, this) ;
 			Logger.print("[Server/GameEntity] RMI ready on " + "//" + serverIP + ":" + RMIPort + "/" + gameName);
+			gameLoop.start();
 		} catch (Exception e) {
 			Logger.print("[Server/GameEntity] Error on RMI " + e) ;
 		}
@@ -70,6 +68,7 @@ public class GameServerEntity extends UnicastRemoteObject implements IGameServer
 	public int getPortEmission (String clientIP, InetAddress clientAdress) throws RemoteException {
 		UnicastTransmitter emetteur = new UnicastTransmitter (clientAdress, transmitterPort++, clientIP) ;
 		transmitters.add (emetteur) ;
+		gameLoop.addTransmitter(emetteur);
 		return (emetteur.getTransmissionPort()) ;
 	}
 	
@@ -86,10 +85,10 @@ public class GameServerEntity extends UnicastRemoteObject implements IGameServer
 	
 	// m�thode permettant d'enregistrer un dessin sur un port rmi sur la machine du serveur :
 	// - comme cela on pourra également invoquer directement des méthodes en rmi également sur chaque dessin
-	public void registerObject (DrawServerProxy drawing) {
+	public void registerObject (DrawingRemote drawing) {
 		try {
 			Naming.rebind ("//" + serverIP + ":" + RMIPort + "/" + drawing.getName (), drawing) ;
-			Logger.print("[Server/GameEntity] Adding " + drawing.getName () + " with x " + drawing.getX () + " and y " + drawing.getY ()) ;
+			Logger.print("[Server/GameEntity] Adding " + drawing.getName () + " at x " + drawing.getX1 () + " and y " + drawing.getY1 ()) ;
 		} catch (Exception e) {
 			e.printStackTrace () ;
 			try {
@@ -101,22 +100,22 @@ public class GameServerEntity extends UnicastRemoteObject implements IGameServer
 	}
 	
 	@Override
-	public DrawServerProxy addDrawingProxy(int formType, Color color) throws RemoteException {
+	public DrawingRemote addDrawingProxy(Point p1, Point p2, int formType, Color color) throws RemoteException {
 		// création d'un nouveau nom, unique, destiné à servir de clé d'accès au dessin
 		// et création d'un nouveau dessin de ce nom et associé également à un émetteur multicast...
 		// attention : la classe Dessin utilisée ici est celle du package serveur (et pas celle du package client)
-		DrawServerProxy dessin = new DrawServerProxy ("draw" + nextId (), color, transmitters) ;
+		DrawingRemote dessin = new DrawingRemote ("draw" + nextId (), color) ;
 		// enregistrement du dessin pour accès rmi distant
 		registerObject (dessin) ;
 		// ajout du dessin dans la liste des dessins pour accès plus efficace au dessin
-		drawingProxies.put (dessin.getName (), dessin) ;
+		drawingRemotes.put (dessin.getName (), dessin) ;
 		
 		//Envoi du message � tous les �diteurs
 		HashMap<String, Object> hm = new HashMap <String, Object> () ;
-		hm.put ("x", Integer.valueOf(0)) ;
-		hm.put ("y", Integer.valueOf(0)) ;
-		hm.put ("w", Integer.valueOf(0)) ;
-		hm.put ("h", Integer.valueOf(0)) ;
+		hm.put ("x1", Integer.valueOf(p1.x)) ;
+		hm.put ("y1", Integer.valueOf(p1.y)) ;
+		hm.put ("x2", Integer.valueOf(p2.x)) ;
+		hm.put ("y2", Integer.valueOf(p2.y)) ;
 		hm.put ("color", color) ;
 		hm.put ("type", formType) ;
 		// envoi des mises à jour à tous les clients, via la liste des émetteurs
@@ -137,37 +136,29 @@ public class GameServerEntity extends UnicastRemoteObject implements IGameServer
 	}
 	
 	@Override
-	public ArrayList<IDrawServerProxy> getDrawingProxies() throws RemoteException {
-		ArrayList<IDrawServerProxy> data = new ArrayList<IDrawServerProxy> (drawingProxies.values());
+	public ArrayList<IDrawServerRemote> getDrawingProxies() throws RemoteException {
+		ArrayList<IDrawServerRemote> data = new ArrayList<IDrawServerRemote> (drawingRemotes.values());
 		return data;
 	}
 
 	@Override
-	public DrawServerProxy getDrawing(String name) throws RemoteException {
-		return drawingProxies.get (name) ;
+	public DrawingRemote getDrawing(String name) throws RemoteException {
+		return drawingRemotes.get (name) ;
 	}
 	
 	public void updateBoundsDrawing(String name, Point p1, Point p2, String clientID) {
-		DrawServerProxy drawing = drawingProxies.get(name);
+		DrawingRemote drawing = drawingRemotes.get(name);
 		if (drawing != null) {
 			try {
 				//update bounds
 				drawing.setBounds(p1, p2);
 				
-				//get int values
-				Rectangle r = new Rectangle(p1);
-				r.add(p2);
-				int x = (int) r.getX();
-				int y = (int) r.getY();
-				int h = (int) r.getHeight();
-				int w = (int) r.getWidth();
-				
 				//send message to update bounds
 				HashMap<String, Object> hm = new HashMap <String, Object> () ;
-				hm.put ("x", Integer.valueOf(x)) ;
-				hm.put ("y", Integer.valueOf(y)) ;
-				hm.put ("w", Integer.valueOf(w)) ;
-				hm.put ("h", Integer.valueOf(h)) ;
+				hm.put ("x1", Integer.valueOf(p1.x)) ;
+				hm.put ("y1", Integer.valueOf(p1.y)) ;
+				hm.put ("x2", Integer.valueOf(p2.x)) ;
+				hm.put ("y2", Integer.valueOf(p2.y)) ;
 				// send to all clients
 				for (UnicastTransmitter sender : transmitters) {
 					String senderID = sender.getClientIP() + ":" + sender.getTransmissionPort();
@@ -186,25 +177,24 @@ public class GameServerEntity extends UnicastRemoteObject implements IGameServer
 	@Override
 	public void startFillingDraw(String name) throws RemoteException {
 		Logger.print("[Server/GameEntity] Starting thread for filling " + name);
-		DrawServerProxy drawing = drawingProxies.get(name);
+		DrawingRemote drawing = drawingRemotes.get(name);
 
 		if (drawing != null) {
-			Point p1 = new Point(drawing.getX(), drawing.getY());
-			Point p2 = p1.getLocation();
-			p2.translate(drawing.getWidth(), drawing.getHeight());
-			Logger.print("Getting these points " + p1 + "; " + p2);
-			drawZoneProxy.addBox(name, new HitboxProxy(drawing.getColor(), p1, p2));
-		
-			drawing.startFilling(drawZoneProxy);
+			
+			gameLoop.addDrawing(
+					drawing.getName(), 
+					new DrawingServerProxy(
+							drawing.getName(), 
+							drawing.getColor(), 
+							new Point(drawing.getX1(), drawing.getY1()), 
+							new Point( drawing.getX2(), drawing.getY2())));
 		}
 	}
 	
 	@Override
 	public void deleteDrawing(String name) throws RemoteException {
-		DrawServerProxy drawing = drawingProxies.get(name);
-		if (drawing != null)
-			drawing.stopFilling();
-		drawingProxies.remove(name);
+		gameLoop.deleteDrawing(name);
+		drawingRemotes.remove(name);
 		// envoi des mises à jour à tous les clients, via la liste des émetteurs
 		for (UnicastTransmitter sender : transmitters) {
 			HashMap<String, Object> hm = new HashMap <String, Object> () ;
@@ -213,10 +203,8 @@ public class GameServerEntity extends UnicastRemoteObject implements IGameServer
 	}
 
 	public void stopServer() throws RemoteException {
-		//stop all threads filling drawings
-		for (Entry<String, DrawServerProxy> drawing : drawingProxies.entrySet()) {
-			drawing.getValue().stopFilling();
-		}
+		//stop game loop
+		gameLoop.interrupt();
 		
 		try {
 			Naming.unbind("//" + serverIP + ":" + RMIPort + "/" + gameName);

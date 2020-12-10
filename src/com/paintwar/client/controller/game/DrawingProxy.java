@@ -4,8 +4,8 @@ import java.awt.Color;
 import java.awt.Point;
 import java.awt.Rectangle;
 
-import com.paintwar.server.service.game.DrawServerProxy;
-import com.paintwar.server.service.game.IDrawServerProxy;
+import com.paintwar.server.service.game.DrawingRemote;
+import com.paintwar.server.service.game.IDrawServerRemote;
 
 public class DrawingProxy {
 	
@@ -18,6 +18,7 @@ public class DrawingProxy {
 	private Color color;
 	private int type;
 	private double completion;
+	private boolean drawn;
 
 	public DrawingProxy(int x, int y, int h, int w, Color color, int type) {
 		super();
@@ -27,6 +28,7 @@ public class DrawingProxy {
 		this.w = w;
 		this.color = color;
 		this.type = type;
+		this.drawn = false;
 	}
 	
 	public DrawingProxy(Point p1, Point p2, Color color, int type) {
@@ -96,6 +98,14 @@ public class DrawingProxy {
 
 	public void setCompletion(double completion) {
 		this.completion = completion;
+	}
+
+	public boolean isDrawn() {
+		return drawn;
+	}
+
+	public void setDrawn(boolean drawn) {
+		this.drawn = drawn;
 	}
 	
 }

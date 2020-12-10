@@ -134,5 +134,12 @@ public class DrawZone extends JPanel {
 	public void startFilling(String entityDrawnName) {
 		gameEntity.startFilling(entityDrawnName);
 	}
+
+	public void setDrawn(String name) {
+		Drawing drawing = drawPanels.get(name);
+		if (drawing != null)
+			drawing.setDrawn();
+		minimap.setDrawn(name);
+	}
 	
 }

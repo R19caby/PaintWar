@@ -12,9 +12,9 @@ import javax.swing.JOptionPane;
 
 import com.paintwar.client.controller.game.GameEntity;
 import com.paintwar.server.logger.Logger;
-import com.paintwar.server.service.game.DrawServerProxy;
+import com.paintwar.server.service.game.DrawingRemote;
 import com.paintwar.server.service.game.GameServerEntity;
-import com.paintwar.server.service.game.IDrawServerProxy;
+import com.paintwar.server.service.game.IDrawServerRemote;
 import com.paintwar.server.service.game.IGameServerEntity;
 import com.paintwar.unicast.UnicastReceiver;
 
@@ -56,11 +56,11 @@ public class GameIOReceiver {
 			// connecting to server
 			server = (IGameServerEntity)Naming.lookup ("//" + serverIp + ":" + serverRMIPort + "/" + gameName);
 			// getting all drawings on server
-			ArrayList<IDrawServerProxy> proxiesDrawings = server.getDrawingProxies() ;
+			ArrayList<IDrawServerRemote> proxiesDrawings = server.getDrawingProxies() ;
 			Logger.print("[Client/Communication/GameIO] Received drawing proxies : " + proxiesDrawings);
 			// ajout de tous les dessins dans la zone de dessin
-			for (IDrawServerProxy rd : proxiesDrawings) {
-				addDrawing (rd.getName(), rd.getX (), rd.getY (), rd.getWidth(), rd. getHeight ()) ;
+			for (IDrawServerRemote rd : proxiesDrawings) {
+				addDrawing (rd.getName(), rd.getX1 (), rd.getY1 (), rd.getX2(), rd. getY2()) ;
 			}
 		} catch (Exception e) {
 			Logger.print ("[Client/Communication/GameIO] couldn't connect to " + "//" + serverIp + ":" + serverRMIPort + "/" + gameName) ;
@@ -92,11 +92,11 @@ public class GameIOReceiver {
 	
 	// Drawing creator, sending the new drawing to server
 	public synchronized String createDrawing (Point p1, Point p2, Color color, int formType) {
-		IDrawServerProxy proxy = null ;
+		IDrawServerRemote proxy = null ;
 		String proxyName = null ;
 		try {
 			// Creating new drawing on server
-			proxy = server.addDrawingProxy(formType, color);
+			proxy = server.addDrawingProxy(p1, p2, formType, color);
 			// getting name from proxy
 			proxyName = proxy.getName();
 		} catch (RemoteException e) {
@@ -115,11 +115,10 @@ public class GameIOReceiver {
 	}
 
 	// Adding a drawing to client
-	public void addDrawing (String proxyName, int x, int y, int w, int h) {
+	public void addDrawing (String proxyName, int x1, int y1, int x2, int y2) {
 		//generating coords
-		Point p1 = new Point(x, y);
-		Point p2 = p1.getLocation();
-		p2.translate(w, h);
+		Point p1 = new Point(x1, y1);
+		Point p2 = new Point(x2, y2);
 		
 		//adding drawing to gameEntity
 		gameEntity.addDrawing(proxyName, p1, p2, Color.black);
@@ -128,11 +127,10 @@ public class GameIOReceiver {
 	
 	// used to update the bounds of a drawing
 	// -> called when receiving a message from server
-	public synchronized void objectUpdateBounds (String objectName, int x, int y, int w, int h) {
+	public synchronized void objectUpdateBounds (String objectName, int x1, int y1, int x2, int y2) {
 		//generating coords
-		Point p1 = new Point(x, y);
-		Point p2 = p1.getLocation();
-		p2.translate(w, h);
+		Point p1 = new Point(x1, y1);
+		Point p2 = new Point(x2, y2);
 		
 		//updating drawing
 		gameEntity.updateCoordPaint(objectName, p1, p2);
@@ -158,7 +156,7 @@ public class GameIOReceiver {
 	}
 	
 	//deleting drawing on client -> used after receiving message
-	public synchronized void deleteDessin(String objectName) {
+	public synchronized void deleteDrawing(String objectName) {
 		gameEntity.removeDrawing(objectName);
 	}
 	
@@ -184,6 +182,11 @@ public class GameIOReceiver {
 	//update filling -> after receiving message
 	public synchronized void updateFilling(String name, Double percent) {
 		gameEntity.updateFilling(name, percent);
+	}
+
+	//set to drawn for drawing
+	public synchronized void setDrawn(String name) {
+		gameEntity.setDrawn(name);
 	}
 
 }

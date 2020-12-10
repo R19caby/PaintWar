@@ -9,49 +9,65 @@ import com.paintwar.server.logger.Logger;
 
 public class DrawZoneProxy {
 	
-	private Map<String, HitboxProxy> hitboxes;
+	private Map<String, DrawingServerProxy> drawings;
 	
 	public DrawZoneProxy() {
-		hitboxes = new HashMap<String, HitboxProxy>();
+		drawings = new HashMap<String, DrawingServerProxy>();
 	}
 	
-	//add a box
-	public void addBox(String name, HitboxProxy box) {
-		hitboxes.put(name, box);
+	//add a drawing to the list
+	public void addDrawing(String name, DrawingServerProxy box) {
+		drawings.put(name, box);
 	}
 	
 	//check if can expand box
-	public synchronized boolean updateBox(String name, Double percent) {
-		HitboxProxy hitbox = hitboxes.get(name);
-		HitboxProxy newHitbox = hitbox.copy();
-		Boolean canUpdate = true;
-		newHitbox.setPercent(percent);
-		Logger.print("[Server/DrawZoneProxy] Checking hitbox " + hitbox.getBox() + " going to " + newHitbox.getBox() + " at " + percent);
+	public synchronized Double updateDrawing(String name) {
+		DrawingServerProxy drawing = drawings.get(name);
+		Double newPercent = null;
 		
-		for (Entry<String, HitboxProxy> currentBox : hitboxes.entrySet()) {
-			if (!currentBox.getKey().equals(name)) {
-				//if intersects and not same color
-				HitboxProxy currentHitbox = currentBox.getValue();
-				Logger.print("[Server/DrawZoneProxy] checking with " + currentHitbox.getBox());
-				if (newHitbox.getBox().intersects(currentHitbox.getBox()) /*&& newHitbox.getColor() != currentHitbox.getColor()*/) {
-					Logger.print("boxes intersect");
-					canUpdate = false;
-					break;
-				};
+		if (!drawing.isDrawFixed()) {
+			Logger.print("[Server/filler] Filling drawing " + name);
+			DrawingServerProxy newDrawing = drawing.copy();
+			Boolean canUpdate = true;
+			newDrawing.upPercent();
+			Logger.print("[Server/DrawZoneProxy] Checking hitbox " + drawing.getBox() + " going to " + newDrawing.getBox());
+			
+			for (Entry<String, DrawingServerProxy> currentDrawItem : drawings.entrySet()) {
+				if (!currentDrawItem.getKey().equals(name)) {
+					DrawingServerProxy currentDraw = currentDrawItem.getValue();
+					Logger.print("[Server/DrawZoneProxy] checking with " + currentDraw.getBox());
+					//if intersects and not same color
+					if (newDrawing.getBox().intersects(currentDraw.getBox()) /*&& newHitbox.getColor() != currentHitbox.getColor()*/) {
+						Logger.print("boxes intersect");
+						if (currentDraw.isDrawFixed()) {
+							Logger.print("can paint over");
+							//update paint score here for other team
+						} else {
+							canUpdate = false;
+							break;
+						}
+					};
+				}
+			}
+			
+			if (canUpdate) {
+				//update drawing in the list and get the new percent for clients
+				newPercent = drawing.upPercent();
 			}
 		}
 		
-		if (canUpdate) {
-			//update hitbox in list
-			hitbox.setPercent(percent);
-		}
-		
-		return canUpdate;
+		return newPercent;
 	}
 	
-	//remove hitbox if drawing finished
-	public void removeBox(String name) {
-		hitboxes.remove(name);
+	public void removeDrawing(String name) {
+		drawings.remove(name);
+	}
+
+	public void stopDrawing(String drawName) {
+		DrawingServerProxy drawing = drawings.get(drawName);
+		if (drawing != null) {
+			drawing.setDrawFixed(true);
+		}
 	}
 	
 }
