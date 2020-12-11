@@ -43,6 +43,8 @@ public class DrawZoneProxy {
 							Logger.print("can paint over");
 							//update paint score here for other team
 						} else {
+							//calculate leftover to expand
+							
 							canUpdate = false;
 							break;
 						}

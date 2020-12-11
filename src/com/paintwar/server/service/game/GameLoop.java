@@ -10,6 +10,7 @@ import com.paintwar.unicast.UnicastTransmitter;
 public class GameLoop extends Thread {
 	
 	private List<String> drawFillingNames;
+	private List<String> drawToStopNames;
 	private volatile boolean running = true;
 	private DrawZoneProxy dz;
 	private int tick;
@@ -19,6 +20,7 @@ public class GameLoop extends Thread {
 	public GameLoop(List<UnicastTransmitter> transmitters) {
 		super();
 		this.drawFillingNames = new ArrayList<String>();
+		this.drawToStopNames = new ArrayList<String>();
 		this.transmitters = transmitters;
 		this.dz = new DrawZoneProxy();
 	}
@@ -29,22 +31,23 @@ public class GameLoop extends Thread {
 
 	private void updateFillDrawing(String drawName) {
 		//check if can update
-		Double newPercent = dz.updateDrawing(drawName);
-		if (newPercent != null) {
-			Logger.print("[Server/gameloop " + tick + " ] Updating drawing " + drawName + " fill to " + newPercent);
-			HashMap<String, Object> hm = new HashMap <String, Object> () ;
-			hm.put ("percent", newPercent) ;
-			for (UnicastTransmitter emetteur : transmitters) {
-				emetteur.diffuseMessage (this.getClass().getPackageName(), "Fill", drawName, hm) ;
+		if (!drawToStopNames.contains(drawName)) {
+			Double newPercent = dz.updateDrawing(drawName);
+			if (newPercent != null) {
+				Logger.print("[Server/gameloop " + tick + " ] Updating drawing " + drawName + " fill to " + newPercent);
+				HashMap<String, Object> hm = new HashMap <String, Object> () ;
+				hm.put ("percent", newPercent) ;
+				for (UnicastTransmitter emetteur : transmitters) {
+					emetteur.diffuseMessage (this.getClass().getPackageName(), "Fill", drawName, hm) ;
+				}
+				if (newPercent.equals(1.)) {
+					Logger.print("[Server/filler] Finished filling for " + drawName);
+					stopFillingDrawing(drawName);
+				}
+			} else {
+				Logger.print("[Server/filler] Collision adding in stopping list : " + drawName);
+				drawToStopNames.add(drawName);
 			}
-			if (newPercent.equals(1.)) {
-				Logger.print("[Server/filler] Finished filling for " + drawName);
-				stopFillingDrawing(drawName);
-			}
-		} else {
-			Logger.print("[Server/filler] Collision stopping filling " + drawName);
-			stopFillingDrawing(drawName);
-			
 		}
 	}
 	
@@ -71,8 +74,13 @@ public class GameLoop extends Thread {
 	public void run () {
 		while (running) {
 			List<String> currentDrawFillingNames = List.copyOf(drawFillingNames);
+			List<String> currentDrawToStopNames = List.copyOf(drawToStopNames);
 			for (String drawing : currentDrawFillingNames) {
 				updateFillDrawing(drawing);
+			}
+			//removing drawings to stop
+			for (String drawing : currentDrawToStopNames) {
+				stopFillingDrawing(drawing);
 			}
 			tick++;
 			try {
