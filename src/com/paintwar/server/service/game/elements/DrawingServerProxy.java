@@ -1,4 +1,4 @@
-package com.paintwar.server.service.game;
+package com.paintwar.server.service.game.elements;
 
 import java.awt.Color;
 import java.awt.Point;

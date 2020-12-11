@@ -1,5 +1,6 @@
 package com.paintwar.client.model.communication.gameio;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -38,7 +39,7 @@ public class GameIOCommandReceiver implements IClientCommandReceiver {
 				break;
 			}
 			case ("Draw"): {
-				gameReceiver.addDrawing(name, (int)args.get ("x1"), (int)args.get ("y1"), (int)args.get ("x2"), (int)args.get ("y2"));
+				gameReceiver.addDrawing(name, (int)args.get ("x1"), (int)args.get ("y1"), (int)args.get ("x2"), (int)args.get ("y2"), (Color)args.get("color"));
 				break;
 			}
 			case ("Delete"): {

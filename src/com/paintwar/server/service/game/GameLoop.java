@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.paintwar.server.logger.Logger;
+import com.paintwar.server.service.game.elements.DrawingServerProxy;
 import com.paintwar.unicast.UnicastTransmitter;
 
 public class GameLoop extends Thread {
@@ -38,14 +39,14 @@ public class GameLoop extends Thread {
 		if (newPercent != null && !drawToStopNames.contains(drawName)) {
 			if (newPercent <= 0.) { //colliding but still needs to be filled to maximum
 				newPercent = -newPercent;
-				Logger.print("[Server/filler] Collision adding in stopping list : " + drawName);
+				//Logger.print("[Server/filler] Collision adding in stopping list : " + drawName);
 				drawToStopNames.add(drawName);
 			} else if (newPercent.equals(1.)) { //finished filling, stopping TODO do I have to put in toStop list or stop right away?
-				Logger.print("[Server/filler] Finished filling for " + drawName);
+				//Logger.print("[Server/filler] Finished filling for " + drawName);
 				stopFillingDrawing(drawName);
 			}
 			//sending message to fill to everyone
-			Logger.print("[Server/gameloop " + tick + " ] Updating drawing " + drawName + " fill to " + newPercent);
+			//Logger.print("[Server/gameloop " + tick + " ] Updating drawing " + drawName + " fill to " + newPercent);
 			HashMap<String, Object> hm = new HashMap <String, Object> () ;
 			hm.put ("percent", newPercent) ;
 			for (UnicastTransmitter emetteur : transmitters) {

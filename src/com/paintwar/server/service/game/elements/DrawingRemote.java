@@ -1,4 +1,4 @@
-package com.paintwar.server.service.game;
+package com.paintwar.server.service.game.elements;
 
 import java.awt.Color;
 import java.awt.Point;
@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.paintwar.server.logger.Logger;
+import com.paintwar.server.service.game.IDrawServerRemote;
 import com.paintwar.unicast.UnicastTransmitter;
 
 public class DrawingRemote extends UnicastRemoteObject implements IDrawServerRemote, Serializable {

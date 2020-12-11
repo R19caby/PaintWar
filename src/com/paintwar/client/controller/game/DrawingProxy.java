@@ -4,8 +4,8 @@ import java.awt.Color;
 import java.awt.Point;
 import java.awt.Rectangle;
 
-import com.paintwar.server.service.game.DrawingRemote;
 import com.paintwar.server.service.game.IDrawServerRemote;
+import com.paintwar.server.service.game.elements.DrawingRemote;
 
 public class DrawingProxy {
 	

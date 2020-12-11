@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import com.paintwar.server.logger.Logger;
+import com.paintwar.server.service.game.elements.DrawingServerProxy;
 
 public class DrawZoneProxy {
 	
@@ -30,17 +31,17 @@ public class DrawZoneProxy {
 			DrawingServerProxy newDrawing = drawing.copy();
 			Boolean canUpdate = true;
 			newDrawing.upPercent();
-			Logger.print("[Server/DrawZoneProxy] Checking hitbox " + drawing.getBox() + " going to " + newDrawing.getBox());
+			//Logger.print("[Server/DrawZoneProxy] Checking hitbox " + drawing.getBox() + " going to " + newDrawing.getBox());
 			
 			for (Entry<String, DrawingServerProxy> currentDrawItem : drawings.entrySet()) {
 				if (!currentDrawItem.getKey().equals(name)) {
 					DrawingServerProxy currentDraw = currentDrawItem.getValue();
-					Logger.print("[Server/DrawZoneProxy] checking with " + currentDraw.getBox());
+					//Logger.print("[Server/DrawZoneProxy] checking with " + currentDraw.getBox());
 					//if intersects and not same color
-					if (newDrawing.getBox().intersects(currentDraw.getBox()) /*&& newHitbox.getColor() != currentHitbox.getColor()*/) {
-						Logger.print("boxes intersect");
+					if (newDrawing.getBox().intersects(currentDraw.getBox()) && !newDrawing.getColor().equals(currentDraw.getColor())) {
+						//Logger.print("boxes intersect");
 						if (currentDraw.isDrawFixed()) {
-							Logger.print("can paint over");
+							//Logger.print("can paint over");
 							//update paint score here for other team
 						} else {
 							if (drawing.getPercent() != 0) {

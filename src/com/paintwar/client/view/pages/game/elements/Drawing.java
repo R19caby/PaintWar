@@ -25,8 +25,8 @@ public class Drawing extends JPanel {
 		this.opacity = opacity;
 		this.color = color;
 		setOpaque(false);
-		if (opacity != 100) {
-			fillingDraw = new Drawing(color, 100);
+		if (opacity != 255) {
+			fillingDraw = new Drawing(color, 255);
 			setLayout(null);
 			add(fillingDraw);
 		}
@@ -101,7 +101,7 @@ public class Drawing extends JPanel {
 
 	public void setEndPoint(Point endPoint) {
 		this.endPoint = endPoint;
-		if (opacity != 100)
+		if (opacity != 255)
 			updateFillDraw();
 	}
 	

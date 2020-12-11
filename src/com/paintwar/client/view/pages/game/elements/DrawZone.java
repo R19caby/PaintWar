@@ -26,7 +26,7 @@ public class DrawZone extends JPanel {
 		this.drawPanels = new HashMap<String, Drawing>();
 		
 		this.setBounds(0, 0, 3000, 3000);
-		this.setBackground(Color.LIGHT_GRAY);
+		this.setBackground(Color.white);
 		this.setBorder(BorderFactory.createLineBorder(Color.black, 10));
 		this.setLayout(null);
 		DrawListener drawLis = new DrawListener(this);
@@ -35,7 +35,8 @@ public class DrawZone extends JPanel {
 	}
 	
 	/*Add a drawing to zone and gameEntity*/
-	public String initializeDraw(Point p, Color color) {
+	public String initializeDraw(Point p) {
+		Color color = gameEntity.getTeamColor();
 		String entiName = gameEntity.paintClient(p, p, color);
 		minimap.paint(entiName, p, p, color, SCHEMA_OPACITY);
 		Drawing newDraw = new Drawing(color, SCHEMA_OPACITY);

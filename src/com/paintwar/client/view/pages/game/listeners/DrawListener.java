@@ -47,7 +47,7 @@ public class DrawListener implements MouseListener, MouseMotionListener {
 	@Override
 	public void mousePressed(MouseEvent e) {
 		if (SwingUtilities.isLeftMouseButton(e)) {
-			entityDrawnName = drawZone.initializeDraw(e.getPoint(), Color.black);
+			entityDrawnName = drawZone.initializeDraw(e.getPoint());
 		}
 	}
 

@@ -11,9 +11,15 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Random;
 
 import com.paintwar.server.logger.Logger;
+import com.paintwar.server.service.game.elements.DrawingRemote;
+import com.paintwar.server.service.game.elements.DrawingServerProxy;
+import com.paintwar.server.service.game.elements.Player;
+import com.paintwar.server.service.game.elements.Team;
 import com.paintwar.unicast.UnicastTransmitter;
 
 public class GameServerEntity extends UnicastRemoteObject implements IGameServerEntity, Serializable {
@@ -34,10 +40,16 @@ public class GameServerEntity extends UnicastRemoteObject implements IGameServer
 	protected int transmitterPort ;
 	
 	// list of transmitters to send to every players
-	private List<UnicastTransmitter> transmitters ;
+	private List<UnicastTransmitter> transmitters = new ArrayList<UnicastTransmitter> () ;
 	
 	// hashmap to save all data of drawings to send to clients
-	private HashMap<String, DrawingRemote> drawingRemotes = new HashMap<String, DrawingRemote> () ;
+	private Map<String, DrawingRemote> drawingRemotes = new HashMap<String, DrawingRemote> () ;
+	
+	//teams
+	private Map<Color, Team> teams = new HashMap<Color, Team>();
+	
+	//players
+	private Map<String, Player> players = new HashMap<String, Player>();
 	
 	//main thread for the game
 	private GameLoop gameLoop;
@@ -48,7 +60,6 @@ public class GameServerEntity extends UnicastRemoteObject implements IGameServer
 		this.serverIP = serverIP ;
 		this.RMIPort = RMIPort ;
 		this.transmitterPort = transmitterPort ;
-		transmitters = new ArrayList<UnicastTransmitter> () ;
 		this.gameLoop = new GameLoop(this, transmitters);
 		try {
 			// attachcement sur serveur sur un port identifi� de la machine d'exécution
@@ -60,19 +71,31 @@ public class GameServerEntity extends UnicastRemoteObject implements IGameServer
 		}
 	}
 
-	// méthode indiquant quel est le port d'émission/réception à utiliser pour le client qui rejoint le serveur
-	// on utilise une valeur arbitraitre de port qu'on incrémente de 1 à chaque arrivée d'un nouveau client
-	// cela permettra d'avoir plusieurs clients sur la même machine, chacun avec un canal de communication distinct
-	// sur un port différent des autres clients
+	// indicates what port to use to emit messages for client (increased by 1 for each client)
+	// used for multiple clients on a single machine
+	// also creates the player
 	@Override
 	public int getPortEmission (String clientIP, InetAddress clientAdress) throws RemoteException {
 		UnicastTransmitter emetteur = new UnicastTransmitter (clientAdress, transmitterPort++, clientIP) ;
 		transmitters.add (emetteur) ;
+		Color newColor = Color.getHSBColor((float) Math.random(), (float) Math.random(), (float) Math.random());
+		Team newTeam = new Team(newColor);
+		Player newPlayer = new Player("Player", clientIP + (transmitterPort-1));
+		newTeam.addPlayer(newPlayer);
+		teams.put(newColor, newTeam);
+		players.put(newPlayer.getIpId(), newPlayer);
+		
 		gameLoop.addTransmitter(emetteur);
 		return (emetteur.getTransmissionPort()) ;
 	}
 	
-	// m�thode permettant juste de v�rifier que le serveur est lanc�
+	@Override
+	public Color getTeamColor(String clientID) throws RemoteException {
+		Player client = players.get(clientID);
+		return client.getColor();
+	}
+	
+	// méthode permettant juste de vérifier que le serveur est lancé
 	@Override
 	public void answer (String question) throws RemoteException {
 		Logger.print("[Server/GameEntity] the question was : " + question) ;   

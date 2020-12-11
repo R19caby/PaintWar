@@ -19,5 +19,6 @@ public interface IGameServerEntity extends Remote {
 	void deleteDrawing(String name) throws RemoteException ;
 	void stopServer() throws RemoteException ;
 	void startFillingDraw(String name) throws RemoteException;
+	Color getTeamColor(String clientID) throws RemoteException;
 	
 }

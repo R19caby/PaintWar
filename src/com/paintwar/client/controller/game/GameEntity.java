@@ -15,8 +15,8 @@ import com.paintwar.client.model.communication.gameio.GameIOReceiver;
 import com.paintwar.client.view.pages.game.GamePage;
 import com.paintwar.client.view.pages.game.elements.DrawZone;
 import com.paintwar.client.view.pages.game.listeners.FrameResizeListener;
-import com.paintwar.server.service.game.DrawingRemote;
 import com.paintwar.server.service.game.IDrawServerRemote;
+import com.paintwar.server.service.game.elements.DrawingRemote;
 
 
 public class GameEntity implements IGameEntity {
@@ -27,6 +27,7 @@ public class GameEntity implements IGameEntity {
 	private List<Thread> threads;
 	private JFrame currentWindow;
 	private GamePage gamepage;
+	private Color teamColor;
 	
 	GameEntity() {
 		drawings = new HashMap<String, DrawingProxy>();
@@ -43,6 +44,14 @@ public class GameEntity implements IGameEntity {
 		this.ioClient = ioClient;
 	}
 
+	public void setTeamColor(Color clientTeamColor) {
+		teamColor = clientTeamColor;
+	}
+	
+	public Color getTeamColor() {
+		return teamColor;
+	}
+	
 	private void deleteAllDrawings() {
 		drawings.clear();
 	}
@@ -53,9 +62,9 @@ public class GameEntity implements IGameEntity {
 	}
 
 	@Override 
-	public String paintClient(Point p1, Point p2, Color c) {
+	public String paintClient(Point p1, Point p2, Color color) {
 		//create drawing on server and retrieve draw name 
-		String drawName = ioClient.createDrawing(p1, p2, c, DrawingProxy.RECTANGLE);
+		String drawName = ioClient.createDrawing(p1, p2, color, DrawingProxy.RECTANGLE);
 		Logger.print("[Game] Putting drawing named " + drawName);
 		return drawName;
 	}
@@ -139,5 +148,6 @@ public class GameEntity implements IGameEntity {
 			thread.interrupt();
 		}
 	}
+
 
 }

@@ -12,10 +12,10 @@ import javax.swing.JOptionPane;
 
 import com.paintwar.client.controller.game.GameEntity;
 import com.paintwar.server.logger.Logger;
-import com.paintwar.server.service.game.DrawingRemote;
 import com.paintwar.server.service.game.GameServerEntity;
 import com.paintwar.server.service.game.IDrawServerRemote;
 import com.paintwar.server.service.game.IGameServerEntity;
+import com.paintwar.server.service.game.elements.DrawingRemote;
 import com.paintwar.unicast.UnicastReceiver;
 
 public class GameIOReceiver {
@@ -40,7 +40,8 @@ public class GameIOReceiver {
 	
 	// the local game entity
 	private GameEntity gameEntity ;
-	
+
+	//port used to send/receive messages
 	private int transmissionPort;
 
 	// Constructor for the receiver
@@ -60,7 +61,7 @@ public class GameIOReceiver {
 			Logger.print("[Client/Communication/GameIO] Received drawing proxies : " + proxiesDrawings);
 			// ajout de tous les dessins dans la zone de dessin
 			for (IDrawServerRemote rd : proxiesDrawings) {
-				addDrawing (rd.getName(), rd.getX1 (), rd.getY1 (), rd.getX2(), rd. getY2()) ;
+				addDrawing (rd.getName(), rd.getX1 (), rd.getY1 (), rd.getX2(), rd. getY2(), rd.getColor()) ;
 			}
 		} catch (Exception e) {
 			Logger.print ("[Client/Communication/GameIO] couldn't connect to " + "//" + serverIp + ":" + serverRMIPort + "/" + gameName) ;
@@ -71,6 +72,9 @@ public class GameIOReceiver {
 			// creating unicast server by asking server port
 			// and sending client IP to server so that it can send messages
 			transmissionPort = server.getPortEmission (clientIP, InetAddress.getByName (clientIP));
+			Color clientTeamColor = server.getTeamColor(clientIP + transmissionPort);
+			gameEntity.setTeamColor(clientTeamColor);
+			
 			unicastReceiver = new UnicastReceiver (InetAddress.getByName (clientIP), transmissionPort) ;
 			// on aimerait bien demander automatiquement quel est l'adresse IP de la machine du client,
 			// mais le problème est que celle-ci peut avoir plusieurs adresses IP (filaire, wifi, ...)
@@ -115,13 +119,13 @@ public class GameIOReceiver {
 	}
 
 	// Adding a drawing to client
-	public void addDrawing (String proxyName, int x1, int y1, int x2, int y2) {
+	public void addDrawing (String proxyName, int x1, int y1, int x2, int y2, Color c) {
 		//generating coords
 		Point p1 = new Point(x1, y1);
 		Point p2 = new Point(x2, y2);
 		
 		//adding drawing to gameEntity
-		gameEntity.addDrawing(proxyName, p1, p2, Color.black);
+		gameEntity.addDrawing(proxyName, p1, p2, c);
 		
 	}
 	
