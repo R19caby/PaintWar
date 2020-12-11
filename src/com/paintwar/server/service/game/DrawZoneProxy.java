@@ -43,8 +43,20 @@ public class DrawZoneProxy {
 							Logger.print("can paint over");
 							//update paint score here for other team
 						} else {
-							//calculate leftover to expand
-							
+							if (drawing.getPercent() != 0) {
+								//calculate leftover to expand (cross product)
+								Rectangle areaToDelete = newDrawing.getBox().intersection(currentDraw.getBox());
+								if (newDrawing.getBox().getHeight() == drawing.getBox().getHeight()) {
+									Double finalWidth = newDrawing.getBox().getWidth()-areaToDelete.getWidth() - 1; //-1 to avoid mutual blocking 
+									newPercent = finalWidth*drawing.getPercent()/drawing.getBox().getWidth();
+								} else {
+									Double finalHeight = newDrawing.getBox().getHeight()-areaToDelete.getHeight() - 1;
+									newPercent = finalHeight*drawing.getPercent()/drawing.getBox().getHeight();	
+								}
+							} else {
+								//the drawing hasn't started
+								newPercent = 0.;
+							}
 							canUpdate = false;
 							break;
 						}
@@ -55,6 +67,10 @@ public class DrawZoneProxy {
 			if (canUpdate) {
 				//update drawing in the list and get the new percent for clients
 				newPercent = drawing.upPercent();
+			} else {
+				//fill the leftover area before collision
+				drawing.setPercent(newPercent);
+				newPercent = -newPercent;
 			}
 		}
 		
@@ -65,11 +81,19 @@ public class DrawZoneProxy {
 		drawings.remove(name);
 	}
 
-	public void stopDrawing(String drawName) {
+	public boolean stopAndDoRemoveDrawing(String drawName) {
 		DrawingServerProxy drawing = drawings.get(drawName);
 		if (drawing != null) {
-			drawing.setDrawFixed(true);
+			if (drawing.getPercent().equals(0.)) {
+				//removing drawing that hasn't even started
+				removeDrawing(drawName);
+				return true;
+			} else {
+				drawing.setDrawFixed(true);
+				return false;
+			}
 		}
+		return true;
 	}
 	
 }

@@ -40,7 +40,7 @@ public class Drawing extends JPanel {
 			if (Math.abs(w) > Math.abs(h)) {
 				/*Expand right*/
 				fillP1 = new Point(0, 0);
-				fillP2 = new Point(0, h);
+				fillP2 = new Point(0, Math.abs(h));
 			} else {
 				/*Expand down*/
 				fillP1 = new Point(0, 0);

@@ -39,7 +39,7 @@ public class DrawingServerProxy {
 			if (Math.abs(w) > Math.abs(h)) {
 				/*Expand right*/
 				currentP1 = new Point(0, 0);
-				currentP2 = new Point(0, h);
+				currentP2 = new Point(0, Math.abs(h));
 			} else {
 				/*Expand down*/
 				currentP1 = new Point(0, 0);

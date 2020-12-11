@@ -49,7 +49,7 @@ public class GameServerEntity extends UnicastRemoteObject implements IGameServer
 		this.RMIPort = RMIPort ;
 		this.transmitterPort = transmitterPort ;
 		transmitters = new ArrayList<UnicastTransmitter> () ;
-		this.gameLoop = new GameLoop(transmitters);
+		this.gameLoop = new GameLoop(this, transmitters);
 		try {
 			// attachcement sur serveur sur un port identifi� de la machine d'exécution
 			Naming.rebind ("//" + serverIP + ":" + RMIPort + "/" + gameName, this) ;
@@ -176,11 +176,11 @@ public class GameServerEntity extends UnicastRemoteObject implements IGameServer
 	}
 	@Override
 	public void startFillingDraw(String name) throws RemoteException {
-		Logger.print("[Server/GameEntity] Starting thread for filling " + name);
+		
 		DrawingRemote drawing = drawingRemotes.get(name);
 
 		if (drawing != null) {
-			
+			Logger.print("[Server/GameEntity] Starting filling " + name + " with x=" + drawing.getX1() + " and y=" + drawing.getY1());
 			gameLoop.addDrawing(
 					drawing.getName(), 
 					new DrawingServerProxy(
