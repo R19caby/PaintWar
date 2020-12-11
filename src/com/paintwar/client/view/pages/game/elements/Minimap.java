@@ -52,7 +52,7 @@ public class Minimap extends JPanel {
 		p.setLocation((int) ((p.x - cameraFrame.getWidth()/2)/ratio), (int) ((p.y - cameraFrame.getHeight()/2)/ratio));
 	}
 	
-	public void paint(String name, Point oldP, Point oldP2, Color color, int opacity) {
+	public void paint(String name, Point oldP, Point oldP2, Color color, int opacity, Double percent) {
 		Point p = oldP.getLocation();
 		Point p2 = oldP2.getLocation();
 		reScale(p);
@@ -63,8 +63,14 @@ public class Minimap extends JPanel {
 		r.add(p2);
 		newDraw.setBounds(r);
 		newDraw.setInitPoint(p);
-		newDraw.setEndPoint(p);
+		newDraw.setEndPoint(p2);
+		
 		add(newDraw);
+		this.setComponentZOrder(newDraw, 0);
+		if (percent != null) {
+			newDraw.setFilling(percent);
+			newDraw.setDrawn();
+		}
 	}
 
 	public void updateEndPointPaint(String name, Point oldP) {

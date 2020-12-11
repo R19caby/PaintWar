@@ -27,7 +27,6 @@ public class DrawZoneProxy {
 		Double newPercent = null;
 		
 		if (!drawing.isDrawFixed()) {
-			Logger.print("[Server/filler] Filling drawing " + name);
 			DrawingServerProxy newDrawing = drawing.copy();
 			Boolean canUpdate = true;
 			newDrawing.upPercent();
@@ -95,6 +94,11 @@ public class DrawZoneProxy {
 			}
 		}
 		return true;
+	}
+
+	public Double getDrawPercent(String drawName) {
+		DrawingServerProxy drawing = drawings.get(drawName);
+		return drawing.getPercent();
 	}
 	
 }

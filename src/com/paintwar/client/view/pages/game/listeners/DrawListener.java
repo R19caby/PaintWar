@@ -7,6 +7,7 @@ import java.awt.event.MouseMotionListener;
 
 import javax.swing.SwingUtilities;
 
+import com.paintwar.client.controller.game.GameEntity;
 import com.paintwar.client.view.pages.game.elements.DrawZone;
 
 public class DrawListener implements MouseListener, MouseMotionListener {
@@ -54,9 +55,13 @@ public class DrawListener implements MouseListener, MouseMotionListener {
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		if (SwingUtilities.isLeftMouseButton(e)) {
-			drawZone.startFilling(entityDrawnName);
-			entityDrawnName = null;
-			drawZone.setCurrentDrawing(null);
+			if (drawZone.isBigEnough(entityDrawnName)) {
+				drawZone.startFilling(entityDrawnName);
+				entityDrawnName = null;
+				drawZone.setCurrentDrawing(null);
+			} else {
+				drawZone.deleteDrawingRequest(entityDrawnName);
+			}
 		}
 	}
 

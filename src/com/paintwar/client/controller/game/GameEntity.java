@@ -70,17 +70,26 @@ public class GameEntity implements IGameEntity {
 	}
 	
 	@Override
-	public DrawingProxy addDrawing(String name, Point p1, Point p2, Color c) {
+	public DrawingProxy addDrawing(String name, Point p1, Point p2, Color c, Double percent) {
 		//create drawing
 		DrawingProxy drawing = new DrawingProxy(p1, p2, c, DrawingProxy.RECTANGLE);
+		
+		if (percent != null) {
+			drawing.setCompletion(percent);
+			drawing.setDrawn(true);
+		}
 		
 		//add to the list
 		drawings.put(name, drawing);
 		
 		//update zone
-		drawZone.addDrawing(name, p1, p2, c);
+		drawZone.addDrawing(name, p1, p2, c, percent);
 		
 		return drawing;
+	}
+	
+	public void removeDrawingClient(String name) {
+		ioClient.deleteDrawingRequest(name);
 	}
 	
 	@Override

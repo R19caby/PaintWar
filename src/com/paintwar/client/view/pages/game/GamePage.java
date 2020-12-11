@@ -22,7 +22,7 @@ import com.paintwar.client.view.pages.game.listeners.CameraMvtListener;
 public class GamePage extends JLayeredPane {
 	
 	public static int CAMERA_SENSIBILITY = 20;
-	public static int CAMERA_HITBOX_WIDTH = 100;
+	public static int CAMERA_HITBOX_WIDTH = 60;
 	private GameEntity gameEnt;
 	private DrawZonePlaceholder DZPlaceholder;
 	private GameLayerUI layerUI;

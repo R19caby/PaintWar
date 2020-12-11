@@ -39,7 +39,7 @@ public class GameIOCommandReceiver implements IClientCommandReceiver {
 				break;
 			}
 			case ("Draw"): {
-				gameReceiver.addDrawing(name, (int)args.get ("x1"), (int)args.get ("y1"), (int)args.get ("x2"), (int)args.get ("y2"), (Color)args.get("color"));
+				gameReceiver.addDrawing(name, (int)args.get ("x1"), (int)args.get ("y1"), (int)args.get ("x2"), (int)args.get ("y2"), (Color)args.get("color"), null);
 				break;
 			}
 			case ("Delete"): {

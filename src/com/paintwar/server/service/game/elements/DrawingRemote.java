@@ -22,6 +22,7 @@ public class DrawingRemote extends UnicastRemoteObject implements IDrawServerRem
 	private int y2 ;
 	private String name ;
 	private Color currentColor;
+	private Double percent;
 
 	private static final long serialVersionUID = 1L ;
 
@@ -31,6 +32,10 @@ public class DrawingRemote extends UnicastRemoteObject implements IDrawServerRem
 		this.currentColor = color;
 	}
 
+	public void setCompleted(Double percent) {
+		this.percent = percent;
+	}
+	
 	public String getName () throws RemoteException {
 		return name ;
 	}
@@ -71,4 +76,9 @@ public class DrawingRemote extends UnicastRemoteObject implements IDrawServerRem
 		return currentColor;
 	}
 
+	@Override 
+	public Double isCompleted() throws RemoteException {
+		return percent;
+	}
+	
 }

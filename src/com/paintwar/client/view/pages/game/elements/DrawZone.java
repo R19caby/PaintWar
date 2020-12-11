@@ -19,6 +19,7 @@ public class DrawZone extends JPanel {
 	private String currentDrawingByUser;
 	private Minimap minimap;
 	private static int SCHEMA_OPACITY = 30;
+	private static Double MINIMUM_AREA = 6000.;
 	
 	public DrawZone(GameEntity gameEntity, Minimap minimap) {
 		this.gameEntity = gameEntity;
@@ -38,12 +39,15 @@ public class DrawZone extends JPanel {
 	public String initializeDraw(Point p) {
 		Color color = gameEntity.getTeamColor();
 		String entiName = gameEntity.paintClient(p, p, color);
-		minimap.paint(entiName, p, p, color, SCHEMA_OPACITY);
+		minimap.paint(entiName, p, p, color, SCHEMA_OPACITY, null);
 		Drawing newDraw = new Drawing(color, SCHEMA_OPACITY);
 		drawPanels.put(entiName, newDraw);
 		newDraw.setBounds(new Rectangle(p));
 		newDraw.setInitPoint(p);
-		add(newDraw);
+
+		newDraw.setDisplayColor(Color.black);
+		add(newDraw, 0);
+		this.setComponentZOrder(newDraw, 0);
 		this.currentDrawingByUser = entiName;
 		
 		return entiName;
@@ -55,10 +59,15 @@ public class DrawZone extends JPanel {
 		if (drawToUpdate != null) {
 			Rectangle r = new Rectangle(drawToUpdate.getInitPoint());
 			r.add(p);
+			drawToUpdate.setDisplayColor(Color.red);
 			drawToUpdate.setBounds(r);
 			drawToUpdate.setEndPoint(p);
-			minimap.updateEndPointPaint(name, p);
-			gameEntity.updateCoordPaintClient(name, p);
+			if (r.getWidth()*r.getHeight() > MINIMUM_AREA) { //send updates if big enough
+				Logger.print(""+r.getWidth()*r.getHeight());
+				drawToUpdate.setDisplayColor(Color.black);
+				minimap.updateEndPointPaint(name, p);
+				gameEntity.updateCoordPaintClient(name, p);
+			}
 		} else if (name != null) {
 			Logger.print("[Game] Couldn't find drawing to change coord");
 		}
@@ -94,16 +103,21 @@ public class DrawZone extends JPanel {
 			endPoint.translate(-x, -y);
 			Rectangle r = new Rectangle(currentDraw.getInitPoint());
 			r.add(endPoint);
+			currentDraw.setDisplayColor(Color.red);
 			currentDraw.setBounds(r);
 			currentDraw.setEndPoint(endPoint);
-			gameEntity.updateCoordPaintClient(currentDrawingByUser, endPoint);
-			minimap.updateEndPointPaint(currentDrawingByUser, endPoint);
+			if (r.getWidth()*r.getHeight() > MINIMUM_AREA) { //send updates if big enough
+				currentDraw.setDisplayColor(Color.black);
+				gameEntity.updateCoordPaintClient(currentDrawingByUser, endPoint);
+				minimap.updateEndPointPaint(currentDrawingByUser, endPoint);
+			}
+			
 		}
 		
 	}
 	
-	public void addDrawing(String name, Point p1, Point p2, Color c) {
-		minimap.paint(name, p1, p2, c, SCHEMA_OPACITY);
+	public void addDrawing(String name, Point p1, Point p2, Color c, Double percent) {
+		minimap.paint(name, p1, p2, c, SCHEMA_OPACITY, percent);
 		Drawing newDraw = new Drawing(c, SCHEMA_OPACITY);
 		drawPanels.put(name, newDraw);
 		
@@ -113,7 +127,14 @@ public class DrawZone extends JPanel {
 		newDraw.setBounds(r);
 		newDraw.setInitPoint(p1);
 		newDraw.setEndPoint(p2);
+		
+		//filling the drawing 
+		if (percent != null) {
+			newDraw.setFilling(percent);
+			newDraw.setDrawn();
+		}
 		add(newDraw);
+		this.setComponentZOrder(newDraw, 0);
 	}
 	
 	public void deleteDrawing(String name) {
@@ -124,6 +145,10 @@ public class DrawZone extends JPanel {
 			this.repaint();
 		}
 	}
+	
+	public void deleteDrawingRequest(String entityDrawnName) {
+		gameEntity.removeDrawingClient(entityDrawnName);
+	}
 
 	public void updateFilling(String name, Double percent) {
 		Drawing drawing = drawPanels.get(name);
@@ -133,7 +158,9 @@ public class DrawZone extends JPanel {
 	}
 
 	public void startFilling(String entityDrawnName) {
-		gameEntity.startFilling(entityDrawnName);
+		if (this.isBigEnough(entityDrawnName)) { //send updates if big enough
+			gameEntity.startFilling(entityDrawnName);
+		}
 	}
 
 	public void setDrawn(String name) {
@@ -142,5 +169,13 @@ public class DrawZone extends JPanel {
 			drawing.setDrawn();
 		minimap.setDrawn(name);
 	}
+
+	public boolean isBigEnough(String entityDrawnName) {
+		Drawing currentDraw = drawPanels.get(entityDrawnName);
+		Rectangle r = currentDraw.getBounds();
+		return r.getWidth()*r.getHeight() > MINIMUM_AREA;
+	}
+
+	
 	
 }

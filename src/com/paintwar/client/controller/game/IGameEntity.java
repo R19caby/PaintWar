@@ -12,7 +12,7 @@ public interface IGameEntity {
 	public String paintClient(Point p1, Point p2, Color c);
 	public void updateCoordPaint(String name, Point p1, Point p2);
 	public void updateCoordPaint(String name, Point p);
-	DrawingProxy addDrawing(String name, Point p1, Point p2, Color c);
+	DrawingProxy addDrawing(String name, Point p1, Point p2, Color c, Double percent);
 	void removeDrawing(String objectName);
 	void updateCoordPaintClient(String name, Point p);
 	

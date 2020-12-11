@@ -6,6 +6,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.function.Function;
 
+import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
 import com.paintwar.server.logger.Logger;
@@ -20,6 +21,7 @@ public class Drawing extends JPanel {
 	private Point fillP2;
 	private Drawing fillingDraw;
 	private int opacity;
+	private Color displayColor = Color.black;
 	
 	Drawing(Color color, int opacity) {
 		this.opacity = opacity;
@@ -74,7 +76,6 @@ public class Drawing extends JPanel {
 				return new Point(newX, newY);
 			};
 		}
-		Logger.print("Init points " + initPoint + "; " + endPoint);
 		setFilling(.0);
 	}
 	
@@ -86,6 +87,15 @@ public class Drawing extends JPanel {
 		this.initPoint = initPoint;
 	}
 
+	public void setDisplayColor(Color color) {
+		if (color.equals(Color.red)) {
+			this.setBorder(BorderFactory.createLineBorder(color, 1));
+		} else {
+			this.setBorder(BorderFactory.createLineBorder(color, 1));
+		}
+		this.displayColor = color;
+	}
+	
 	@Override
 	public void paint(Graphics g) {
 
@@ -106,6 +116,9 @@ public class Drawing extends JPanel {
 	}
 	
 	public void setFilling(Double percent) {
+		if (fillDraw == null) {
+			updateFillDraw();
+		}
 		if (percent >= 1) {
 			percent = 1.;
 			//fillingDraw.setOpacity(100);
@@ -125,7 +138,9 @@ public class Drawing extends JPanel {
 	
 	public void setDrawn() {
 		this.opacity = 0;
+		this.setBorder(null);
 		this.repaint();
 	}
+
 
 }

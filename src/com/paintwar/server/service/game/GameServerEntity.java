@@ -71,6 +71,12 @@ public class GameServerEntity extends UnicastRemoteObject implements IGameServer
 		}
 	}
 
+	//set drawn a remote for future players connecting
+	protected void setDrawn(String drawing, Double drawPercent) {
+		DrawingRemote draw = drawingRemotes.get(drawing);
+		draw.setCompleted(drawPercent);
+	}
+	
 	// indicates what port to use to emit messages for client (increased by 1 for each client)
 	// used for multiple clients on a single machine
 	// also creates the player
@@ -236,5 +242,6 @@ public class GameServerEntity extends UnicastRemoteObject implements IGameServer
 			e.printStackTrace();
 		}
 	}
+
 
 }

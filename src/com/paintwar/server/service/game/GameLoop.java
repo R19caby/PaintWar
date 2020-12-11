@@ -61,6 +61,7 @@ public class GameLoop extends Thread {
 	}
 	
 	public void stopFillingDrawing(String name) {
+		Double percent = dz.getDrawPercent(name);
 		Boolean doRemove = dz.stopAndDoRemoveDrawing(name);
 		drawFillingNames.remove(name);
 		if (doRemove) {
@@ -74,6 +75,7 @@ public class GameLoop extends Thread {
 			for (UnicastTransmitter emetteur : transmitters) {
 				emetteur.diffuseMessage (this.getClass().getPackageName(), "Drawn", name, null) ;
 			}
+			gameEntity.setDrawn(name, percent);
 		}
 	}
 	

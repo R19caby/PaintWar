@@ -61,7 +61,7 @@ public class GameIOReceiver {
 			Logger.print("[Client/Communication/GameIO] Received drawing proxies : " + proxiesDrawings);
 			// ajout de tous les dessins dans la zone de dessin
 			for (IDrawServerRemote rd : proxiesDrawings) {
-				addDrawing (rd.getName(), rd.getX1 (), rd.getY1 (), rd.getX2(), rd. getY2(), rd.getColor()) ;
+				addDrawing (rd.getName(), rd.getX1 (), rd.getY1 (), rd.getX2(), rd. getY2(), rd.getColor(), rd.isCompleted()) ;
 			}
 		} catch (Exception e) {
 			Logger.print ("[Client/Communication/GameIO] couldn't connect to " + "//" + serverIp + ":" + serverRMIPort + "/" + gameName) ;
@@ -111,7 +111,7 @@ public class GameIOReceiver {
 		// adding new drawing in the list if not already in� :
 		// -> Could have received a new drawing while we are adding that one
 		if (! gameEntity.hasDrawing(proxyName)) {
-			gameEntity.addDrawing(proxyName, p1, p2, color);
+			gameEntity.addDrawing(proxyName, p1, p2, color, null);
 		} else {
 			Logger.print ("[Client/Communication/GameIO] drawing " + proxyName + " already there") ;
 		}
@@ -119,13 +119,13 @@ public class GameIOReceiver {
 	}
 
 	// Adding a drawing to client
-	public void addDrawing (String proxyName, int x1, int y1, int x2, int y2, Color c) {
+	public void addDrawing (String proxyName, int x1, int y1, int x2, int y2, Color c, Double percent) {
 		//generating coords
 		Point p1 = new Point(x1, y1);
 		Point p2 = new Point(x2, y2);
 		
 		//adding drawing to gameEntity
-		gameEntity.addDrawing(proxyName, p1, p2, c);
+		gameEntity.addDrawing(proxyName, p1, p2, c, percent);
 		
 	}
 	
