@@ -60,7 +60,7 @@ public class GameServerEntity extends UnicastRemoteObject implements IGameServer
 		this.serverIP = serverIP ;
 		this.RMIPort = RMIPort ;
 		this.transmitterPort = transmitterPort ;
-		this.gameLoop = new GameLoop(this, transmitters);
+		this.gameLoop = new GameLoop(this, transmitters, teams);
 		try {
 			// attachcement sur serveur sur un port identifi� de la machine d'exécution
 			Naming.rebind ("//" + serverIP + ":" + RMIPort + "/" + gameName, this) ;
@@ -241,6 +241,17 @@ public class GameServerEntity extends UnicastRemoteObject implements IGameServer
 			Logger.print("[Server/GameEntity] Couldn't remove RMI binding " + "//" + serverIP + ":" + RMIPort + "/" + gameName);
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public Map<Color, Integer> getTeamScores() throws RemoteException {
+		HashMap<Color, Integer> scores = new HashMap<Color, Integer>();
+		for (Entry<Color, Team> team : teams.entrySet()) {
+			Team currentTeam = team.getValue();
+			scores.put(team.getKey(), currentTeam.getScore());
+		}
+		
+		return scores;
 	}
 
 

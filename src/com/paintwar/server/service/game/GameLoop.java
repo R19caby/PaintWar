@@ -1,12 +1,15 @@
 package com.paintwar.server.service.game;
 
+import java.awt.Color;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.paintwar.server.logger.Logger;
 import com.paintwar.server.service.game.elements.DrawingServerProxy;
+import com.paintwar.server.service.game.elements.Team;
 import com.paintwar.unicast.UnicastTransmitter;
 
 public class GameLoop extends Thread {
@@ -19,13 +22,15 @@ public class GameLoop extends Thread {
 	
 	private List<UnicastTransmitter> transmitters;
 	private GameServerEntity gameEntity;
+	private Map<Color, Team> teams;
 	
-	public GameLoop(GameServerEntity gameEntity, List<UnicastTransmitter> transmitters) {
+	public GameLoop(GameServerEntity gameEntity, List<UnicastTransmitter> transmitters, Map<Color, Team> teams) {
 		super();
 		this.drawFillingNames = new ArrayList<String>();
 		this.drawToStopNames = new ArrayList<String>();
 		this.transmitters = transmitters;
-		this.dz = new DrawZoneProxy();
+		this.teams = teams;
+		this.dz = new DrawZoneProxy(teams);
 		this.gameEntity = gameEntity;
 	}
 	
@@ -61,7 +66,7 @@ public class GameLoop extends Thread {
 	}
 	
 	public void stopFillingDrawing(String name) {
-		Double percent = dz.getDrawPercent(name);
+		Double percent = dz.getDrawing(name).getPercent();
 		Boolean doRemove = dz.stopAndDoRemoveDrawing(name);
 		drawFillingNames.remove(name);
 		if (doRemove) {

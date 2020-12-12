@@ -1,5 +1,6 @@
 package com.paintwar.server.service.game;
 
+import java.awt.Color;
 import java.awt.Rectangle;
 import java.util.HashMap;
 import java.util.Map;
@@ -7,13 +8,16 @@ import java.util.Map.Entry;
 
 import com.paintwar.server.logger.Logger;
 import com.paintwar.server.service.game.elements.DrawingServerProxy;
+import com.paintwar.server.service.game.elements.Team;
 
 public class DrawZoneProxy {
 	
 	private Map<String, DrawingServerProxy> drawings;
+	private Map<Color, Team> teams;
 	
-	public DrawZoneProxy() {
+	public DrawZoneProxy(Map<Color, Team> teams) {
 		drawings = new HashMap<String, DrawingServerProxy>();
+		this.teams = teams;
 	}
 	
 	//add a drawing to the list
@@ -41,7 +45,14 @@ public class DrawZoneProxy {
 						//Logger.print("boxes intersect");
 						if (currentDraw.isDrawFixed()) {
 							//Logger.print("can paint over");
-							//update paint score here for other team
+							//update paint score for other team
+							/*Team teamToRemove = teams.get(currentDraw.getColor());
+							Rectangle drawSizes = drawing.getFinalBox();
+							Integer scoreToRemove = (int) ((newPercent-oldPercent)*drawSizes.width*drawSizes.height);
+							Integer scoreToRemove = removedZone.width*removedZone.height;
+							Logger.print("[Server/DrawZoneProxy] Removing " + scoreToRemove + " from " + teamToRemove.getScore());
+							teamToRemove.addScore(-scoreToRemove);*/
+							
 						} else {
 							if (drawing.getPercent() != 0) {
 								//calculate leftover to expand (cross product)
@@ -64,6 +75,7 @@ public class DrawZoneProxy {
 				}
 			}
 			
+			Double oldPercent = drawing.getPercent();
 			if (canUpdate) {
 				//update drawing in the list and get the new percent for clients
 				newPercent = drawing.upPercent();
@@ -72,6 +84,12 @@ public class DrawZoneProxy {
 				drawing.setPercent(newPercent);
 				newPercent = -newPercent;
 			}
+			
+			//update scores
+			Team currentTeam = teams.get(drawing.getColor());
+			Rectangle drawSizes = drawing.getFinalBox();
+			Integer scoreToAdd = (int) ((newPercent-oldPercent)*drawSizes.width*drawSizes.height);
+			currentTeam.addScore(scoreToAdd);
 		}
 		
 		return newPercent;
@@ -96,9 +114,9 @@ public class DrawZoneProxy {
 		return true;
 	}
 
-	public Double getDrawPercent(String drawName) {
+	public DrawingServerProxy getDrawing(String drawName) {
 		DrawingServerProxy drawing = drawings.get(drawName);
-		return drawing.getPercent();
+		return drawing;
 	}
 	
 }

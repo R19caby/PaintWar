@@ -17,6 +17,7 @@ import com.paintwar.client.view.pages.game.elements.DrawZone;
 import com.paintwar.client.view.pages.game.elements.DrawZonePlaceholder;
 import com.paintwar.client.view.pages.game.elements.GameLayerUI;
 import com.paintwar.client.view.pages.game.elements.Minimap;
+import com.paintwar.client.view.pages.game.elements.ScoreboardSimple;
 import com.paintwar.client.view.pages.game.listeners.CameraMvtListener;
 
 public class GamePage extends JLayeredPane {
@@ -32,13 +33,12 @@ public class GamePage extends JLayeredPane {
 		super();
 		this.gameEnt = gameEnt;
 		
-		this.layerUI = new GameLayerUI();
+		this.layerUI = new GameLayerUI(gameEnt, threads);
 		
 		drawZone = new DrawZone(gameEnt, layerUI.getMinimap());
 		setLayout(null);
 		DZPlaceholder = new DrawZonePlaceholder(drawZone, layerUI.getMinimap(), threads);
 		layerUI.setDZPlaceHolder(DZPlaceholder);
-
 		
 		add(DZPlaceholder, Integer.valueOf(1));
 		add(layerUI, Integer.valueOf(2));

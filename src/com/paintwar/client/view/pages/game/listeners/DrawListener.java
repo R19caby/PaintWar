@@ -23,8 +23,10 @@ public class DrawListener implements MouseListener, MouseMotionListener {
 	@Override
 	public void mouseDragged(MouseEvent e) {
 		if (SwingUtilities.isLeftMouseButton(e)) {
-			drawZone.updateEndPointDraw(entityDrawnName, e.getPoint());
-			drawZone.repaint();
+			if (e.getPoint() != null) {
+				drawZone.updateEndPointDraw(entityDrawnName, e.getPoint());
+				drawZone.repaint();
+			}
 		}
 		
 		//sending event to other listeners

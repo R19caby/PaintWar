@@ -6,8 +6,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
-import com.paintwar.client.view.pages.game.CameraMoverThread;
 import com.paintwar.client.view.pages.game.GamePage;
+import com.paintwar.client.view.pages.game.threads.CameraMoverThread;
 
 public class CameraMvtListener implements MouseMotionListener, MouseListener {
 

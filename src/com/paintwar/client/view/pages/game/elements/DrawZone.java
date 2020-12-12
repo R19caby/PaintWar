@@ -37,7 +37,7 @@ public class DrawZone extends JPanel {
 	
 	/*Add a drawing to zone and gameEntity*/
 	public String initializeDraw(Point p) {
-		Color color = gameEntity.getTeamColor();
+		Color color = gameEntity.getClientTeamColor();
 		String entiName = gameEntity.paintClient(p, p, color);
 		minimap.paint(entiName, p, p, color, SCHEMA_OPACITY, null);
 		Drawing newDraw = new Drawing(color, SCHEMA_OPACITY);

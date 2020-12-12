@@ -7,6 +7,7 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.JFrame;
 
@@ -27,7 +28,8 @@ public class GameEntity implements IGameEntity {
 	private List<Thread> threads;
 	private JFrame currentWindow;
 	private GamePage gamepage;
-	private Color teamColor;
+	private Color clientTeamColor;
+	private Map<Color, Integer> teamScores;
 	
 	GameEntity() {
 		drawings = new HashMap<String, DrawingProxy>();
@@ -44,12 +46,12 @@ public class GameEntity implements IGameEntity {
 		this.ioClient = ioClient;
 	}
 
-	public void setTeamColor(Color clientTeamColor) {
-		teamColor = clientTeamColor;
+	public void setClientTeamColor(Color clientTeamColor) {
+		this.clientTeamColor = clientTeamColor;
 	}
 	
-	public Color getTeamColor() {
-		return teamColor;
+	public Color getClientTeamColor() {
+		return clientTeamColor;
 	}
 	
 	private void deleteAllDrawings() {
@@ -156,6 +158,13 @@ public class GameEntity implements IGameEntity {
 		for (Thread thread : threads) {
 			thread.interrupt();
 		}
+	}
+
+	public Map<Color, Integer> getTeamScores() {
+		if (ioClient != null) {
+			teamScores = ioClient.getTeamScores();
+		}
+		return teamScores;
 	}
 
 

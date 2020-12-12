@@ -7,6 +7,7 @@ import java.net.UnknownHostException;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Map;
 
 import javax.swing.JOptionPane;
 
@@ -73,7 +74,7 @@ public class GameIOReceiver {
 			// and sending client IP to server so that it can send messages
 			transmissionPort = server.getPortEmission (clientIP, InetAddress.getByName (clientIP));
 			Color clientTeamColor = server.getTeamColor(clientIP + transmissionPort);
-			gameEntity.setTeamColor(clientTeamColor);
+			gameEntity.setClientTeamColor(clientTeamColor);
 			
 			unicastReceiver = new UnicastReceiver (InetAddress.getByName (clientIP), transmissionPort) ;
 			// on aimerait bien demander automatiquement quel est l'adresse IP de la machine du client,
@@ -191,6 +192,16 @@ public class GameIOReceiver {
 	//set to drawn for drawing
 	public synchronized void setDrawn(String name) {
 		gameEntity.setDrawn(name);
+	}
+	
+	public Map<Color, Integer> getTeamScores() {
+		try {
+			return server.getTeamScores();
+		} catch (RemoteException e) {
+			Logger.print("[Client/GameIOReceiever] Couldn't retreive team scores");
+			e.printStackTrace();	
+			return null;
+		}
 	}
 
 }

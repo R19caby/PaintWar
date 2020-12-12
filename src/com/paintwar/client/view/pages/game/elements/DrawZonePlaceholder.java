@@ -6,8 +6,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-import com.paintwar.client.view.pages.game.CameraMoverThread;
 import com.paintwar.client.view.pages.game.listeners.CameraMvtListener;
+import com.paintwar.client.view.pages.game.threads.CameraMoverThread;
 import com.paintwar.server.logger.Logger;
 
 public class DrawZonePlaceholder extends JPanel {

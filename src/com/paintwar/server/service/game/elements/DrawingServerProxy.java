@@ -100,6 +100,14 @@ public class DrawingServerProxy {
 		r.translate(Math.min(finalP1.x, finalP2.x), Math.min(finalP1.y, finalP2.y));
 		return r;
 	}
+	
+	public Rectangle getFinalBox() {
+		//generate hitbox
+		Rectangle r = new Rectangle(finalP1);
+		r.add(finalP2);
+		
+		return r;
+	}
 
 	public Double getPercent() {
 		return percent;

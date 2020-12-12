@@ -1,4 +1,4 @@
-package com.paintwar.client.view.pages.game;
+package com.paintwar.client.view.pages.game.threads;
 
 import com.paintwar.client.view.pages.game.elements.DrawZonePlaceholder;
 import com.paintwar.server.logger.Logger;

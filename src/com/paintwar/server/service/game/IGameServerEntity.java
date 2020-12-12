@@ -6,6 +6,7 @@ import java.net.InetAddress;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Map;
 
 public interface IGameServerEntity extends Remote {
 	
@@ -20,5 +21,6 @@ public interface IGameServerEntity extends Remote {
 	void stopServer() throws RemoteException ;
 	void startFillingDraw(String name) throws RemoteException;
 	Color getTeamColor(String clientID) throws RemoteException;
+	Map<Color, Integer> getTeamScores() throws RemoteException;
 	
 }
