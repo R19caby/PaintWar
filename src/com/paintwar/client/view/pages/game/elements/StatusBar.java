@@ -89,7 +89,7 @@ public class StatusBar extends JPanel {
 			inkBar.add(emptyInkBar, c);
 		}
 		
-		Logger.print("[Client/statusbar] updated ink to " + ink + "/" + maxInk);
+		//Logger.print("[Client/statusbar] updated ink to " + ink + "/" + maxInk);
 		GridBagConstraints c = new GridBagConstraints();
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridy = 0;

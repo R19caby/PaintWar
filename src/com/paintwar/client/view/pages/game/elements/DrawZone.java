@@ -64,7 +64,7 @@ public class DrawZone extends JPanel {
 			drawToUpdate.setBounds(r);
 			drawToUpdate.setEndPoint(p);
 			
-			if (r.getWidth()*r.getHeight() > GameConfig.MINIMUM_AREA
+			if (isBigEnough(name)
 					&& isOnTopFriendlyZone(name)
 					&& isAffordable(name)) { //send updates if big enough
 				drawToUpdate.setDisplayColor(Color.black);
@@ -109,7 +109,7 @@ public class DrawZone extends JPanel {
 			currentDraw.setDisplayColor(Color.red);
 			currentDraw.setBounds(r);
 			currentDraw.setEndPoint(endPoint);
-			if (r.getWidth()*r.getHeight() > GameConfig.MINIMUM_AREA
+			if (isBigEnough(currentDrawingByUser)
 					&& isOnTopFriendlyZone(currentDrawingByUser)
 					&& isAffordable(currentDrawingByUser)) { //send updates if big enough
 				currentDraw.setDisplayColor(Color.black);
@@ -189,7 +189,9 @@ public class DrawZone extends JPanel {
 	public boolean isBigEnough(String entityDrawnName) {
 		Drawing currentDraw = drawPanels.get(entityDrawnName);
 		Rectangle r = currentDraw.getBounds();
-		return r.getWidth()*r.getHeight() > GameConfig.MINIMUM_AREA;
+		return r.getWidth()*r.getHeight() > GameConfig.MINIMUM_AREA
+				&& r.getWidth() > GameConfig.MINIMUM_AREA_WIDTH_HEIGHT
+				&& r.getHeight() > GameConfig.MINIMUM_AREA_WIDTH_HEIGHT;
 	}
 	
 	public boolean isOnTopFriendlyZone(String name) {
@@ -226,7 +228,6 @@ public class DrawZone extends JPanel {
 			if (p != null)
 				updateEndPointDraw(0, 0);
 		}
-		
 	}
 	
 	

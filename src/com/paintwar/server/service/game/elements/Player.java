@@ -10,8 +10,8 @@ public class Player implements Serializable {
 	private String name;
 	private String ipId;
 	private Color color;
-	private double ink= (int) GameConfig.MAX_INK_PLAYER;
-	private int maxInk=GameConfig.MAX_INK_PLAYER;
+	private double ink= (int) GameConfig.BASE_MAX_INK;
+	private int maxInk=GameConfig.BASE_MAX_INK;
 	
 	public Player(String name, String ipId) {
 		super();

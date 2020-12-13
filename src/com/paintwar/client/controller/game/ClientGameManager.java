@@ -1,5 +1,11 @@
 package com.paintwar.client.controller.game;
 
+import java.net.Inet4Address;
+import java.net.UnknownHostException;
+
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+
 import com.paintwar.client.model.communication.gameio.GameIOReceiver;
 
 public class ClientGameManager implements IClientGameManager {
@@ -32,8 +38,35 @@ public class ClientGameManager implements IClientGameManager {
 	
 	public static void main(String[] args) {
 		ClientGameManager manag = new ClientGameManager();
-		manag.setClientIp("localhost");
-		manag.joinGame("game0", "localhost", 2020);
+		JTextField serverIP = new JTextField();
+		JTextField portRMIServeur = new JTextField();
+		JTextField gameName = new JTextField();
+		
+		serverIP.setText("localhost");
+		portRMIServeur.setText("2020");
+		gameName.setText("game0");
+		
+		Object[] message = {
+		    "IP du serveur:", serverIP,
+		    "Port du serveur:", portRMIServeur,
+		    "Nom de la partie: ", gameName
+		};
+
+		int option = JOptionPane.showConfirmDialog(null, message, "Login", JOptionPane.OK_CANCEL_OPTION);
+		if (option == JOptionPane.OK_OPTION) {
+			String clientIP = "localhost";
+			try {
+				clientIP = Inet4Address.getLocalHost().getHostAddress();
+				System.out.println(clientIP);
+				//start game
+				manag.setClientIp(clientIP);
+				manag.joinGame(gameName.getText(), serverIP.getText(), Integer.parseInt(portRMIServeur.getText()));
+				
+			} catch (UnknownHostException e1) {
+				System.out.println("Couldn't get local IP");
+				e1.printStackTrace();
+			}
+		}
 	}
 	
 }

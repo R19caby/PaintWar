@@ -35,6 +35,7 @@ public class Minimap extends JPanel {
 		cameraFrame.setOpaque(false);
 		cameraFrame.setBorder(BorderFactory.createLineBorder(Color.red, 1));
 		this.add(cameraFrame);
+		this.setComponentZOrder(cameraFrame, 0);
 
 	}
 	
@@ -66,7 +67,7 @@ public class Minimap extends JPanel {
 		newDraw.setEndPoint(p2);
 		
 		add(newDraw);
-		this.setComponentZOrder(newDraw, 0);
+		this.setComponentZOrder(newDraw, 1);
 		if (percent != null) {
 			newDraw.setFilling(percent);
 			newDraw.setDrawn();

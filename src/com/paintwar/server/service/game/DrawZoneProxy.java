@@ -51,7 +51,7 @@ public class DrawZoneProxy {
 	}
 	
 	//add a drawing to the list
-	public void addDrawing(String name, DrawingServerProxy box) {
+	public synchronized void addDrawing(String name, DrawingServerProxy box) {
 		drawings.put(name, box);
 	}
 	
@@ -156,11 +156,11 @@ public class DrawZoneProxy {
 		return newPercent;
 	}
 	
-	public void removeDrawing(String name) {
+	public synchronized void removeDrawing(String name) {
 		drawings.remove(name);
 	}
 
-	public boolean stopAndDoRemoveDrawing(String drawName) {
+	public synchronized boolean stopAndDoRemoveDrawing(String drawName) {
 		DrawingServerProxy drawing = drawings.get(drawName);
 		if (drawing != null) {
 			if (drawing.getPercent().equals(0.)) {
@@ -175,12 +175,12 @@ public class DrawZoneProxy {
 		return true;
 	}
 
-	public DrawingServerProxy getDrawing(String drawName) {
+	public synchronized DrawingServerProxy getDrawing(String drawName) {
 		DrawingServerProxy drawing = drawings.get(drawName);
 		return drawing;
 	}
 
-	public List<String> removeOverwrittenDrawings() {
+	public synchronized List<String> removeOverwrittenDrawings() {
 		ArrayList<String> names = new ArrayList<String>();
 		
 		for (Entry<String, DrawingServerProxy> drawingEntry : drawings.entrySet()) {

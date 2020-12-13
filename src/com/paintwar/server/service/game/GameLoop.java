@@ -26,11 +26,13 @@ public class GameLoop extends Thread {
 	private GameServerEntity gameEntity;
 	private Map<Color, Team> teams;
 	private Map<String, Player> players;
+	private Map<String, DrawingServerProxy> drawToAdd;
 	
 	public GameLoop(GameServerEntity gameEntity, List<UnicastTransmitter> transmitters, Map<Color, Team> teams, Map<String, Player> players) {
 		super();
 		this.drawFillingNames = new ArrayList<String>();
 		this.drawToStopNames = new ArrayList<String>();
+		this.drawToAdd = new HashMap<String, DrawingServerProxy>();
 		this.transmitters = transmitters;
 		this.teams = teams;
 		this.players = players;
@@ -60,9 +62,14 @@ public class GameLoop extends Thread {
 		}
 	}
 	
-	public void addDrawing(String name, DrawingServerProxy proxy) {
+	private void addDrawingInQueue(String name, DrawingServerProxy proxy) {
 		dz.addDrawing(name, proxy);
 		drawFillingNames.add(name);
+		drawToAdd.remove(name);
+	}
+	
+	public void addDrawing(String name, DrawingServerProxy proxy) {
+		drawToAdd.put(name, proxy);
 	}
 	
 	public void stopFillingDrawing(String name) {
@@ -95,6 +102,11 @@ public class GameLoop extends Thread {
 	//main game loop
 	public void run () {
 		while (running) {
+			Map<String, DrawingServerProxy> currentDrawToAdd = Map.copyOf(drawToAdd);
+			for (Entry<String, DrawingServerProxy> drawingEntry : currentDrawToAdd.entrySet()) {
+				addDrawingInQueue(drawingEntry.getKey(), drawingEntry.getValue());
+			}
+			
 			List<String> currentDrawFillingNames = List.copyOf(drawFillingNames);
 			List<String> currentDrawToStopNames = List.copyOf(drawToStopNames);
 			for (String drawing : currentDrawFillingNames) {
@@ -127,10 +139,14 @@ public class GameLoop extends Thread {
 					if (currentPlayer != null) {
 						//Logger.print("[Server/gameloop] " + currentPlayer.getIpId() + " current ink : " + currentPlayer.getInk() + "/" + currentPlayer.getMaxInk());
 						//send update only if not full
-						if (currentPlayer.getInk()<currentPlayer.getMaxInk()) {
+						//if (currentPlayer.getInk()<currentPlayer.getMaxInk() || currentPlayer.getInk()>currentPlayer.getMaxInk()) {
 							Team currentTeam = teams.get(currentPlayer.getColor());
-							double inkToAdd = (currentPlayer.getMaxInk()*Math.min(0.2,
-									GameConfig.BASE_INK_REGEN_PERCENT_PER_TICK+(GameConfig.TEAM_SCORE_INK_REGEN*currentTeam.getScore())));
+							/*double inkToAdd = (currentPlayer.getMaxInk()*Math.min(0.2,
+									GameConfig.BASE_INK_REGEN_PERCENT_PER_TICK+(GameConfig.TEAM_SCORE_INK_REGEN*currentTeam.getScore())));*/
+							int newMaxInk = GameConfig.GET_MAX_INK_FROM_TEAM_SCORE.apply(currentTeam.getScore());
+							currentPlayer.setMaxInk(newMaxInk);
+							currentPlayer.setInk(Math.min(currentPlayer.getInk(), newMaxInk));
+							double inkToAdd = currentPlayer.getMaxInk()*GameConfig.BASE_INK_REGEN_PERCENT_PER_TICK;
 							currentPlayer.addInk(inkToAdd);
 							//Logger.print("[Server/gameloop] update ink to " + currentPlayer.getInk());
 						
@@ -139,7 +155,7 @@ public class GameLoop extends Thread {
 							hm.put("maxInk", currentPlayer.getMaxInk());
 							transmitter.diffuseMessage (this.getClass().getPackageName(), "UpInk", currentPlayer.getIpId(), hm);
 						}
-					}
+					//}
 				} catch (RemoteException e) {
 					Logger.print("[Server/Gameloop] Couldn't update player ink");
 					e.printStackTrace();

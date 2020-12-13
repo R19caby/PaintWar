@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.function.Function;
 
 import com.paintwar.server.logger.Logger;
+import com.paintwar.server.service.game.GameConfig;
 
 
 public class DrawingServerProxy {
@@ -21,7 +22,6 @@ public class DrawingServerProxy {
 	private Point currentP1;
 	private Point currentP2;
 	private Double percent;
-	private Double areaFillPerTick = 1000.;
 	private Double percentPerTick;
 	private boolean drawFixed;
 	private Function<Double, Point> fillDraw;
@@ -90,7 +90,7 @@ public class DrawingServerProxy {
 	private void calculatePercentPerTick() {
 		int w = Math.abs((int) (finalP2.getX() - finalP1.getX()));
 		int h = Math.abs((int) (finalP2.getY() - finalP1.getY()));
-		percentPerTick = areaFillPerTick/(w*h);
+		percentPerTick = GameConfig.AREA_FILL_PER_TICK/(w*h);
 	}
 
 	public Color getColor() {
@@ -159,15 +159,6 @@ public class DrawingServerProxy {
 		copy.setPercent(percent);
 		copy.addRemovedArea(removedArea);
 		return copy;
-	}
-
-	public Double getAreaFillPerTick() {
-		return areaFillPerTick;
-	}
-
-	public void setAreaFillPerTick(Double areaFillPerTick) {
-		this.areaFillPerTick = areaFillPerTick;
-		calculatePercentPerTick();
 	}
 
 	public boolean isDrawFixed() {
