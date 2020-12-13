@@ -3,7 +3,13 @@ package com.paintwar.server.service.game.elements;
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.geom.Area;
+import java.awt.geom.PathIterator;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Function;
+
+import com.paintwar.server.logger.Logger;
 
 
 public class DrawingServerProxy {
@@ -19,6 +25,7 @@ public class DrawingServerProxy {
 	private Double percentPerTick;
 	private boolean drawFixed;
 	private Function<Double, Point> fillDraw;
+	private Area removedArea;
 	
 	public DrawingServerProxy(String name, Color color, Point p1, Point p2) {
 		super();
@@ -27,6 +34,7 @@ public class DrawingServerProxy {
 		this.finalP1 = p1;
 		this.finalP2 = p2;
 		this.drawFixed = false;
+		this.removedArea = new Area();
 		updateFillDraw();
 		calculatePercentPerTick();
 	}
@@ -91,6 +99,20 @@ public class DrawingServerProxy {
 		this.color = color;
 	}
 
+	public Point getCurrentP2() {
+		//return currentP2 in drawZone
+		Point p = currentP2.getLocation();
+		p.translate(Math.min(finalP1.x, finalP2.x), Math.min(finalP1.y, finalP2.y));
+		return p;
+	}
+	
+	public Point getCurrentP1() {
+		//return currentP1 in drawZone
+		Point p = currentP1.getLocation();
+		p.translate(Math.min(finalP1.x, finalP2.x), Math.min(finalP1.y, finalP2.y));
+		return p;
+	}
+	
 	public Rectangle getBox() {
 		//generate hitbox
 		Rectangle r = new Rectangle(currentP1);
@@ -133,6 +155,7 @@ public class DrawingServerProxy {
 	public DrawingServerProxy copy() {
 		DrawingServerProxy copy = new DrawingServerProxy(name, color, finalP1, finalP2);
 		copy.setPercent(percent);
+		copy.addRemovedArea(removedArea);
 		return copy;
 	}
 
@@ -152,4 +175,13 @@ public class DrawingServerProxy {
 	public void setDrawFixed(boolean drawFixed) {
 		this.drawFixed = drawFixed;
 	}
+	
+	public Area getRemovedArea() {
+		return removedArea;
+	}
+	
+	public void addRemovedArea(Area a) {
+		removedArea.add(a);
+	}
+	
 }

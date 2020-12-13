@@ -97,10 +97,25 @@ public class GameLoop extends Thread {
 			for (String drawing : currentDrawFillingNames) {
 				updateFillDrawing(drawing);
 			}
+			
 			//removing drawings to stop
 			for (String drawing : currentDrawToStopNames) {
 				stopFillingDrawing(drawing);
 			}
+			
+			//remove overwritten drawings
+			List<String> drawNames = dz.removeOverwrittenDrawings();
+			for (String name : drawNames) {
+				deleteDrawing(name);
+				try {
+					gameEntity.deleteDrawing(name);
+				} catch (RemoteException e) {
+					Logger.print("[Server/Gameloop] Couldn't delete drawing " + name);
+					e.printStackTrace();
+				}
+				Logger.print("[Server/Gameloop] Removed overwritten " + name);
+			}
+			
 			tick++;
 			try {
 				sleep(30);
