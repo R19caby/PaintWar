@@ -19,12 +19,12 @@ public class UnicastTransmitter implements Serializable
 	private int transmissionPort;
 	private InetAddress transmissionAddress;
 	private transient DatagramSocket transmissionSocket;
-	private String clientIP;
+	private String clientIPID;
 
-	public UnicastTransmitter(final InetAddress targetAddress, final int transmissionPort, String clientIP) throws RemoteException
+	public UnicastTransmitter(final InetAddress targetAddress, final int transmissionPort, String clientIPID) throws RemoteException
 	{
 		this.transmissionPort = transmissionPort;
-		this.clientIP = clientIP;
+		this.clientIPID = clientIPID;
 		Logger.print("Transmition on port " + transmissionPort + " to client : " + targetAddress);
 		transmissionAddress = targetAddress;
 		transmissionSocket = null;
@@ -74,8 +74,8 @@ public class UnicastTransmitter implements Serializable
 		return transmissionPort;
 	}
 	
-	public String getClientIP() throws RemoteException
+	public String getClientIPID() throws RemoteException
 	{
-		return clientIP;
+		return clientIPID;
 	}
 }

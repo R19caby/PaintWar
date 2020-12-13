@@ -14,5 +14,6 @@ public interface IDrawServerRemote extends Remote {
    int getY2() throws RemoteException;
    Color getColor () throws RemoteException ;
    Double isCompleted() throws RemoteException;
+   String getCreatorID() throws RemoteException;
 
 }

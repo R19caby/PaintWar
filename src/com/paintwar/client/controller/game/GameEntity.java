@@ -31,6 +31,8 @@ public class GameEntity implements IGameEntity {
 	private GamePage gamepage;
 	private Color clientTeamColor;
 	private Map<Color, Team> teamData;
+	private double clientInk;
+	private int clientMaxInk;
 	
 	GameEntity() {
 		drawings = new HashMap<String, DrawingProxy>();
@@ -167,6 +169,17 @@ public class GameEntity implements IGameEntity {
 			teamData = ioClient.getTeamData();
 		}
 		return teamData;
+	}
+
+	public void updateInk(double d, int maxInk) {
+		this.clientInk = d;
+		this.clientMaxInk = maxInk;
+		gamepage.updateInk(d, maxInk);
+		drawZone.updateInkLimit();
+	}
+
+	public double getClientInk() {
+		return clientInk;
 	}
 
 

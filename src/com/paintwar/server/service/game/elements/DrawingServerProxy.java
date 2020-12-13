@@ -26,8 +26,9 @@ public class DrawingServerProxy {
 	private boolean drawFixed;
 	private Function<Double, Point> fillDraw;
 	private Area removedArea;
+	private String creatorID;
 	
-	public DrawingServerProxy(String name, Color color, Point p1, Point p2) {
+	public DrawingServerProxy(String name, Color color, Point p1, Point p2, String creatorID) {
 		super();
 		this.name = name;
 		this.color = color;
@@ -35,6 +36,7 @@ public class DrawingServerProxy {
 		this.finalP2 = p2;
 		this.drawFixed = false;
 		this.removedArea = new Area();
+		this.creatorID = creatorID;
 		updateFillDraw();
 		calculatePercentPerTick();
 	}
@@ -153,7 +155,7 @@ public class DrawingServerProxy {
 	}
 	
 	public DrawingServerProxy copy() {
-		DrawingServerProxy copy = new DrawingServerProxy(name, color, finalP1, finalP2);
+		DrawingServerProxy copy = new DrawingServerProxy(name, color, finalP1, finalP2, creatorID);
 		copy.setPercent(percent);
 		copy.addRemovedArea(removedArea);
 		return copy;

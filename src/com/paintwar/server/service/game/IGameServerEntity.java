@@ -8,6 +8,7 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Map;
 
+import com.paintwar.server.service.game.elements.Player;
 import com.paintwar.server.service.game.elements.Team;
 
 public interface IGameServerEntity extends Remote {
@@ -15,7 +16,7 @@ public interface IGameServerEntity extends Remote {
 	int addPlayer (String clientIP, InetAddress clientAdress) throws RemoteException ;
 	void answer (String question) throws RemoteException ;
 	int getRMIPort () throws RemoteException ;
-	IDrawServerRemote addDrawingProxy (Point p1, Point p2, int formType, Color color) throws RemoteException ;
+	IDrawServerRemote addDrawingProxy (Point p1, Point p2, int formType, Color color, String clientID) throws RemoteException ;
 	ArrayList <IDrawServerRemote> getDrawingProxies () throws RemoteException ;
 	IDrawServerRemote getDrawing (String name) throws RemoteException ;
 	void updateBoundsDrawing(String name, Point p1, Point p2, String clientIP) throws RemoteException;
@@ -25,5 +26,6 @@ public interface IGameServerEntity extends Remote {
 	Color getTeamColor(String clientID) throws RemoteException;
 	Map<Color, Team> getTeamData() throws RemoteException;
 	void generateTeamZone(Color clientTeamColor) throws RemoteException;
+	Player getPlayerData(String name) throws RemoteException;
 	
 }

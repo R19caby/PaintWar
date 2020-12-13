@@ -12,6 +12,7 @@ import javax.swing.JPanel;
 import com.paintwar.client.controller.game.GameEntity;
 import com.paintwar.client.logger.Logger;
 import com.paintwar.client.view.pages.game.listeners.DrawListener;
+import com.paintwar.server.service.game.GameConfig;
 
 public class DrawZone extends JPanel {
 	
@@ -20,14 +21,13 @@ public class DrawZone extends JPanel {
 	private String currentDrawingByUser;
 	private Minimap minimap;
 	private static int SCHEMA_OPACITY = 30;
-	private static Double MINIMUM_AREA = 6000.;
 	
 	public DrawZone(GameEntity gameEntity, Minimap minimap) {
 		this.gameEntity = gameEntity;
 		this.minimap = minimap;
 		this.drawPanels = new HashMap<String, Drawing>();
 		
-		this.setBounds(0, 0, 3000, 3000);
+		this.setBounds(0, 0, GameConfig.DRAWZONE_AREA_WIDTH, (int) (GameConfig.DRAWZONE_AREA_WIDTH/GameConfig.ASPECT_RATIO));
 		this.setBackground(Color.white);
 		this.setBorder(BorderFactory.createLineBorder(Color.black, 10));
 		this.setLayout(null);
@@ -64,7 +64,9 @@ public class DrawZone extends JPanel {
 			drawToUpdate.setBounds(r);
 			drawToUpdate.setEndPoint(p);
 			
-			if (r.getWidth()*r.getHeight() > MINIMUM_AREA && isOnTopFriendlyZone(name)) { //send updates if big enough
+			if (r.getWidth()*r.getHeight() > GameConfig.MINIMUM_AREA
+					&& isOnTopFriendlyZone(name)
+					&& isAffordable(name)) { //send updates if big enough
 				drawToUpdate.setDisplayColor(Color.black);
 				minimap.updateEndPointPaint(name, p);
 				gameEntity.updateCoordPaintClient(name, p);
@@ -107,7 +109,9 @@ public class DrawZone extends JPanel {
 			currentDraw.setDisplayColor(Color.red);
 			currentDraw.setBounds(r);
 			currentDraw.setEndPoint(endPoint);
-			if (r.getWidth()*r.getHeight() > MINIMUM_AREA && isOnTopFriendlyZone(currentDrawingByUser)) { //send updates if big enough
+			if (r.getWidth()*r.getHeight() > GameConfig.MINIMUM_AREA
+					&& isOnTopFriendlyZone(currentDrawingByUser)
+					&& isAffordable(currentDrawingByUser)) { //send updates if big enough
 				currentDraw.setDisplayColor(Color.black);
 				gameEntity.updateCoordPaintClient(currentDrawingByUser, endPoint);
 				minimap.updateEndPointPaint(currentDrawingByUser, endPoint);
@@ -162,9 +166,8 @@ public class DrawZone extends JPanel {
 	}
 
 	public void startFilling(String entityDrawnName) {
-		if (this.isBigEnough(entityDrawnName)) { //send updates if big enough
-			gameEntity.startFilling(entityDrawnName);
-		}
+		currentDrawingByUser = null;
+		gameEntity.startFilling(entityDrawnName);
 	}
 
 	public void setDrawn(String name) {
@@ -174,10 +177,19 @@ public class DrawZone extends JPanel {
 		minimap.setDrawn(name);
 	}
 
+	public boolean isAffordable(String name) {
+		Drawing currentDraw = drawPanels.get(name);
+		Point p1 = currentDraw.getInitPoint();
+		Point p2 = currentDraw.getEndPoint();
+		Rectangle r = new Rectangle(p1);
+		r.add(p2);
+		return r.getWidth()*r.getHeight()*GameConfig.INK_AREA_COST <= gameEntity.getClientInk();
+	}
+	
 	public boolean isBigEnough(String entityDrawnName) {
 		Drawing currentDraw = drawPanels.get(entityDrawnName);
 		Rectangle r = currentDraw.getBounds();
-		return r.getWidth()*r.getHeight() > MINIMUM_AREA;
+		return r.getWidth()*r.getHeight() > GameConfig.MINIMUM_AREA;
 	}
 	
 	public boolean isOnTopFriendlyZone(String name) {
@@ -204,6 +216,17 @@ public class DrawZone extends JPanel {
 		}
 		
 		return isDrawnOnFriendlyZone;
+	}
+
+	public void updateInkLimit() {
+		//re-set currentdrawing
+		Drawing currentDraw = drawPanels.get(currentDrawingByUser);
+		if (currentDraw != null) {
+			Point p = currentDraw.getEndPoint();
+			if (p != null)
+				updateEndPointDraw(0, 0);
+		}
+		
 	}
 	
 	

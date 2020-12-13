@@ -6,9 +6,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.paintwar.server.logger.Logger;
 import com.paintwar.server.service.game.elements.DrawingServerProxy;
+import com.paintwar.server.service.game.elements.Player;
 import com.paintwar.server.service.game.elements.Team;
 import com.paintwar.unicast.UnicastTransmitter;
 
@@ -23,19 +25,17 @@ public class GameLoop extends Thread {
 	private List<UnicastTransmitter> transmitters;
 	private GameServerEntity gameEntity;
 	private Map<Color, Team> teams;
+	private Map<String, Player> players;
 	
-	public GameLoop(GameServerEntity gameEntity, List<UnicastTransmitter> transmitters, Map<Color, Team> teams) {
+	public GameLoop(GameServerEntity gameEntity, List<UnicastTransmitter> transmitters, Map<Color, Team> teams, Map<String, Player> players) {
 		super();
 		this.drawFillingNames = new ArrayList<String>();
 		this.drawToStopNames = new ArrayList<String>();
 		this.transmitters = transmitters;
 		this.teams = teams;
+		this.players = players;
 		this.dz = new DrawZoneProxy(teams);
 		this.gameEntity = gameEntity;
-	}
-	
-	public void addTransmitter(UnicastTransmitter emetteur) {
-		transmitters.add(emetteur);
 	}
 
 	private void updateFillDrawing(String drawName) {
@@ -117,6 +117,33 @@ public class GameLoop extends Thread {
 					e.printStackTrace();
 				}
 				Logger.print("[Server/Gameloop] Removed overwritten " + name);
+			}
+			
+			//update players ink bank
+			for (UnicastTransmitter transmitter : transmitters) {
+				try {
+
+					Player currentPlayer = players.get(transmitter.getClientIPID());
+					if (currentPlayer != null) {
+						//Logger.print("[Server/gameloop] " + currentPlayer.getIpId() + " current ink : " + currentPlayer.getInk() + "/" + currentPlayer.getMaxInk());
+						//send update only if not full
+						if (currentPlayer.getInk()<currentPlayer.getMaxInk()) {
+							Team currentTeam = teams.get(currentPlayer.getColor());
+							double inkToAdd = (currentPlayer.getMaxInk()*Math.min(0.2,
+									GameConfig.BASE_INK_REGEN_PERCENT_PER_TICK+(GameConfig.TEAM_SCORE_INK_REGEN*currentTeam.getScore())));
+							currentPlayer.addInk(inkToAdd);
+							//Logger.print("[Server/gameloop] update ink to " + currentPlayer.getInk());
+						
+							HashMap<String, Object> hm = new HashMap <String, Object> () ;
+							hm.put("ink", currentPlayer.getInk());
+							hm.put("maxInk", currentPlayer.getMaxInk());
+							transmitter.diffuseMessage (this.getClass().getPackageName(), "UpInk", currentPlayer.getIpId(), hm);
+						}
+					}
+				} catch (RemoteException e) {
+					Logger.print("[Server/Gameloop] Couldn't update player ink");
+					e.printStackTrace();
+				}
 			}
 			
 			tick++;

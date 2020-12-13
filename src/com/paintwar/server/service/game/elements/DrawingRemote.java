@@ -21,15 +21,17 @@ public class DrawingRemote extends UnicastRemoteObject implements IDrawServerRem
 	private int x2 ;
 	private int y2 ;
 	private String name ;
+	private String playerCreatorID;
 	private Color currentColor;
 	private Double percent;
 
 	private static final long serialVersionUID = 1L ;
 
 	// constructeur du Dessin sur le serveur : il diffuse alors qu'il faut créer un nouveau dessin sur tous les clients 
-	public DrawingRemote (String name, Color color) throws RemoteException {
+	public DrawingRemote (String name, Color color, String player) throws RemoteException {
 		this.name = name ;
 		this.currentColor = color;
+		this.playerCreatorID = player;
 	}
 
 	public void setCompleted(Double percent) {
@@ -79,6 +81,11 @@ public class DrawingRemote extends UnicastRemoteObject implements IDrawServerRem
 	@Override 
 	public Double isCompleted() throws RemoteException {
 		return percent;
+	}
+	
+	@Override
+	public String getCreatorID() throws RemoteException {
+		return playerCreatorID;
 	}
 	
 }

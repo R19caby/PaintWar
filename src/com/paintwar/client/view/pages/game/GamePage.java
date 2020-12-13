@@ -58,4 +58,8 @@ public class GamePage extends JLayeredPane {
 	public DrawZone getDrawZone() {
 		return drawZone;
 	}
+
+	public void updateInk(double d, int maxInk) {
+		layerUI.updateInk(d, maxInk);
+	}
 }

@@ -23,7 +23,7 @@ import com.paintwar.server.service.game.elements.Team;
 import com.paintwar.unicast.UnicastTransmitter;
 
 public class GameServerEntity extends UnicastRemoteObject implements IGameServerEntity, Serializable {
-	
+
 	// name of the game
 	protected String gameName ;
 
@@ -63,7 +63,7 @@ public class GameServerEntity extends UnicastRemoteObject implements IGameServer
 		this.serverIP = serverIP ;
 		this.RMIPort = RMIPort ;
 		this.transmitterPort = transmitterPort ;
-		this.gameLoop = new GameLoop(this, transmitters, teams);
+		this.gameLoop = new GameLoop(this, transmitters, teams, players);
 		try {
 			// attachcement sur serveur sur un port identifi� de la machine d'exécution
 			Naming.rebind ("//" + serverIP + ":" + RMIPort + "/" + gameName, this) ;
@@ -85,16 +85,17 @@ public class GameServerEntity extends UnicastRemoteObject implements IGameServer
 	// also creates the player
 	@Override
 	public int addPlayer (String clientIP, InetAddress clientAdress) throws RemoteException {
-		UnicastTransmitter emetteur = new UnicastTransmitter (clientAdress, transmitterPort++, clientIP) ;
+		String clientIPID = clientIP + ":" + transmitterPort;
+		Logger.print(clientIPID);
+		UnicastTransmitter emetteur = new UnicastTransmitter (clientAdress, transmitterPort++, clientIPID) ;
 		transmitters.add (emetteur) ;
 		Color newColor = Color.getHSBColor((float) Math.random(), (float) Math.random(), (float) Math.random());
 		Team newTeam = new Team("Team" + teamID++,newColor);
-		Player newPlayer = new Player("Player", clientIP + (transmitterPort-1));
+		Player newPlayer = new Player("Player", clientIPID);
 		newTeam.addPlayer(newPlayer);
 		teams.put(newColor, newTeam);
-		players.put(newPlayer.getIpId(), newPlayer);
-		
-		gameLoop.addTransmitter(emetteur);
+		players.put(clientIPID, newPlayer);
+
 		return (emetteur.getTransmissionPort()) ;
 	}
 	
@@ -110,7 +111,7 @@ public class GameServerEntity extends UnicastRemoteObject implements IGameServer
 		Point p1 = new Point((int) (Math.random()*3000), (int) (Math.random()*3000));
 		Point p2 = p1.getLocation();
 		p2.translate(100, 100);
-		DrawingRemote draw = addDrawingProxy(p1, p2, 0, color);
+		DrawingRemote draw = addDrawingProxy(p1, p2, 0, color, "server");
 		updateBoundsDrawing(draw.getName(), p1, p2, "server");
 		startFillingDraw(draw.getName());
 	}
@@ -143,11 +144,11 @@ public class GameServerEntity extends UnicastRemoteObject implements IGameServer
 	}
 	
 	@Override
-	public DrawingRemote addDrawingProxy(Point p1, Point p2, int formType, Color color) throws RemoteException {
+	public DrawingRemote addDrawingProxy(Point p1, Point p2, int formType, Color color, String clientID) throws RemoteException {
 		// création d'un nouveau nom, unique, destiné à servir de clé d'accès au dessin
 		// et création d'un nouveau dessin de ce nom et associé également à un émetteur multicast...
 		// attention : la classe Dessin utilisée ici est celle du package serveur (et pas celle du package client)
-		DrawingRemote dessin = new DrawingRemote ("draw" + nextId (), color) ;
+		DrawingRemote dessin = new DrawingRemote ("draw" + nextId (), color, clientID) ;
 		// enregistrement du dessin pour accès rmi distant
 		registerObject (dessin) ;
 		// ajout du dessin dans la liste des dessins pour accès plus efficace au dessin
@@ -204,7 +205,7 @@ public class GameServerEntity extends UnicastRemoteObject implements IGameServer
 				hm.put ("y2", Integer.valueOf(p2.y)) ;
 				// send to all clients
 				for (UnicastTransmitter sender : transmitters) {
-					String senderID = sender.getClientIP() + ":" + sender.getTransmissionPort();
+					String senderID = sender.getClientIPID() + ":" + sender.getTransmissionPort();
 					if (!senderID.equals(clientID)) {
 						sender.diffuseMessage (this.getClass().getPackageName(), "Bounds", name, hm);
 					};
@@ -224,13 +225,36 @@ public class GameServerEntity extends UnicastRemoteObject implements IGameServer
 
 		if (drawing != null) {
 			Logger.print("[Server/GameEntity] Starting filling " + name + " with x=" + drawing.getX1() + " and y=" + drawing.getY1());
+			
+			//generate area of drawing
+			Point p1 = new Point(drawing.getX1(), drawing.getY1());
+			Point p2 = new Point(drawing.getX2(), drawing.getY2());
+			Rectangle r = new Rectangle(p1);
+			r.add(p2);
+			
+			if (!drawing.getCreatorID().equals("server")) {
+				//calculate ink to remove
+				Player playerPainting = players.get(drawing.getCreatorID());
+				playerPainting.addInk((int) (-r.height*r.width*GameConfig.INK_AREA_COST));
+				
+				//update ink for player
+				for (UnicastTransmitter sender : transmitters) {
+					if (sender.getClientIPID().equals(playerPainting.getIpId())) {
+						HashMap<String, Object> hm = new HashMap <String, Object> () ;
+						hm.put("ink", playerPainting.getInk());
+						hm.put("maxInk", playerPainting.getMaxInk());
+						sender.diffuseMessage (this.getClass().getPackageName(), "UpInk", playerPainting.getIpId(), hm);
+					}
+				}
+			}
+			
 			gameLoop.addDrawing(
 					drawing.getName(), 
 					new DrawingServerProxy(
 							drawing.getName(), 
 							drawing.getColor(), 
-							new Point(drawing.getX1(), drawing.getY1()), 
-							new Point( drawing.getX2(), drawing.getY2())));
+							p1, p2, 
+							drawing.getCreatorID()));
 		}
 	}
 	
@@ -261,6 +285,11 @@ public class GameServerEntity extends UnicastRemoteObject implements IGameServer
 	@Override
 	public Map<Color, Team> getTeamData() throws RemoteException {
 		return teams;
+	}
+	
+	@Override
+	public Player getPlayerData(String name) throws RemoteException {
+		return players.get(name);
 	}
 
 

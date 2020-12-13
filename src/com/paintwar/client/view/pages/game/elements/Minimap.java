@@ -27,7 +27,7 @@ public class Minimap extends JPanel {
 		this.cameraFrame = new JPanel();
 		
 		this.ratio = (double) minimapSize/drawZoneSize;
-		this.setPreferredSize(new Dimension((int) aspectRatio*minimapSize, minimapSize));
+		this.setPreferredSize(new Dimension((int) (aspectRatio*minimapSize), minimapSize));
 		this.setBackground(Color.white);
 		this.setBorder(BorderFactory.createLineBorder(Color.black, 1));
 		this.setLayout(null);

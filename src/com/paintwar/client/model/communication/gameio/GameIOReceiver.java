@@ -17,6 +17,7 @@ import com.paintwar.server.service.game.GameServerEntity;
 import com.paintwar.server.service.game.IDrawServerRemote;
 import com.paintwar.server.service.game.IGameServerEntity;
 import com.paintwar.server.service.game.elements.DrawingRemote;
+import com.paintwar.server.service.game.elements.Player;
 import com.paintwar.server.service.game.elements.Team;
 import com.paintwar.unicast.UnicastReceiver;
 
@@ -74,7 +75,7 @@ public class GameIOReceiver {
 			// creating unicast server by asking server port
 			// and sending client IP to server so that it can send messages
 			transmissionPort = server.addPlayer (clientIP, InetAddress.getByName (clientIP));
-			Color clientTeamColor = server.getTeamColor(clientIP + transmissionPort);
+			Color clientTeamColor = server.getTeamColor(clientIP + ":" + transmissionPort);
 			gameEntity.setClientTeamColor(clientTeamColor);
 			
 			unicastReceiver = new UnicastReceiver (InetAddress.getByName (clientIP), transmissionPort) ;
@@ -85,6 +86,8 @@ public class GameIOReceiver {
 			//add all commands to unicast
 			unicastReceiver.addClientCommandReceiver(new GameIOCommandReceiver(this));
 			server.generateTeamZone(clientTeamColor);
+			Player clientData = server.getPlayerData(clientIP + ":" + transmissionPort);
+			this.updateInk(clientData.getInk(), clientData.getMaxInk());
 			
 		} catch (RemoteException e1) {
 			e1.printStackTrace();
@@ -103,7 +106,7 @@ public class GameIOReceiver {
 		String proxyName = null ;
 		try {
 			// Creating new drawing on server
-			proxy = server.addDrawingProxy(p1, p2, formType, color);
+			proxy = server.addDrawingProxy(p1, p2, formType, color, clientIP+":"+transmissionPort);
 			// getting name from proxy
 			proxyName = proxy.getName();
 		} catch (RemoteException e) {
@@ -205,6 +208,10 @@ public class GameIOReceiver {
 			e.printStackTrace();	
 			return null;
 		}
+	}
+
+	public synchronized void updateInk(double d, int maxInk) {
+		gameEntity.updateInk(d, maxInk);
 	}
 
 }

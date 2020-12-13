@@ -23,6 +23,7 @@ public class GameIOCommandReceiver implements IClientCommandReceiver {
 		commands.add("Delete");
 		commands.add("Fill");
 		commands.add("Drawn");
+		commands.add("UpInk");
 	}
 
 	@Override
@@ -52,6 +53,10 @@ public class GameIOCommandReceiver implements IClientCommandReceiver {
 			}
 			case ("Drawn"): {
 				gameReceiver.setDrawn(name);
+				break;
+			}
+			case ("UpInk"): {
+				gameReceiver.updateInk((double)args.get("ink"), (int)args.get("maxInk"));
 				break;
 			}
 			default: {

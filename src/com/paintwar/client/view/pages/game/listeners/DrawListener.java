@@ -26,7 +26,7 @@ public class DrawListener implements MouseListener, MouseMotionListener {
 		if (SwingUtilities.isLeftMouseButton(e)) {
 			Point p = e.getPoint().getLocation();
 			if (p != null) {
-				drawZone.updateEndPointDraw(entityDrawnName, e.getPoint());
+				drawZone.updateEndPointDraw(entityDrawnName, p);
 				drawZone.repaint();
 			}
 		}
@@ -59,10 +59,11 @@ public class DrawListener implements MouseListener, MouseMotionListener {
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		if (SwingUtilities.isLeftMouseButton(e)) {
-			if (drawZone.isBigEnough(entityDrawnName) && drawZone.isOnTopFriendlyZone(entityDrawnName)) {
+			if (drawZone.isBigEnough(entityDrawnName)
+					&& drawZone.isOnTopFriendlyZone(entityDrawnName)
+					&& drawZone.isAffordable(entityDrawnName)) {
 				drawZone.startFilling(entityDrawnName);
 				entityDrawnName = null;
-				drawZone.setCurrentDrawing(null);
 			} else {
 				drawZone.deleteDrawingRequest(entityDrawnName);
 			}
