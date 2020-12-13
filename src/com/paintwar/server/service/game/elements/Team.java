@@ -1,17 +1,20 @@
 package com.paintwar.server.service.game.elements;
 
 import java.awt.Color;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Team {
+public class Team implements Serializable {
 
+	private String name;
 	private Color color;
-	private Map<String, Player> playerList;
+	private transient Map<String, Player> playerList;
 	private int score;
 	
-	public Team(Color color) {
+	public Team(String name, Color color) {
 		super();
+		this.name = name;
 		this.color = color;
 		this.playerList = new HashMap<String, Player>();
 		this.score = 0;
@@ -44,6 +47,10 @@ public class Team {
 	
 	public int getScore() {
 		return score;
+	}
+
+	public String getName() {
+		return name;
 	}
 	
 }

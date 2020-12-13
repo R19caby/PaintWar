@@ -8,6 +8,8 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Map;
 
+import com.paintwar.server.service.game.elements.Team;
+
 public interface IGameServerEntity extends Remote {
 	
 	int addPlayer (String clientIP, InetAddress clientAdress) throws RemoteException ;
@@ -21,7 +23,7 @@ public interface IGameServerEntity extends Remote {
 	void stopServer() throws RemoteException ;
 	void startFillingDraw(String name) throws RemoteException;
 	Color getTeamColor(String clientID) throws RemoteException;
-	Map<Color, Integer> getTeamScores() throws RemoteException;
+	Map<Color, Team> getTeamData() throws RemoteException;
 	void generateTeamZone(Color clientTeamColor) throws RemoteException;
 	
 }

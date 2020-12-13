@@ -35,6 +35,9 @@ public class GameServerEntity extends UnicastRemoteObject implements IGameServer
 
 	// int to generate the ids of the drawings
 	protected int drawingID ;
+	
+	// int to generate team id
+	protected int teamID ;
 
 	// port used to send message to and from client
 	protected int transmitterPort ;
@@ -85,7 +88,7 @@ public class GameServerEntity extends UnicastRemoteObject implements IGameServer
 		UnicastTransmitter emetteur = new UnicastTransmitter (clientAdress, transmitterPort++, clientIP) ;
 		transmitters.add (emetteur) ;
 		Color newColor = Color.getHSBColor((float) Math.random(), (float) Math.random(), (float) Math.random());
-		Team newTeam = new Team(newColor);
+		Team newTeam = new Team("Team" + teamID++,newColor);
 		Player newPlayer = new Player("Player", clientIP + (transmitterPort-1));
 		newTeam.addPlayer(newPlayer);
 		teams.put(newColor, newTeam);
@@ -256,14 +259,8 @@ public class GameServerEntity extends UnicastRemoteObject implements IGameServer
 	}
 
 	@Override
-	public Map<Color, Integer> getTeamScores() throws RemoteException {
-		HashMap<Color, Integer> scores = new HashMap<Color, Integer>();
-		for (Entry<Color, Team> team : teams.entrySet()) {
-			Team currentTeam = team.getValue();
-			scores.put(team.getKey(), currentTeam.getScore());
-		}
-		
-		return scores;
+	public Map<Color, Team> getTeamData() throws RemoteException {
+		return teams;
 	}
 
 

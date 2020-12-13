@@ -20,6 +20,7 @@ import javax.swing.JTextField;
 import com.paintwar.client.controller.game.GameEntity;
 import com.paintwar.client.view.pages.game.threads.GameDataRetreiver;
 import com.paintwar.server.logger.Logger;
+import com.paintwar.server.service.game.elements.Team;
 
 public class ScoreboardSimple extends JPanel {
 	
@@ -27,8 +28,8 @@ public class ScoreboardSimple extends JPanel {
 	private static int BAR_HEIGHT = 10;
 	private GameDataRetreiver gameRetreiver;
 	private JPanel scoreBar;
-	private JLabel leadingTeamLabel;
-	private Map<Color, Integer> teamScores = new HashMap<Color, Integer>();
+	private JPanel leadingTeamPane;
+	private Map<Color, Team> teamScores = new HashMap<Color, Team>();
 	
 	public ScoreboardSimple(GameEntity gameEnt, List<Thread> threads) {
 		super();
@@ -39,7 +40,8 @@ public class ScoreboardSimple extends JPanel {
 		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		this.setBorder(BorderFactory.createLineBorder(Color.black, 1));
 		
-		leadingTeamLabel = new JLabel("No team leading.");
+		leadingTeamPane = new JPanel();
+		leadingTeamPane.add(new JLabel("No team leading."));
 		scoreBar = new JPanel();
 		scoreBar.setLayout(new GridBagLayout());
 		scoreBar.setBackground(Color.gray);
@@ -48,25 +50,30 @@ public class ScoreboardSimple extends JPanel {
 		greyBar.setBackground(Color.gray);
 		scoreBar.add(greyBar);
 		
-		add(leadingTeamLabel);
+		add(leadingTeamPane);
 		add(scoreBar);
+		
+		Dimension d = this.getPreferredSize();
+		d.width = 200;
+		this.setPreferredSize(d);
 	}
 
-	public void updateTeamScores(Map<Color, Integer> teamScores) {
-		this.teamScores = teamScores;
+	public void updateTeamScores(Map<Color, Team> teamData) {
+		this.teamScores = teamData;
 		Integer totalScore = 0;
-		Color leadingTeam = null;
+		Team leadingTeam = null;
 		Integer maxScore = 0;
 		
 		//generate all panels for bar
 		List<JPanel> colorBars = new ArrayList<JPanel>();
-		for (Entry<Color, Integer> team : teamScores.entrySet()) {
-			Integer teamScore = team.getValue();
+		for (Entry<Color, Team> team : teamData.entrySet()) {
+			Team currentTeam = team.getValue();
+			Integer teamScore = currentTeam.getScore();
 			if (teamScore >= maxScore) {
-				leadingTeam = team.getKey();
+				leadingTeam = currentTeam;
 				maxScore = teamScore;
 			}
-			totalScore += team.getValue();
+			totalScore += teamScore;
 			JPanel currentTeamBar = new JPanel();
 			currentTeamBar.setBackground(team.getKey());
 			colorBars.add(currentTeamBar);
@@ -82,7 +89,7 @@ public class ScoreboardSimple extends JPanel {
 		    c.weighty = 0.5;
 			for (int i=0; i<colorBars.size(); i++) {
 				JPanel bar = colorBars.get(i);
-				double teamScore = teamScores.get(bar.getBackground());
+				double teamScore = teamData.get(bar.getBackground()).getScore();
 				if (teamScore > 0) {
 					Double widthBar = teamScore/totalScore;
 					c.gridx = i;
@@ -90,9 +97,17 @@ public class ScoreboardSimple extends JPanel {
 					scoreBar.add(bar, c);
 				}
 			}
-			leadingTeamLabel.setText(leadingTeam + " is leading !");
+			
+			JLabel leadingTeamLabel = new JLabel(leadingTeam.getName());
+			leadingTeamLabel.setForeground(leadingTeam.getColor());
+			JLabel isLeading = new JLabel("is leading !");
+			leadingTeamPane.removeAll();
+			leadingTeamPane.add(leadingTeamLabel);
+			leadingTeamPane.add(isLeading);
 		} else {
-			leadingTeamLabel.setText("No team leading.");
+			JLabel leadingTeamLabel = new JLabel("No team leading.");
+			leadingTeamPane.removeAll();
+			leadingTeamPane.add(leadingTeamLabel);
 			JPanel greyBar = new JPanel();
 			greyBar.setBackground(Color.gray);
 			greyBar.setPreferredSize(new Dimension(BAR_WIDTH, BAR_HEIGHT));

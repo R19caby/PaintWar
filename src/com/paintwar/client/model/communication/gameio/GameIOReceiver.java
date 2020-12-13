@@ -17,6 +17,7 @@ import com.paintwar.server.service.game.GameServerEntity;
 import com.paintwar.server.service.game.IDrawServerRemote;
 import com.paintwar.server.service.game.IGameServerEntity;
 import com.paintwar.server.service.game.elements.DrawingRemote;
+import com.paintwar.server.service.game.elements.Team;
 import com.paintwar.unicast.UnicastReceiver;
 
 public class GameIOReceiver {
@@ -196,9 +197,9 @@ public class GameIOReceiver {
 		gameEntity.setDrawn(name);
 	}
 	
-	public Map<Color, Integer> getTeamScores() {
+	public Map<Color, Team> getTeamData() {
 		try {
-			return server.getTeamScores();
+			return server.getTeamData();
 		} catch (RemoteException e) {
 			Logger.print("[Client/GameIOReceiever] Couldn't retreive team scores");
 			e.printStackTrace();	

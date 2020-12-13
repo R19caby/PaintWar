@@ -18,6 +18,7 @@ import com.paintwar.client.view.pages.game.elements.DrawZone;
 import com.paintwar.client.view.pages.game.listeners.FrameResizeListener;
 import com.paintwar.server.service.game.IDrawServerRemote;
 import com.paintwar.server.service.game.elements.DrawingRemote;
+import com.paintwar.server.service.game.elements.Team;
 
 
 public class GameEntity implements IGameEntity {
@@ -29,7 +30,7 @@ public class GameEntity implements IGameEntity {
 	private JFrame currentWindow;
 	private GamePage gamepage;
 	private Color clientTeamColor;
-	private Map<Color, Integer> teamScores;
+	private Map<Color, Team> teamData;
 	
 	GameEntity() {
 		drawings = new HashMap<String, DrawingProxy>();
@@ -161,11 +162,11 @@ public class GameEntity implements IGameEntity {
 		}
 	}
 
-	public Map<Color, Integer> getTeamScores() {
+	public Map<Color, Team> getTeamData() {
 		if (ioClient != null) {
-			teamScores = ioClient.getTeamScores();
+			teamData = ioClient.getTeamData();
 		}
-		return teamScores;
+		return teamData;
 	}
 
 
