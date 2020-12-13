@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
@@ -62,8 +63,8 @@ public class DrawZone extends JPanel {
 			drawToUpdate.setDisplayColor(Color.red);
 			drawToUpdate.setBounds(r);
 			drawToUpdate.setEndPoint(p);
-			if (r.getWidth()*r.getHeight() > MINIMUM_AREA) { //send updates if big enough
-				Logger.print(""+r.getWidth()*r.getHeight());
+			
+			if (r.getWidth()*r.getHeight() > MINIMUM_AREA && isOnTopFriendlyZone(name)) { //send updates if big enough
 				drawToUpdate.setDisplayColor(Color.black);
 				minimap.updateEndPointPaint(name, p);
 				gameEntity.updateCoordPaintClient(name, p);
@@ -106,7 +107,7 @@ public class DrawZone extends JPanel {
 			currentDraw.setDisplayColor(Color.red);
 			currentDraw.setBounds(r);
 			currentDraw.setEndPoint(endPoint);
-			if (r.getWidth()*r.getHeight() > MINIMUM_AREA) { //send updates if big enough
+			if (r.getWidth()*r.getHeight() > MINIMUM_AREA && isOnTopFriendlyZone(currentDrawingByUser)) { //send updates if big enough
 				currentDraw.setDisplayColor(Color.black);
 				gameEntity.updateCoordPaintClient(currentDrawingByUser, endPoint);
 				minimap.updateEndPointPaint(currentDrawingByUser, endPoint);
@@ -144,6 +145,7 @@ public class DrawZone extends JPanel {
 			this.remove(drawing);
 			this.repaint();
 		}
+		drawPanels.remove(name);
 	}
 	
 	public void deleteDrawingRequest(String entityDrawnName) {
@@ -152,9 +154,11 @@ public class DrawZone extends JPanel {
 
 	public void updateFilling(String name, Double percent) {
 		Drawing drawing = drawPanels.get(name);
-		if (drawing != null)
+		if (drawing != null) {
 			drawing.setFilling(percent);
-		minimap.updateFilling(name, percent);
+			this.setComponentZOrder(drawing, 0);
+			minimap.updateFilling(name, percent);
+		}
 	}
 
 	public void startFilling(String entityDrawnName) {
@@ -175,7 +179,32 @@ public class DrawZone extends JPanel {
 		Rectangle r = currentDraw.getBounds();
 		return r.getWidth()*r.getHeight() > MINIMUM_AREA;
 	}
-
+	
+	public boolean isOnTopFriendlyZone(String name) {
+		Drawing drawToCheck = drawPanels.get(name);
+		
+		boolean isDrawnOnFriendlyZone = false;
+		int lastZoneZOrder = this.getComponentCount();
+		for (Entry<String, Drawing> otherDrawingEntry : drawPanels.entrySet()) {
+			Drawing otherDrawing = otherDrawingEntry.getValue();
+			int currentZOrder = this.getComponentZOrder(otherDrawing);
+			//if not same name, zOrder over last tested drawing,  same color and initPoint on top of it => all good
+			if (!otherDrawingEntry.getKey().equals(name)
+					&& otherDrawing.getColor().equals(drawToCheck.getColor()) 
+					&& otherDrawing.getFillingBox().contains(drawToCheck.getInitPoint())
+					&& currentZOrder < lastZoneZOrder) {
+				isDrawnOnFriendlyZone = true;
+			
+			//update z order only if overlapping an ennemy zone
+			} else if (!otherDrawingEntry.getKey().equals(name)
+					&& !otherDrawing.getColor().equals(drawToCheck.getColor()) 
+					&& otherDrawing.getFillingBox().contains(drawToCheck.getInitPoint())){
+				lastZoneZOrder = Math.min(currentZOrder, lastZoneZOrder);
+			}
+		}
+		
+		return isDrawnOnFriendlyZone;
+	}
 	
 	
 }

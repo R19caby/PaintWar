@@ -72,7 +72,7 @@ public class GameIOReceiver {
 		try {
 			// creating unicast server by asking server port
 			// and sending client IP to server so that it can send messages
-			transmissionPort = server.getPortEmission (clientIP, InetAddress.getByName (clientIP));
+			transmissionPort = server.addPlayer (clientIP, InetAddress.getByName (clientIP));
 			Color clientTeamColor = server.getTeamColor(clientIP + transmissionPort);
 			gameEntity.setClientTeamColor(clientTeamColor);
 			
@@ -83,6 +83,7 @@ public class GameIOReceiver {
 			
 			//add all commands to unicast
 			unicastReceiver.addClientCommandReceiver(new GameIOCommandReceiver(this));
+			server.generateTeamZone(clientTeamColor);
 			
 		} catch (RemoteException e1) {
 			e1.printStackTrace();
@@ -121,6 +122,7 @@ public class GameIOReceiver {
 
 	// Adding a drawing to client
 	public void addDrawing (String proxyName, int x1, int y1, int x2, int y2, Color c, Double percent) {
+		Logger.print("[Client] adding drawing " + proxyName + " at " + x1 + "; " + y1);
 		//generating coords
 		Point p1 = new Point(x1, y1);
 		Point p2 = new Point(x2, y2);

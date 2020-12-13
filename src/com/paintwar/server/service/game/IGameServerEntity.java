@@ -10,7 +10,7 @@ import java.util.Map;
 
 public interface IGameServerEntity extends Remote {
 	
-	int getPortEmission (String clientIP, InetAddress clientAdress) throws RemoteException ;
+	int addPlayer (String clientIP, InetAddress clientAdress) throws RemoteException ;
 	void answer (String question) throws RemoteException ;
 	int getRMIPort () throws RemoteException ;
 	IDrawServerRemote addDrawingProxy (Point p1, Point p2, int formType, Color color) throws RemoteException ;
@@ -22,5 +22,6 @@ public interface IGameServerEntity extends Remote {
 	void startFillingDraw(String name) throws RemoteException;
 	Color getTeamColor(String clientID) throws RemoteException;
 	Map<Color, Integer> getTeamScores() throws RemoteException;
+	void generateTeamZone(Color clientTeamColor) throws RemoteException;
 	
 }

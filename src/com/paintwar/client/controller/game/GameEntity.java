@@ -97,6 +97,7 @@ public class GameEntity implements IGameEntity {
 	@Override
 	public void removeDrawing(String name) {
 		drawZone.deleteDrawing(name);
+		drawings.remove(name);
 	}
 	
 	@Override

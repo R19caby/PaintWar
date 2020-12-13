@@ -142,5 +142,18 @@ public class Drawing extends JPanel {
 		this.repaint();
 	}
 
+	public Color getColor() {
+		return color;
+	}
+	
+	public Rectangle getFillingBox() {
+		//generate hitbox
+		Rectangle r = new Rectangle(fillP1);
+		r.add(fillP2);
+		
+		//translate it to have the real position in drawzone
+		r.translate(Math.min(initPoint.x, endPoint.x), Math.min(initPoint.y, endPoint.y));
+		return r;
+	}
 
 }

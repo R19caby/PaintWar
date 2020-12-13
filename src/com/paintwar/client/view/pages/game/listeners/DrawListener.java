@@ -1,6 +1,7 @@
 package com.paintwar.client.view.pages.game.listeners ;
 
 import java.awt.Color;
+import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -23,7 +24,8 @@ public class DrawListener implements MouseListener, MouseMotionListener {
 	@Override
 	public void mouseDragged(MouseEvent e) {
 		if (SwingUtilities.isLeftMouseButton(e)) {
-			if (e.getPoint() != null) {
+			Point p = e.getPoint().getLocation();
+			if (p != null) {
 				drawZone.updateEndPointDraw(entityDrawnName, e.getPoint());
 				drawZone.repaint();
 			}
@@ -57,7 +59,7 @@ public class DrawListener implements MouseListener, MouseMotionListener {
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		if (SwingUtilities.isLeftMouseButton(e)) {
-			if (drawZone.isBigEnough(entityDrawnName)) {
+			if (drawZone.isBigEnough(entityDrawnName) && drawZone.isOnTopFriendlyZone(entityDrawnName)) {
 				drawZone.startFilling(entityDrawnName);
 				entityDrawnName = null;
 				drawZone.setCurrentDrawing(null);

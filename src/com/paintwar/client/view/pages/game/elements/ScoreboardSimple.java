@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -36,6 +37,7 @@ public class ScoreboardSimple extends JPanel {
 		threads.add(gameRetreiver);
 		
 		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+		this.setBorder(BorderFactory.createLineBorder(Color.black, 1));
 		
 		leadingTeamLabel = new JLabel("No team leading.");
 		scoreBar = new JPanel();

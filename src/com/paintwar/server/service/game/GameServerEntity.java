@@ -81,7 +81,7 @@ public class GameServerEntity extends UnicastRemoteObject implements IGameServer
 	// used for multiple clients on a single machine
 	// also creates the player
 	@Override
-	public int getPortEmission (String clientIP, InetAddress clientAdress) throws RemoteException {
+	public int addPlayer (String clientIP, InetAddress clientAdress) throws RemoteException {
 		UnicastTransmitter emetteur = new UnicastTransmitter (clientAdress, transmitterPort++, clientIP) ;
 		transmitters.add (emetteur) ;
 		Color newColor = Color.getHSBColor((float) Math.random(), (float) Math.random(), (float) Math.random());
@@ -99,6 +99,17 @@ public class GameServerEntity extends UnicastRemoteObject implements IGameServer
 	public Color getTeamColor(String clientID) throws RemoteException {
 		Player client = players.get(clientID);
 		return client.getColor();
+	}
+	
+	@Override
+	public void generateTeamZone(Color color) throws RemoteException {
+		//generate 1st drawing zone
+		Point p1 = new Point((int) (Math.random()*3000), (int) (Math.random()*3000));
+		Point p2 = p1.getLocation();
+		p2.translate(100, 100);
+		DrawingRemote draw = addDrawingProxy(p1, p2, 0, color);
+		updateBoundsDrawing(draw.getName(), p1, p2, "server");
+		startFillingDraw(draw.getName());
 	}
 	
 	// méthode permettant juste de vérifier que le serveur est lancé
@@ -222,6 +233,7 @@ public class GameServerEntity extends UnicastRemoteObject implements IGameServer
 	
 	@Override
 	public void deleteDrawing(String name) throws RemoteException {
+		Logger.print("[Server/GameEntity] deleting " + name);
 		gameLoop.deleteDrawing(name);
 		drawingRemotes.remove(name);
 		// envoi des mises à jour à tous les clients, via la liste des émetteurs

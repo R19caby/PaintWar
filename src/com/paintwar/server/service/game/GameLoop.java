@@ -66,21 +66,24 @@ public class GameLoop extends Thread {
 	}
 	
 	public void stopFillingDrawing(String name) {
-		Double percent = dz.getDrawing(name).getPercent();
-		Boolean doRemove = dz.stopAndDoRemoveDrawing(name);
-		drawFillingNames.remove(name);
-		if (doRemove) {
-			try {
-				gameEntity.deleteDrawing(name);
-			} catch (RemoteException e) {
-				Logger.print("[Server/Gameloop] Couldn't delete drawing " + name);
-				e.printStackTrace();
+		DrawingServerProxy drawToStop = dz.getDrawing(name);
+		if (drawToStop != null) {
+			Double percent = drawToStop.getPercent();
+			Boolean doRemove = dz.stopAndDoRemoveDrawing(name);
+			drawFillingNames.remove(name);
+			if (doRemove) {
+				try {
+					gameEntity.deleteDrawing(name);
+				} catch (RemoteException e) {
+					Logger.print("[Server/Gameloop] Couldn't delete drawing " + name);
+					e.printStackTrace();
+				}
+			} else {
+				for (UnicastTransmitter emetteur : transmitters) {
+					emetteur.diffuseMessage (this.getClass().getPackageName(), "Drawn", name, null) ;
+				}
+				gameEntity.setDrawn(name, percent);
 			}
-		} else {
-			for (UnicastTransmitter emetteur : transmitters) {
-				emetteur.diffuseMessage (this.getClass().getPackageName(), "Drawn", name, null) ;
-			}
-			gameEntity.setDrawn(name, percent);
 		}
 	}
 	
