@@ -56,6 +56,24 @@ public class ButtonFactory
 		b.setOpaque(false);
 		return b;
 	}
+	
+	public JButton getConnexionButton(String name, PageName pageName, MainWindow manager) {
+		JButton b = this.getButton(name, pageName, manager);
+		b.addActionListener(new RedirectListener(manager));
+		return b;
+		
+	}
+	
+	private class RedirectListener implements ActionListener {
+		private MainWindow parent;
+		private RedirectListener(MainWindow manager) {
+			parent = manager;
+		}
+		public void actionPerformed(ActionEvent e) {
+			parent.connexionAsGuest();
+		}
+		
+	}
 
 	public JButton getParameterButton(MainWindow manager)
     {

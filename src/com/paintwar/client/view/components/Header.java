@@ -27,8 +27,9 @@ public class Header extends JPanel
 	{
 		this.setOpaque(false);
 		this.setLayout(new FlowLayout());
-
-		home = ButtonFactory.getInstance().getButton("Home", PageName.HOME, manager);
+		
+		//Le bouton "home" renvoie vers la page "Guest" car c'est la seule connexion possible pour l'instant.
+		home = ButtonFactory.getInstance().getButton("Home", PageName.GUEST, manager);
 		this.add(home);
 
 		collection = ButtonFactory.getInstance().getButton("Collection", PageName.COLLECTION, manager);

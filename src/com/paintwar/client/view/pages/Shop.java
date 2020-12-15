@@ -4,10 +4,15 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -41,17 +46,31 @@ public class Shop extends JPanel {
 		add(new Header(manager), BorderLayout.NORTH);
 
 		JPanel center = new JPanel();
+		container = new JPanel();
+		JPanel west = new JPanel();
+		JPanel categories = new JPanel();
+		JPanel balance = new JPanel();
+		JPanel titlePanel = new JPanel();
+		
+		center.setOpaque(false);
+		container.setOpaque(false);
+		west.setOpaque(false);
+		categories.setOpaque(false);
+		balance.setOpaque(false);
+		titlePanel.setOpaque(false);
+		
+		
 		add(center, BorderLayout.CENTER);
 		center.setLayout(new BorderLayout(10, 10));
-		JPanel titlePanel = new JPanel();
 		center.add(titlePanel, BorderLayout.NORTH);
 		effectiveTitle = new JLabel("Bordures");
 		titlePanel.add(effectiveTitle);
 
-		container = new JPanel();
 		JScrollPane scroll = new JScrollPane(container, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		container.setAutoscrolls(true);
+		scroll.getViewport().setOpaque(false);
+		scroll.setOpaque(false);
 		container.setPreferredSize(DIMENSION_CONTAINER);
 		center.add(scroll, BorderLayout.CENTER);
 		container.setLayout(new CardLayout());
@@ -64,12 +83,10 @@ public class Shop extends JPanel {
 		container.add("Curseurs", cursorGoods);
 		container.add("Textures", AppearanceGoods);
 
-		JPanel west = new JPanel();
 		add(west, BorderLayout.WEST);
 		west.setLayout(new BorderLayout(100, 100));
 		west.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
 
-		JPanel categories = new JPanel();
 		west.add(categories, BorderLayout.NORTH);
 		categories.setLayout(new GridLayout(0, 1, 10, 10));
 		JLabel categoriesTitle = new JLabel("Catégories");
@@ -91,7 +108,6 @@ public class Shop extends JPanel {
 		JPanel filters = buildFiltersPanel();
 		west.add(filters, BorderLayout.CENTER);
 
-		JPanel balance = new JPanel();
 		west.add(balance, BorderLayout.SOUTH);
 		JLabel balanceTitle = new JLabel("Solde");
 		balance.add(balanceTitle);
@@ -100,6 +116,7 @@ public class Shop extends JPanel {
 
 	private JPanel buildGoodsPanel(String good) {
 		JPanel cardsPanel = new JPanel();
+		cardsPanel.setOpaque(false);
 		cardsPanel.setLayout(new GridLayout(0, 5, 10, 10));
 		cardsPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		cardsPanel.setPreferredSize(DIMENSION_CONTAINER);
@@ -136,6 +153,19 @@ public class Shop extends JPanel {
 		card9Container.add(card9);
 		card10Container.add(card10);
 		card11Container.add(card11);
+		
+		card1Container.setOpaque(false);
+		card2Container.setOpaque(false);
+		card3Container.setOpaque(false);
+		card4Container.setOpaque(false);
+		card5Container.setOpaque(false);
+		card6Container.setOpaque(false);
+		card7Container.setOpaque(false);
+		card8Container.setOpaque(false);
+		card9Container.setOpaque(false);
+		card10Container.setOpaque(false);
+		card11Container.setOpaque(false);
+
 		JLabel title1 = new JLabel(good + "1");
 		JLabel title2 = new JLabel(good + "2");
 		JLabel title3 = new JLabel(good + "3");
@@ -222,6 +252,7 @@ public class Shop extends JPanel {
 
 	private JPanel buildFiltersPanel() {
 		JPanel panel = new JPanel();
+		panel.setOpaque(false);
 		panel.setLayout(new GridLayout(0, 1, 10, 10));
 		JLabel filtersTitle = new JLabel("Filtres");
 		panel.add(filtersTitle);
@@ -231,6 +262,12 @@ public class Shop extends JPanel {
 		JCheckBox filter3 = new JCheckBox("Filtre3");
 		JCheckBox filter4 = new JCheckBox("Filtre4");
 		JCheckBox filter5 = new JCheckBox("Filtre5");
+		
+		filter1.setOpaque(false);
+		filter2.setOpaque(false);
+		filter3.setOpaque(false);
+		filter4.setOpaque(false);
+		filter5.setOpaque(false);
 
 		panel.add(filter1);
 		panel.add(filter2);
@@ -263,5 +300,18 @@ public class Shop extends JPanel {
 		}
 
 	}
+	
+
+	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		Image icon = null;
+		try {
+			icon = ImageIO.read(new File(System.getProperty("user.dir") + "/src/graphicResources/paint_HQ.png"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		if(icon != null)
+			g.drawImage(icon, 0, 0, getWidth(), getHeight(), null);
+		}
 
 }

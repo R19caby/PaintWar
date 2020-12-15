@@ -29,7 +29,7 @@ import javax.swing.ScrollPaneConstants;
 import com.paintwar.client.view.MainWindow;
 import com.paintwar.client.view.components.Header;
 
-public class Home extends JPanel {
+public class Home extends HomePage {
 	
 	private static final long serialVersionUID = -1539937711095867060L;
 	

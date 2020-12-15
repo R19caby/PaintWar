@@ -32,7 +32,7 @@ import com.paintwar.client.view.components.Header;
 import com.paintwar.client.view.pages.Home.ResetText;
 import com.paintwar.client.view.pages.Home.SelectType;
 
-public class Guest extends JPanel {
+public class Guest extends HomePage {
 	
 	private static final long serialVersionUID = -1539937711095867060L;
 	

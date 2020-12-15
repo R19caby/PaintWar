@@ -5,8 +5,13 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.GridLayout;
+import java.awt.Image;
+import java.io.File;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -76,6 +81,8 @@ public class Battlepass extends JPanel {
 		//Ajout de la scrollbarre
 		JScrollPane scrollPane = new JScrollPane(rewards, ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER,
 				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+		scrollPane.getViewport().setOpaque(false);
+		scrollPane.setOpaque(false);
 		result.setLayout(new BorderLayout());
 		rewards.setLayout(new FlowLayout());
 		result.add(titlePane, BorderLayout.NORTH);
@@ -93,7 +100,7 @@ public class Battlepass extends JPanel {
 		JTextArea title;
 		for (int i=0; i<=20; i++) {
 			lvl = new JPanel();
-			lvl.setOpaque(false);
+			lvl.setBackground(Color.white);
 			lvl.setBorder(BorderFactory.createLineBorder(Color.red, 2, true));
 			lvl.setPreferredSize(new Dimension(100, 200));
 			title = new JTextArea("Récompenses \ndu lvl" + i);
@@ -105,5 +112,18 @@ public class Battlepass extends JPanel {
 		
 		
 	}
+	
+
+	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		Image icon = null;
+		try {
+			icon = ImageIO.read(new File(System.getProperty("user.dir") + "/src/graphicResources/paint_HQ.png"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		if(icon != null)
+			g.drawImage(icon, 0, 0, getWidth(), getHeight(), null);
+		}
 
 }

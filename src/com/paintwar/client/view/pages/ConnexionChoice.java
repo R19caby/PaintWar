@@ -44,7 +44,7 @@ public class ConnexionChoice extends JPanel {
 		logo.setFont(new Font(logo.getFont().getName(), logo.getFont().getSize(), logo.getFont().getSize() + 100));
 		JButton logInButton = ButtonFactory.getInstance().getButton("Se connecter", PageName.LOG_IN, manager);
 		JButton signInButton = ButtonFactory.getInstance().getButton("Rejoindre", PageName.SIGN_IN, manager);
-		JButton guestButton = ButtonFactory.getInstance().getButton("Continuer en tant qu'invité", PageName.GUEST, manager);
+		JButton guestButton = ButtonFactory.getInstance().getConnexionButton("Continuer en tant qu'invité", PageName.GUEST, manager);
 		logInButton.setPreferredSize(new Dimension(200, 40));
 		signInButton.setPreferredSize(new Dimension(200, 40));
 		guestButton.setPreferredSize(new Dimension(200, 40));
