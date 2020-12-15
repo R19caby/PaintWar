@@ -10,6 +10,7 @@ Cloner la branch `gameSystem` et lancer les 2 main comme précédemment (il faud
 
 ## Pour lancer le prototype des pages de l'accueil du jeu
 :warning: Il est fortement recommandé de lancer l'application en la mettant en taille maximale.
+
 Lancer le main dans `com.paintwar.client.view.MainWindow`.
 Certaines pages ne seront accessibles qu'en cliquant sur "Continuer en tant qu'invité".
 
