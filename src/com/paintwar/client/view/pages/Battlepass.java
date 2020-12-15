@@ -80,6 +80,7 @@ public class Battlepass extends JPanel {
 		JScrollPane scrollPane = new JScrollPane(rewards, ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER,
 				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 		scrollPane.getViewport().setOpaque(false);
+		scrollPane.getHorizontalScrollBar().setUnitIncrement(50);
 		scrollPane.setOpaque(false);
 		result.setLayout(new BorderLayout());
 		rewards.setLayout(new FlowLayout());
@@ -96,7 +97,7 @@ public class Battlepass extends JPanel {
 		//Ajout de tous les panneaux de récompenses
 		JPanel lvl;
 		JTextArea title;
-		for (int i=0; i<=20; i++) {
+		for (int i=1; i<=50; i++) {
 			lvl = new JPanel();
 			lvl.setBackground(Color.white);
 			lvl.setBorder(BorderFactory.createLineBorder(Color.red, 1, true));

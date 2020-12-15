@@ -69,6 +69,7 @@ public class Shop extends JPanel {
 		JScrollPane scroll = new JScrollPane(container, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		container.setAutoscrolls(true);
+		scroll.getVerticalScrollBar().setUnitIncrement(50);
 		scroll.getViewport().setOpaque(false);
 		scroll.setOpaque(false);
 		container.setPreferredSize(DIMENSION_CONTAINER);
