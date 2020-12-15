@@ -215,4 +215,10 @@ public class AccountSystem implements IAccountSystem
 			Logger.print(e2);
 		}
 	}
+
+	@Override
+	public IUser getUser(String username) throws RemoteException, NoSuchUsernameException
+	{
+		return users.get(username);
+	}
 }
