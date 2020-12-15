@@ -13,7 +13,7 @@ import com.paintwar.server.logger.Logger;
 import com.paintwar.server.service.game.IDrawServerRemote;
 import com.paintwar.unicast.UnicastTransmitter;
 
-public class DrawingRemote extends UnicastRemoteObject implements IDrawServerRemote, Serializable {
+public class DrawingRemote implements IDrawServerRemote, Serializable {
 
 	// les attributs du proxy
 	private int x1 ;
@@ -28,7 +28,7 @@ public class DrawingRemote extends UnicastRemoteObject implements IDrawServerRem
 	private static final long serialVersionUID = 1L ;
 
 	// constructeur du Dessin sur le serveur : il diffuse alors qu'il faut créer un nouveau dessin sur tous les clients 
-	public DrawingRemote (String name, Color color, String player) throws RemoteException {
+	public DrawingRemote (String name, Color color, String player) {
 		this.name = name ;
 		this.currentColor = color;
 		this.playerCreatorID = player;
@@ -38,53 +38,53 @@ public class DrawingRemote extends UnicastRemoteObject implements IDrawServerRem
 		this.percent = percent;
 	}
 	
-	public String getName () throws RemoteException {
+	public String getName () {
 		return name ;
 	}
 
-	public void setBounds (Point p1, Point p2) throws RemoteException {
+	public void setBounds (Point p1, Point p2) {
 		this.x1 = p1.x;
 		this.y1 = p1.y;
 		this.x2 = p2.x;
 		this.y2 = p2.y;
 	}
 	
-	public void setColor (Color color) throws RemoteException {
+	public void setColor (Color color) {
 		this.currentColor = color;
 	}
 
 	@Override
-	public int getX1() throws RemoteException {
+	public int getX1() {
 		return x1 ;
 	}
 
 	@Override
-	public int getY1() throws RemoteException {
+	public int getY1() {
 		return y1 ;
 	}
 
 	@Override
-	public int getX2() throws RemoteException {
+	public int getX2() {
 		return x2 ;
 	}
 
 	@Override
-	public int getY2() throws RemoteException {
+	public int getY2() {
 		return y2 ;
 	}
 
 	@Override
-	public Color getColor() throws RemoteException {
+	public Color getColor() {
 		return currentColor;
 	}
 
 	@Override 
-	public Double isCompleted() throws RemoteException {
+	public Double isCompleted() {
 		return percent;
 	}
 	
 	@Override
-	public String getCreatorID() throws RemoteException {
+	public String getCreatorID() {
 		return playerCreatorID;
 	}
 	

@@ -10,6 +10,7 @@ import javax.swing.SwingUtilities;
 
 import com.paintwar.client.controller.game.GameEntity;
 import com.paintwar.client.view.pages.game.elements.DrawZone;
+import com.paintwar.server.logger.Logger;
 
 public class DrawListener implements MouseListener, MouseMotionListener {
 
@@ -61,10 +62,11 @@ public class DrawListener implements MouseListener, MouseMotionListener {
 		if (SwingUtilities.isLeftMouseButton(e)) {
 			if (drawZone.isBigEnough(entityDrawnName)
 					&& drawZone.isOnTopFriendlyZone(entityDrawnName)
-					&& drawZone.isAffordable(entityDrawnName)) {
+					&& drawZone.isAffordable(entityDrawnName)
+					&& !entityDrawnName.contains("pending")) {
 				drawZone.startFilling(entityDrawnName);
 				entityDrawnName = null;
-			} else {
+			} else if (!entityDrawnName.contains("pending")) {
 				drawZone.deleteDrawingRequest(entityDrawnName);
 			}
 		}
@@ -80,6 +82,10 @@ public class DrawListener implements MouseListener, MouseMotionListener {
 	public void mouseExited(MouseEvent e) {
 		// TODO Auto-generated method stub
 
+	}
+
+	public void setCurrentName(String realName) {
+		entityDrawnName = realName;
 	}
 
 }

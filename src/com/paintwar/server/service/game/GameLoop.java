@@ -102,6 +102,7 @@ public class GameLoop extends Thread {
 	//main game loop
 	public void run () {
 		while (running) {
+
 			Map<String, DrawingServerProxy> currentDrawToAdd = Map.copyOf(drawToAdd);
 			for (Entry<String, DrawingServerProxy> drawingEntry : currentDrawToAdd.entrySet()) {
 				addDrawingInQueue(drawingEntry.getKey(), drawingEntry.getValue());

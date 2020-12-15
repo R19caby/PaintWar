@@ -182,5 +182,11 @@ public class GameEntity implements IGameEntity {
 		return clientInk;
 	}
 
+	public void changeName(String drawName, String realName) {
+		DrawingProxy draw = drawings.remove(drawName);
+		drawings.put(realName, draw);
+		drawZone.changeName(drawName, realName);
+	}
+
 
 }

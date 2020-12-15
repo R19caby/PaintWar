@@ -12,32 +12,19 @@ import java.util.HashMap;
 
 import com.paintwar.server.logger.Logger;
 
-public class UnicastTransmitter implements Serializable
+public class UnicastTransmitter
 {
 
-	private static final long serialVersionUID = 1L;
-	private int transmissionPort;
-	private InetAddress transmissionAddress;
-	private transient DatagramSocket transmissionSocket;
+	private DatagramSocket transmissionSocket;
+	private DatagramPacket clientPacket;
 	private String clientIPID;
 
-	public UnicastTransmitter(final InetAddress targetAddress, final int transmissionPort, String clientIPID) throws RemoteException
+	public UnicastTransmitter(final DatagramSocket serverSocket, DatagramPacket clientPacket, String clientIPID)
 	{
-		this.transmissionPort = transmissionPort;
 		this.clientIPID = clientIPID;
-		Logger.print("Transmition on port " + transmissionPort + " to client : " + targetAddress);
-		transmissionAddress = targetAddress;
-		transmissionSocket = null;
-
-		try
-		{
-			transmissionSocket = new DatagramSocket();
-		} catch (IOException e)
-		{
-			Logger.print(e);
-		}
-
-		Logger.print("Socket emission : " + transmissionSocket.getLocalPort() + " " + transmissionAddress);
+		Logger.print("Transmition to client : " + clientIPID);
+		transmissionSocket = serverSocket;
+		this.clientPacket = clientPacket;
 	}
 
 	public void diffuseMessage(String packageName, String command, String name, HashMap<String, Object> hm)
@@ -56,13 +43,12 @@ public class UnicastTransmitter implements Serializable
 		{
 			Logger.print(e);
 		}
-
-		DatagramPacket packet = new DatagramPacket(baos.toByteArray(), baos.toByteArray().length, transmissionAddress,
-				transmissionPort);
-
+		
+		clientPacket.setData(baos.toByteArray());
+		
 		try
 		{
-			transmissionSocket.send(packet);
+			transmissionSocket.send(clientPacket);
 		} catch (IOException e)
 		{
 			Logger.print(e);
@@ -71,7 +57,7 @@ public class UnicastTransmitter implements Serializable
 
 	public int getTransmissionPort() throws RemoteException
 	{
-		return transmissionPort;
+		return transmissionSocket.getLocalPort();
 	}
 	
 	public String getClientIPID() throws RemoteException

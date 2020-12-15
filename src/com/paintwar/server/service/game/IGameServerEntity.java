@@ -13,10 +13,10 @@ import com.paintwar.server.service.game.elements.Team;
 
 public interface IGameServerEntity extends Remote {
 	
-	int addPlayer (String clientIP, InetAddress clientAdress) throws RemoteException ;
+	int addPlayer (String clientIP, int clientPort) throws RemoteException ;
 	void answer (String question) throws RemoteException ;
 	int getRMIPort () throws RemoteException ;
-	IDrawServerRemote addDrawingProxy (Point p1, Point p2, int formType, Color color, String clientID) throws RemoteException ;
+	String addDrawingProxy (Point p1, Point p2, int formType, String clientID) throws RemoteException ;
 	ArrayList <IDrawServerRemote> getDrawingProxies () throws RemoteException ;
 	IDrawServerRemote getDrawing (String name) throws RemoteException ;
 	void updateBoundsDrawing(String name, Point p1, Point p2, String clientIP) throws RemoteException;
@@ -25,7 +25,8 @@ public interface IGameServerEntity extends Remote {
 	void startFillingDraw(String name) throws RemoteException;
 	Color getTeamColor(String clientID) throws RemoteException;
 	Map<Color, Team> getTeamData() throws RemoteException;
-	void generateTeamZone(Color clientTeamColor) throws RemoteException;
+	boolean generateTeamZone(String clientID) throws RemoteException;
 	Player getPlayerData(String name) throws RemoteException;
+	int getUnicastPort() throws RemoteException;
 	
 }

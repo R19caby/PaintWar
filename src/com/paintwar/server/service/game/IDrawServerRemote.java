@@ -5,15 +5,15 @@ import java.awt.Point;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
-public interface IDrawServerRemote extends Remote {
+public interface IDrawServerRemote {
 	
-   String getName () throws RemoteException ;
-   int getX1() throws RemoteException;
-   int getY1() throws RemoteException;
-   int getX2() throws RemoteException;
-   int getY2() throws RemoteException;
-   Color getColor () throws RemoteException ;
-   Double isCompleted() throws RemoteException;
-   String getCreatorID() throws RemoteException;
+   String getName ();
+   int getX1();
+   int getY1();
+   int getX2();
+   int getY2();
+   Color getColor ();
+   Double isCompleted();
+   String getCreatorID();
 
 }

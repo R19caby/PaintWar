@@ -136,6 +136,11 @@ public class Minimap extends JPanel {
 			drawToUpdate.setDrawn();
 	}
 
+	public void changeName(String drawName, String realName) {
+		Drawing draw = miniDraws.remove(drawName);
+		miniDraws.put(realName, draw);
+	}
+
 
 	
 }

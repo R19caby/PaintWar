@@ -2,12 +2,15 @@ package com.paintwar.client.model.communication.gameio;
 
 import java.awt.Color;
 import java.awt.Point;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 import javax.swing.JOptionPane;
 
@@ -45,14 +48,16 @@ public class GameIOReceiver {
 	private GameEntity gameEntity ;
 
 	//port used to send/receive messages
-	private int transmissionPort;
+	private int unicastReceiverPort;
+	
+	private int pendingDraw;
 
 	// Constructor for the receiver
 	// - name of the client
 	// - name of the game
 	// - name of the server
 	// - RMIPort of the game
-	public GameIOReceiver (String clientIP, String gameName, String serverIp, int serverRMIPort, GameEntity gameEntity) {
+	public GameIOReceiver (String clientIP, String clientLocalIP, String gameName, String serverIp, int serverRMIPort, GameEntity gameEntity) {
 		this.clientIP = clientIP;
 		this.gameEntity = gameEntity;
 		
@@ -60,6 +65,8 @@ public class GameIOReceiver {
 			// connecting to server
 			server = (IGameServerEntity)Naming.lookup ("//" + serverIp + ":" + serverRMIPort + "/" + gameName);
 			// getting all drawings on server
+
+			Logger.print("[Client/GameIO] Getting all drawings");
 			ArrayList<IDrawServerRemote> proxiesDrawings = server.getDrawingProxies() ;
 			Logger.print("[Client/Communication/GameIO] Received drawing proxies : " + proxiesDrawings);
 			// ajout de tous les dessins dans la zone de dessin
@@ -72,27 +79,43 @@ public class GameIOReceiver {
 			e.printStackTrace () ;
 		}
 		try {
+			
+			
 			// creating unicast server by asking server port
 			// and sending client IP to server so that it can send messages
-			transmissionPort = server.addPlayer (clientIP, InetAddress.getByName (clientIP));
-			Color clientTeamColor = server.getTeamColor(clientIP + ":" + transmissionPort);
-			gameEntity.setClientTeamColor(clientTeamColor);
+			int serverUnicastPort = server.getUnicastPort();
 			
-			unicastReceiver = new UnicastReceiver (InetAddress.getByName (clientIP), transmissionPort) ;
-			// on aimerait bien demander automatiquement quel est l'adresse IP de la machine du client,
-			// mais le problème est que celle-ci peut avoir plusieurs adresses IP (filaire, wifi, ...)
-			// et qu'on ne sait pas laquelle sera retournée par InetAddress.getLocalHost ()...
+			//create unicast receiver
+			unicastReceiver = new UnicastReceiver (clientIP, serverIp, serverUnicastPort) ;
+			unicastReceiverPort = unicastReceiver.getSocket().getLocalPort();
 			
 			//add all commands to unicast
 			unicastReceiver.addClientCommandReceiver(new GameIOCommandReceiver(this));
-			server.generateTeamZone(clientTeamColor);
-			Player clientData = server.getPlayerData(clientIP + ":" + transmissionPort);
+			
+			unicastReceiver.receive();
+			
+			Logger.print("[Client/GameIO] Getting client team color " + clientIP + ":" + unicastReceiverPort);
+			Color clientTeamColor = server.getTeamColor(clientIP + ":" + unicastReceiverPort);
+			Logger.print("[Client/GameIO] Got client color");
+			gameEntity.setClientTeamColor(clientTeamColor);
+			
+			// on aimerait bien demander automatiquement quel est l'adresse IP de la machine du client,
+			// mais le problème est que celle-ci peut avoir plusieurs adresses IP (filaire, wifi, ...)
+			// et qu'on ne sait pas laquelle sera retournée par InetAddress.getLocalHost ()...
+
+
+			Logger.print("[Client/GameIO] Generating team zone");
+			boolean bool = server.generateTeamZone(clientIP + ":" + unicastReceiverPort);
+			Logger.print("[Client/GameIO] Done generating team zone " + bool);
+			
+
+			Logger.print("[Client/GameIO] Getting player data");
+			Player clientData = server.getPlayerData(clientIP + ":" + unicastReceiverPort);
+			Logger.print("[Client/GameIO] Player data received");
 			this.updateInk(clientData.getInk(), clientData.getMaxInk());
 			
 		} catch (RemoteException e1) {
 			e1.printStackTrace();
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
 		}
 		// Creating thread to receive all messages
 		receiverThread = new Thread (unicastReceiver) ;
@@ -100,19 +123,31 @@ public class GameIOReceiver {
 		receiverThread.start () ;
 	}
 	
+	private void createDrawingServerRequest(String drawName, Point p1, Point p2, int formType) {
+		Thread t = new Thread(() -> {
+			try {
+				// Creating new drawing on server
+				Logger.print("[Client/GameIO] Creating drawing");
+				String realName = server.addDrawingProxy(p1, p2, formType, clientIP+":"+unicastReceiverPort);
+				
+				Logger.print("[Client/GameIO] Got drawing name " + realName);
+				
+				gameEntity.changeName(drawName, realName);
+			} catch (RemoteException e) {
+				e.printStackTrace();
+			} 
+		});
+		t.setDaemon(true);
+		t.start();
+	}
+	
 	// Drawing creator, sending the new drawing to server
 	public synchronized String createDrawing (Point p1, Point p2, Color color, int formType) {
-		IDrawServerRemote proxy = null ;
-		String proxyName = null ;
-		try {
-			// Creating new drawing on server
-			proxy = server.addDrawingProxy(p1, p2, formType, color, clientIP+":"+transmissionPort);
-			// getting name from proxy
-			proxyName = proxy.getName();
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		} 
-	
+		
+		String proxyName = "pending" + pendingDraw++;
+		
+		createDrawingServerRequest(proxyName, p1, p2, formType);
+		
 		Logger.print("[Client/Communication/GameIO] creating new drawing " + proxyName) ;
 		// adding new drawing in the list if not already in� :
 		// -> Could have received a new drawing while we are adding that one
@@ -149,7 +184,7 @@ public class GameIOReceiver {
 	
 	public void updateBoundsrequest(String name, Point p1, Point p2) {
 		try {
-			server.updateBoundsDrawing(name, p1, p2, clientIP+":"+transmissionPort);
+			server.updateBoundsDrawing(name, p1, p2, clientIP+":"+unicastReceiverPort);
 		} catch (RemoteException e) {
 			Logger.print("[Client/GameIO] Couldn't update proxy " + name + " bounds on server");
 			e.printStackTrace();
