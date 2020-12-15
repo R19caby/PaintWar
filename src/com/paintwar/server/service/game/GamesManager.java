@@ -64,7 +64,7 @@ public class GamesManager implements IGamesManager {
 	}
 	
 	public static void main(String[] args) {
-		GamesManager gm = new GamesManager("192.168.1.20", "uc.kyrandia.org", 25565, 2556);
+		GamesManager gm = new GamesManager(GameConfig.SERVER_LOCAL_IP, GameConfig.SERVER_HOSTNAME_IP, GameConfig.RMI_PORT, GameConfig.UNICAST_PORT);
 		
 		String newGame = gm.createGame();
 		GameServerEntity currentGame = gm.getGameInfo(newGame);
