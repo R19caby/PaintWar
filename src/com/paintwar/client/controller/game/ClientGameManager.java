@@ -51,7 +51,7 @@ public class ClientGameManager implements IClientGameManager {
 		JTextField gameName = new JTextField();
 		
 		clientOnlineIP.setText("");
-		serverIP.setText("uc.kyrandia.org");
+		serverIP.setText("localhost");
 		portRMIServeur.setText("25565");
 		gameName.setText("game0");
 		
@@ -65,7 +65,6 @@ public class ClientGameManager implements IClientGameManager {
 		int option = JOptionPane.showConfirmDialog(null, message, "Login", JOptionPane.OK_CANCEL_OPTION);
 		if (option == JOptionPane.OK_OPTION) {
 			String clientIP = clientOnlineIP.getText();
-			//clientIP = "185.50.131.178";
 			//clientIP = "localhost";
 			System.out.println(clientIP);
 			System.setProperty("java.security.policy","Server.policy");

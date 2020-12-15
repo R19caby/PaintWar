@@ -103,7 +103,7 @@ public class GameServerEntity implements IGameServerEntity, Serializable {
 		try {
 			// attachcement sur serveur sur un port identifi� de la machine d'exécution
 			System.setProperty("java.security.policy","Server.policy");
-			UnicastRemoteObject.exportObject(this, 1234);
+			UnicastRemoteObject.exportObject(this, GameConfig.RMI_OBJECT_PORT);
 			Naming.rebind ("//" + serverIP + ":" + RMIPort + "/" + gameName, this) ;
 			Logger.print("[Server/GameEntity] RMI ready on " + "//" + serverIP + ":" + RMIPort + "/" + gameName);
 			gameLoop.setDaemon(true);

@@ -2,7 +2,13 @@ package com.paintwar.server.service.game;
 
 import java.util.function.Function;
 
+
 public final class GameConfig {
+	public static final int RMI_OBJECT_PORT = 1234;
+	public static final String SERVER_LOCAL_IP = "localhost";
+	public static final String SERVER_HOSTNAME_IP = "localhost";
+	public static final int RMI_PORT = 25565;
+	public static final int UNICAST_PORT = 2556;
 	public static double AREA_FILL_PER_TICK = 1000.;
 	public static int BASE_MAX_INK = 100;
 	public static double ASPECT_RATIO = 1.0;
