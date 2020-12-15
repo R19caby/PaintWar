@@ -16,5 +16,5 @@ public interface IClientCommandReceiver
 
 	public void executeCommand(String command, String name, HashMap<String, Object> args);
 
-	public String getPackageName();
+	public String getOriginPackage();
 }

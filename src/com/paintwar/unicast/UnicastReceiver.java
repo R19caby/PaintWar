@@ -5,6 +5,7 @@ import java.io.ObjectInputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -24,6 +25,7 @@ public class UnicastReceiver extends Thread
 
 	public UnicastReceiver(final InetAddress receptionAddress, final int receptionPort)
 	{
+		commandReceivers = new ArrayList<IClientCommandReceiver>();
 		receptionSocket = null;
 		command = new String();
 		name = new String();
@@ -33,7 +35,7 @@ public class UnicastReceiver extends Thread
 		{
 			receptionSocket = new DatagramSocket(receptionPort, receptionAddress);
 			Logger.print(
-					"reception socket : " + receptionSocket.getLocalPort() + " " + receptionSocket.getInetAddress());
+					"reception socket : " + receptionSocket.getLocalPort());
 
 		} catch (Exception e)
 		{
@@ -70,7 +72,7 @@ public class UnicastReceiver extends Thread
 			// treat all different message here -->
 			for (IClientCommandReceiver ccm : commandReceivers)
 			{
-				if (ccm.getPackageName().equals(packageName))
+				if (packageName.contains(ccm.getOriginPackage()))
 				{
 					ccm.executeCommand(command, name, hm);
 				}

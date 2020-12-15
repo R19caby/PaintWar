@@ -4,6 +4,9 @@ import java.awt.Color;
 import java.awt.Point;
 import java.awt.Rectangle;
 
+import com.paintwar.server.service.game.IDrawServerRemote;
+import com.paintwar.server.service.game.elements.DrawingRemote;
+
 public class DrawingProxy {
 	
 	public static int RECTANGLE=0;
@@ -14,7 +17,9 @@ public class DrawingProxy {
 	private int w;
 	private Color color;
 	private int type;
-	
+	private double completion;
+	private boolean drawn;
+
 	public DrawingProxy(int x, int y, int h, int w, Color color, int type) {
 		super();
 		this.x = x;
@@ -23,16 +28,15 @@ public class DrawingProxy {
 		this.w = w;
 		this.color = color;
 		this.type = type;
+		this.drawn = false;
 	}
 	
 	public DrawingProxy(Point p1, Point p2, Color color, int type) {
 		super();
-		Rectangle r = new Rectangle(p1);
-		r.add(p2);
-		this.x = (int) r.getX();
-		this.y = (int) r.getY();
-		this.h = (int) r.getHeight();
-		this.w = (int) r.getWidth();
+		this.x = (int) p1.getX();
+		this.y = (int) p1.getY();
+		this.h = (int) (p2.getX() - p1.getX());
+		this.w = (int) (p2.getY() - p1.getY());
 		this.color = color;
 		this.type = type;
 	}
@@ -88,6 +92,20 @@ public class DrawingProxy {
 		this.type = type;
 	}
 	
-	
+	public double getCompletion() {
+		return completion;
+	}
+
+	public void setCompletion(double completion) {
+		this.completion = completion;
+	}
+
+	public boolean isDrawn() {
+		return drawn;
+	}
+
+	public void setDrawn(boolean drawn) {
+		this.drawn = drawn;
+	}
 	
 }
