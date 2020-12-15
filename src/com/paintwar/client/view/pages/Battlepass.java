@@ -55,7 +55,6 @@ public class Battlepass extends JPanel {
 		playerData.setOpaque(false);
 		center.add(roadmap, BorderLayout.CENTER);
 		center.add(playerData, BorderLayout.SOUTH);
-		playerData.setBorder(BorderFactory.createLineBorder(Color.black, 2));
 		JLabel player = new JLabel("Ici seront affichées les informations principales concernant le joueur");
 		playerData.add(player);
 		
@@ -63,7 +62,6 @@ public class Battlepass extends JPanel {
 		JPanel balance = new JPanel();
 		balance.setOpaque(false);
 		south.add(balance, BorderLayout.WEST);
-		balance.setBorder(BorderFactory.createLineBorder(Color.black, 2));
 		JLabel explanation = new JLabel("Ici sera affiché le solde du joueur");
 		balance.add(explanation);
 		}
@@ -90,7 +88,7 @@ public class Battlepass extends JPanel {
 		rewards.setAutoscrolls(true);
 		
 		//Paramétrages et titre
-		rewards.setBorder(BorderFactory.createLineBorder(Color.black, 2, true));
+		rewards.setBorder(BorderFactory.createLineBorder(Color.black, 1, true));
 		JLabel roadmapTitle = new JLabel("Roadmap des récompenses");
 		roadmapTitle.setFont(new Font(roadmapTitle.getFont().getName(), roadmapTitle.getFont().getSize(), roadmapTitle.getFont().getSize()+10));
 		titlePane.add(roadmapTitle);
@@ -101,7 +99,7 @@ public class Battlepass extends JPanel {
 		for (int i=0; i<=20; i++) {
 			lvl = new JPanel();
 			lvl.setBackground(Color.white);
-			lvl.setBorder(BorderFactory.createLineBorder(Color.red, 2, true));
+			lvl.setBorder(BorderFactory.createLineBorder(Color.red, 1, true));
 			lvl.setPreferredSize(new Dimension(100, 200));
 			title = new JTextArea("Récompenses \ndu lvl" + i);
 			title.setBackground(lvl.getBackground());
