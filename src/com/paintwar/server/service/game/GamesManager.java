@@ -17,13 +17,13 @@ public class GamesManager implements IGamesManager {
 	
 	private Map<String, GameServerEntity> games;
 	
-	public GamesManager(String serverIP, int RMIPort, int transmitterPorts) {
+	public GamesManager(String serverIP, String onlineHostName, int RMIPort, int transmitterPorts) {
 		games = new HashMap<String, GameServerEntity>();
 		this.serverIP = serverIP;
 		this.RMIPort = RMIPort;
 		this.transmitterPorts = transmitterPorts;
 		this.gameCount = 0;
-		System.setProperty ("java.rmi.server.hostname", serverIP) ;
+		System.setProperty ("java.rmi.server.hostname", onlineHostName) ;
 	}
 	
 	@Override
@@ -64,7 +64,7 @@ public class GamesManager implements IGamesManager {
 	}
 	
 	public static void main(String[] args) {
-		GamesManager gm = new GamesManager("192.168.43.1", 2020, 4020);
+		GamesManager gm = new GamesManager("192.168.1.20", "uc.kyrandia.org", 25565, 2556);
 		
 		String newGame = gm.createGame();
 		GameServerEntity currentGame = gm.getGameInfo(newGame);

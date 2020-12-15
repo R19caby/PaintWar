@@ -23,7 +23,7 @@ public class UnicastReceiver extends Thread
 	private String name; // the name of the object to apply the command on
 	private HashMap<String, Object> hm; // the arguments of the method
 
-	public UnicastReceiver(final InetAddress receptionAddress, final int receptionPort)
+	public UnicastReceiver(String clientIP, String serverIp, int serverPort)
 	{
 		commandReceivers = new ArrayList<IClientCommandReceiver>();
 		receptionSocket = null;
@@ -33,9 +33,14 @@ public class UnicastReceiver extends Thread
 
 		try
 		{
-			receptionSocket = new DatagramSocket(receptionPort, receptionAddress);
-			Logger.print(
-					"reception socket : " + receptionSocket.getLocalPort());
+			receptionSocket = new DatagramSocket();
+			String clientID = clientIP + ":" + receptionSocket.getLocalPort();
+			DatagramPacket dp = new DatagramPacket(("init co;" + clientID).getBytes(), 
+					("init co;" + clientID).getBytes().length,
+					InetAddress.getByName(serverIp),
+					serverPort);
+			receptionSocket.send(dp); 
+			Logger.print("Send 1st message to server : " + serverIp + ":" + serverPort);
 
 		} catch (Exception e)
 		{
@@ -83,5 +88,9 @@ public class UnicastReceiver extends Thread
 	public void addClientCommandReceiver(IClientCommandReceiver ccm)
 	{
 		commandReceivers.add(ccm);
+	}
+	
+	public DatagramSocket getSocket() {
+		return receptionSocket;
 	}
 }

@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
+import com.paintwar.client.controller.game.DrawingProxy;
 import com.paintwar.client.controller.game.GameEntity;
 import com.paintwar.client.logger.Logger;
 import com.paintwar.client.view.pages.game.listeners.DrawListener;
@@ -20,6 +21,7 @@ public class DrawZone extends JPanel {
 	private HashMap<String, Drawing> drawPanels;
 	private String currentDrawingByUser;
 	private Minimap minimap;
+	private DrawListener drawLis;
 	private static int SCHEMA_OPACITY = 30;
 	
 	public DrawZone(GameEntity gameEntity, Minimap minimap) {
@@ -31,7 +33,7 @@ public class DrawZone extends JPanel {
 		this.setBackground(Color.white);
 		this.setBorder(BorderFactory.createLineBorder(Color.black, 10));
 		this.setLayout(null);
-		DrawListener drawLis = new DrawListener(this);
+		drawLis = new DrawListener(this);
 		this.addMouseListener(drawLis);
 		this.addMouseMotionListener(drawLis);
 	}
@@ -66,7 +68,8 @@ public class DrawZone extends JPanel {
 			
 			if (isBigEnough(name)
 					&& isOnTopFriendlyZone(name)
-					&& isAffordable(name)) { //send updates if big enough
+					&& isAffordable(name)
+					&& !name.contains("pending")) { //send updates if big enough
 				drawToUpdate.setDisplayColor(Color.black);
 				minimap.updateEndPointPaint(name, p);
 				gameEntity.updateCoordPaintClient(name, p);
@@ -111,7 +114,8 @@ public class DrawZone extends JPanel {
 			currentDraw.setEndPoint(endPoint);
 			if (isBigEnough(currentDrawingByUser)
 					&& isOnTopFriendlyZone(currentDrawingByUser)
-					&& isAffordable(currentDrawingByUser)) { //send updates if big enough
+					&& isAffordable(currentDrawingByUser)
+					&& !currentDrawingByUser.contains("pending")) { //send updates if big enough
 				currentDraw.setDisplayColor(Color.black);
 				gameEntity.updateCoordPaintClient(currentDrawingByUser, endPoint);
 				minimap.updateEndPointPaint(currentDrawingByUser, endPoint);
@@ -227,6 +231,15 @@ public class DrawZone extends JPanel {
 			Point p = currentDraw.getEndPoint();
 			if (p != null)
 				updateEndPointDraw(0, 0);
+		}
+	}
+
+	public void changeName(String drawName, String realName) {
+		Drawing draw = drawPanels.remove(drawName);
+		drawPanels.put(realName, draw);
+		minimap.changeName(drawName, realName);
+		if (currentDrawingByUser.equals(drawName)) {
+			drawLis.setCurrentName(realName);
 		}
 	}
 	
