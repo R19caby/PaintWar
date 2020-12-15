@@ -77,7 +77,6 @@ public class MainWindow extends JFrame {
 	}
 	
 	public void connexionAsGuest() {
-		System.out.println("Connexion en tant qu'invité confirmée");
 		playerName = "Guest" + (int) Math.floor(Math.random()*1000);
 		homePage = new Guest(playerName, this);
 		collectionPage = new Collection(playerName, this);
