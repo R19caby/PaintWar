@@ -59,7 +59,7 @@ public class MainWindow extends JFrame {
 		contentContainer.add(PageName.CONNEXION_CHOICE.toString(), connexionChoicePage);
 		contentContainer.add(PageName.LOG_IN.toString(), logInPage);
 		contentContainer.add(PageName.SIGN_IN.toString(), accountCreationPage);
-		contentContainer.add(PageName.PARAMETERS.toString(), parametersPage);
+//		contentContainer.add(PageName.PARAMETERS.toString(), parametersPage);
 		
 		
 		this.setDefaultCloseOperation(3);
